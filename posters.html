@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Posters · 1142 Labs</title>
+<link rel="icon" href="assets/images/1142_logo.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/global.css">
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+</style>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#030510">
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div id="cursor"></div>
+<!-- ═══ 1142 BROADCAST SYSTEM ═══ -->
+<div id="crt-overlay"></div>
+<div id="scanlines"></div>
+<div id="phosphor"></div>
+<div id="crt-flicker"></div>
+<div id="scan-sweep"></div>
+<canvas id="static-canvas"></canvas>
+
+<!-- TV Corner Registration Marks -->
+<div id="tv-corners">
+  <div class="tv-corner tl"></div>
+  <div class="tv-corner tr"></div>
+  <div class="tv-corner bl"></div>
+  <div class="tv-corner br"></div>
+</div>
+
+<!-- Broadcast HUD -->
+<div id="broadcast-hud">
+
+  <!-- TOP LEFT: Channel -->
+  <div id="bcast-channel">
+    <div>
+      <div id="bcast-ch-num">11·42</div>
+      <div id="bcast-ch-label">1142 LABS<br><span id="bcast-ch-sub">COGNITIVE LIBERATION TV</span></div>
+    </div>
+  </div>
+
+  <!-- TOP CENTER: ON AIR -->
+  <div id="bcast-onair">
+    <div id="bcast-onair-dot"></div>
+    <span>ON AIR &nbsp;·&nbsp; CH.15</span>
+  </div>
+
+  <!-- TOP RIGHT: Time + Signal -->
+  <div id="bcast-topright">
+    <div id="bcast-time" id="bcast-time-el">11:42</div>
+    <div id="bcast-date">EST. DEC 22 2019</div>
+    <div id="bcast-signal">
+      <div class="sig-bar"></div>
+      <div class="sig-bar"></div>
+      <div class="sig-bar"></div>
+      <div class="sig-bar"></div>
+      <div class="sig-bar"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LOWER THIRD -->
+  <div id="bcast-lower">
+    <div id="lower-third-bar"></div>
+    <div id="lower-ticker-wrap">
+      <div id="lower-ticker-tag">1142 LABS</div>
+      <div id="lower-ticker-scroll">
+        <div id="lower-ticker-inner">
+          COLE EVERDARK · FOUNDER · BARRIE ONTARIO · EST DEC 22 2019 · 11:42 PM → 11:42 AM · THE SPIRITUAL JAILBREAK · COGNITIVE LIBERATION · NEURODIVERGENT EMPOWERMENT · 20+ RESEARCH PAPERS · METHYLPHENIDATE SERIES COMPLETE · STIM BLASTING REPORT PUBLISHED · ERGOPATHICS DISCOVERED JUN 2023 · PHARMACEUTICAL SOVEREIGNTY · THE RITLITILIN METHOD · SURGING BRAIN · METHYL NUTRIENTS · 7-DAY SLEEP DEPRIVATION STUDY · FENTANYL NEUROVASCULAR RISK · DOWN SYNDROME COGNITIVE PROCESS · THE COST OF KNOWLEDGE · BLUE METH WAR 2020-2022 · METHYL WINS · IN LOVING MEMORY: KATRINA JADE MUTCH HASLER ♥ DEC 20 2021 · 1142 IS INEVITABLE · TOMORROW'S SOLUTIONS TODAY · A TIME · A MOVEMENT · A MINDSET · ST. JIMMY PHENIDATE: PHENIDATE TV COMING · 1142 GAME STUDIOS · FERROFLUID · THE FORTRESS · THE BRAIN · THE ENGINE · THE ARCHIVE · THE CREATOR · COGNITIVE LIBERATION TV · CHANNEL 11·42 · BROADCASTING LIVE · ∞
+        </div>
+      </div>
+      <div id="lower-ticker-corner" id="bcast-uptime">LIVE</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LEFT: Watermark -->
+  <div id="bcast-watermark">
+    <div id="bcast-wm-ch">1142</div>
+    <div id="bcast-wm-sub">COGNITIVE LIBERATION TV</div>
+  </div>
+
+  <!-- BOTTOM RIGHT: Stats -->
+  <div id="bcast-stats">
+    <div class="bstat"><div class="bstat-dot"></div>20+ PAPERS PUBLISHED</div>
+    <div class="bstat"><div class="bstat-dot" style="background:var(--purple);box-shadow:0 0 5px var(--purple);"></div>SIGNAL STABLE</div>
+    <div class="bstat"><div class="bstat-dot" style="background:var(--pink);box-shadow:0 0 5px var(--pink);"></div>BARRIE · ONTARIO · CA</div>
+  </div>
+
+</div>
+
+<!-- ═══ BROADCAST SCRIPTS ═══ -->
+<script>
+(function(){
+  /* Live clock */
+  function updateTime(){
+    var now=new Date();
+    var h=now.getHours().toString().padStart(2,'0');
+    var m=now.getMinutes().toString().padStart(2,'0');
+    var s=now.getSeconds().toString().padStart(2,'0');
+    var el=document.getElementById('bcast-time');
+    if(el)el.textContent=h+':'+m+':'+s;
+    var mo=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][now.getMonth()];
+    var de=document.getElementById('bcast-date');
+    if(de)de.textContent=mo+' '+now.getDate()+' '+now.getFullYear()+' · BARRIE CA';
+  }
+  updateTime();setInterval(updateTime,1000);
+
+  /* Signal bar animation */
+  function animateSignal(){
+    var bars=document.querySelectorAll('.sig-bar');
+    bars.forEach(function(b,i){
+      var base=[4,7,10,13,16][i];
+      var vary=Math.max(2,base+Math.round((Math.random()-.3)*4));
+      b.style.height=vary+'px';
+      var alive=Math.random()>.12;
+      b.style.opacity=alive?'1':'.2';
+      b.style.background=alive?'var(--cyan)':'rgba(0,240,255,.2)';
+    });
+    setTimeout(animateSignal,280+Math.random()*420);
+  }
+  animateSignal();
+
+  /* Static canvas noise flash on page load */
+  var sc=document.getElementById('static-canvas');
+  if(sc){
+    sc.width=window.innerWidth;sc.height=window.innerHeight;
+    var ctx=sc.getContext('2d');
+    function drawStatic(a){
+      var id=ctx.createImageData(sc.width,sc.height);
+      for(var i=0;i<id.data.length;i+=4){
+        var v=Math.random()<.5?0:255;
+        id.data[i]=id.data[i+1]=id.data[i+2]=v;
+        id.data[i+3]=Math.floor(Math.random()*a);
+      }
+      ctx.putImageData(id,0,0);
+    }
+    /* fade-in static on load */
+    var alpha=120,frames=0;
+    sc.classList.add('visible');
+    var fade=setInterval(function(){
+      alpha-=8;frames++;
+      if(alpha<=0){clearInterval(fade);sc.classList.remove('visible');ctx.clearRect(0,0,sc.width,sc.height);return;}
+      drawStatic(alpha);
+    },30);
+  }
+
+  /* Periodic signal disruption */
+  function randomDisrupt(){
+    var sc2=document.getElementById('static-canvas');
+    if(!sc2)return;
+    sc2.width=window.innerWidth;sc2.height=window.innerHeight;
+    var ctx2=sc2.getContext('2d');
+    sc2.classList.add('visible');
+    var a=40,cnt=0;
+    var fl=setInterval(function(){
+      a-=6;cnt++;
+      if(a<=0||cnt>8){clearInterval(fl);sc2.classList.remove('visible');ctx2.clearRect(0,0,sc2.width,sc2.height);return;}
+      var id=ctx2.createImageData(sc2.width,sc2.height);
+      for(var i=0;i<id.data.length;i+=4){var v=Math.random()<.5?0:255;id.data[i]=id.data[i+1]=id.data[i+2]=v;id.data[i+3]=Math.floor(Math.random()*a);}
+      ctx2.putImageData(id,0,0);
+    },40);
+    setTimeout(randomDisrupt,12000+Math.random()*18000);
+  }
+  setTimeout(randomDisrupt,5000+Math.random()*8000);
+
+  /* Uptime counter */
+  var start=new Date('2019-12-22T23:42:00');
+  function uptime(){
+    var diff=Date.now()-start.getTime();
+    var d=Math.floor(diff/86400000);
+    var h=Math.floor((diff%86400000)/3600000);
+    var el=document.getElementById('bcast-uptime');
+    if(el)el.textContent='UP '+d+'D '+h+'H';
+    setTimeout(uptime,60000);
+  }
+  uptime();
+})();
+</script>
+<!-- ═══ END BROADCAST SYSTEM ═══ -->
+
+<div id="cursor-ring"></div>
+<nav class="hud">
+  <a href="index.html" class="hud-logo">
+    <img src="assets/images/1142_logo.png" alt="1142 Labs">
+    <span>1142 LABS</span>
+  </a>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-section">
+      <button class="nav-section-toggle" data-target="drop-fortress">THE FORTRESS <span class="nav-caret">&#9660;</span></button>
+      <div class="nav-drop" id="drop-fortress">
+        <a href="index.html">The Void <em>Home</em></a>
+        <a href="research.html">The Brain <em>Research</em></a>
+        <a href="tools.html">The Engine <em>Tools</em></a>
+        <a href="archive.html">The Archive</a>
+        <a href="creators.html">The Creator</a>
+      </div>
+    </div>
+    <div class="nav-section">
+      <button class="nav-section-toggle" data-target="drop-research">RESEARCH <span class="nav-caret">&#9660;</span></button>
+      <div class="nav-drop" id="drop-research">
+        <span class="drop-label" style="color:var(--green)">Studies</span>
+        <a href="breakthroughs.html">Breakthroughs</a>
+        <a href="pdf_portal.html">PDF Portal</a>
+        <span class="drop-label" style="color:var(--green)">Chemical DB</span>
+        <a href="chemlog.html">Chem Log</a>
+        <a href="1142_chemicals.html">Chemicals of Study</a>
+        <span class="drop-label" style="color:var(--green)">Calculators</span>
+        <a href="tools.html">Combo Calc</a>
+        <a href="withdrawal.html">Withdrawal Calc</a>
+      </div>
+    </div>
+    <div class="nav-section">
+      <button class="nav-section-toggle" data-target="drop-about">ABOUT <span class="nav-caret">&#9660;</span></button>
+      <div class="nav-drop" id="drop-about">
+        <span class="drop-label" style="color:var(--pink)">Creator</span>
+        <a href="creators.html">Cole EverDark</a>
+        <a href="creators.html#personas">Persona Matrix</a>
+        <span class="drop-label" style="color:var(--pink)">Manifesto</span>
+        <a href="vision.html">The Manifesto</a>
+        <a href="archive.html">Cole's Tab Corner</a>
+        <span class="drop-label" style="color:var(--pink)">More</span>
+        <a href="posters.html">Visualizations</a>
+        <a href="socials.html">Network</a>
+        <a href="resources.html">Resources</a>
+      </div>
+    </div>
+  </div>
+  <div class="hud-status"><div class="hud-dot"></div>ONLINE · 1142</div>
+  <button class="nav-hamburger" id="mobileMenuBtn" aria-label="Open Menu"><span></span><span></span><span></span></button>
+</nav>
+<!-- ═══ MOBILE MENU ═══ -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <div class="mobile-channel">
+      <div class="mobile-ch-num">11·42</div>
+      <div class="mobile-ch-info">1142 LABS<br>COGNITIVE LIBERATION TV</div>
+      <div class="mobile-onair"><div class="mobile-onair-dot"></div><span>ON AIR</span></div>
+    </div>
+
+    <div class="mobile-section-label">The Fortress</div>
+    <a href="index.html">The Void <em>Home</em></a>
+    <a href="research.html">The Brain <em>Research</em></a>
+    <a href="tools.html">The Engine <em>Tools</em></a>
+    <a href="archive.html">The Archive</a>
+    <a href="creators.html">The Creator</a>
+
+    <div class="mobile-section-label">Research</div>
+    <a href="breakthroughs.html">Breakthroughs</a>
+    <a href="pdf_portal.html">PDF Portal</a>
+    <a href="chemlog.html">Chem Log</a>
+    <a href="1142_chemicals.html">Chemicals of Study</a>
+    <a href="tools.html">Combo Calc</a>
+    <a href="withdrawal.html">Withdrawal Calc</a>
+
+    <div class="mobile-section-label">About</div>
+    <a href="creators.html">Cole EverDark</a>
+    <a href="vision.html">The Manifesto</a>
+    <a href="archive.html">Cole's Tab Corner</a>
+    <a href="socials.html">Network</a>
+    <a href="resources.html">Resources</a>
+    <a href="posters.html">Visualizations</a>
+  </div>
+</div>
+<!-- ═══ END MOBILE MENU ═══ -->
+
+<section style="position:relative;min-height:55vh;display:flex;flex-direction:column;justify-content:center;padding:clamp(88px,13vw,130px) clamp(16px,4vw,48px) clamp(48px,8vw,80px);overflow:hidden;">
+  <div class="vortex-grid" style="opacity:.35;"></div>
+  <div class="orb orb-p" style="opacity:.5;"></div>
+  <img src="assets/images/1766599328950.jpg" alt="" style="position:absolute;top:0;right:0;height:100%;width:28vw;object-fit:cover;opacity:.18;filter:saturate(1.3);mask-image:linear-gradient(to left,rgba(0,0,0,.6),transparent);">
+  <img src="assets/images/1768774665022.jpg" alt="" style="position:absolute;top:0;left:0;height:100%;width:22vw;object-fit:cover;opacity:.1;filter:saturate(1.2);mask-image:linear-gradient(to right,rgba(0,0,0,.5),transparent);">
+  <div style="position:relative;z-index:1;max-width:680px;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.5em;color:var(--pink);text-transform:uppercase;margin-bottom:20px;opacity:0;animation:fadeUp .8s .1s forwards;">PRINT COLLECTION · 1142 LABS VISUAL IDENTITY</div>
+    <img src="assets/images/1142_logo.png" alt="" style="height:50px;filter:drop-shadow(0 0 14px var(--pink));margin-bottom:22px;display:block;opacity:0;animation:fadeUp .8s .15s forwards;">
+    <h1 style="font-family:'Road Rage','Orbitron',sans-serif;font-weight:900;font-size:clamp(44px,7vw,96px);line-height:.9;text-transform:uppercase;margin-bottom:28px;opacity:0;animation:fadeUp .9s .3s forwards;">
+      <span style="display:block;color:var(--white);">Poster</span>
+      <span style="display:block;color:var(--pink);text-shadow:0 0 30px var(--pink),0 0 60px rgba(236,72,153,.4);" class="glitch anaglyph" data-text="Collection">Collection</span>
+    </h1>
+    <p style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:300;color:rgba(240,244,255,.6);line-height:1.8;opacity:0;animation:fadeUp .9s .5s forwards;">The 1142 Labs visual archive. Print them. Paste them. The aesthetic of cognitive liberation, made physical.</p>
+  </div>
+</section>
+
+<section class="section section-void" style="position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.04;">
+  <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <defs><pattern id="circuit" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M0 40 H30 M50 40 H80 M40 0 V30 M40 50 V80" stroke="#00F0FF" stroke-width="1" fill="none"/>
+      <circle cx="40" cy="40" r="4" fill="none" stroke="#00F0FF" stroke-width="1"/>
+      <circle cx="0" cy="40" r="2" fill="#00F0FF"/><circle cx="80" cy="40" r="2" fill="#00F0FF"/>
+      <circle cx="40" cy="0" r="2" fill="#8B5CF6"/><circle cx="40" cy="80" r="2" fill="#8B5CF6"/>
+      <path d="M20 20 L30 30 M50 50 L60 60 M20 60 L30 50 M50 30 L60 20" stroke="#8B5CF6" stroke-width=".5" fill="none" opacity=".5"/>
+    </pattern></defs>
+    <rect width="100%" height="100%" fill="url(#circuit)"/>
+  </svg>
+</div>
+  <img src="assets/images/1766599328950.jpg" alt="" style="position:absolute;top:0;right:0;width:22vw;max-width:260px;opacity:0.1;pointer-events:none;filter:saturate(1.4) brightness(.6);mask-image:radial-gradient(circle at center,rgba(0,0,0,.6),transparent 70%);">
+  <div style="position:absolute;bottom:-100px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(236,72,153,.07),transparent 60%);pointer-events:none;"></div>>
+  <div class="section-label reveal" style="font-family:\'Neon Tubes\',\'Share Tech Mono\',monospace;display:inline-flex;align-items:center;gap:10px;">Visual Collection · 1142 Labs</div>
+  <h2 class="section-title reveal">The <span style="color:var(--pink);">Posters</span></h2>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:56px;">
+    <div class="feat-card reveal d1" style="padding:0;overflow:hidden;cursor:none;">
+      <div class="feat-top-line"></div>
+      <img src="assets/images/1772910954865.webp" alt="1142 Gasoline — Ritalin" style="width:100%;display:block;transition:transform .5s,filter .4s;">
+      <div style="padding:24px 28px;">
+        <div class="feat-title">1142 Gasoline</div>
+        <p class="feat-body" style="margin-bottom:16px;">You Will Never Touch My Ritalin. The original gasoline station manifesto image — neon purple skyline, crystal burst overhead.</p>
+        <a href="assets/images/1772910954865.webp" download class="btn-neon pink" style="font-size:9px;padding:10px 20px;">⬇ Download</a>
+      </div>
+    </div>
+    <div class="feat-card reveal d2" style="padding:0;overflow:hidden;cursor:none;">
+      <div class="feat-top-line"></div>
+      <img src="assets/images/1766599328950.jpg" alt="1142 Crystal Sunset" style="width:100%;display:block;transition:transform .5s,filter .4s;">
+      <div style="padding:24px 28px;">
+        <div class="feat-title">Crystal Sunset</div>
+        <p class="feat-body" style="margin-bottom:16px;">The crystal burst suspended over a synthwave mountain sunset. The idea that could not be contained, made visible.</p>
+        <a href="assets/images/1766599328950.jpg" download class="btn-neon" style="font-size:9px;padding:10px 20px;">⬇ Download</a>
+      </div>
+    </div>
+    <div class="feat-card reveal d1" style="padding:0;overflow:hidden;cursor:none;">
+      <div class="feat-top-line"></div>
+      <img src="assets/images/1768774665022.jpg" alt="1142 City — The Fortress" style="width:100%;display:block;transition:transform .5s,filter .4s;">
+      <div style="padding:24px 28px;">
+        <div class="feat-title">1142 City</div>
+        <p class="feat-body" style="margin-bottom:16px;">The 1142 fortress as a neon city. Every building branded. The Ritalin Dial overhead. The inevitable city.</p>
+        <a href="assets/images/1768774665022.jpg" download class="btn-neon purple" style="font-size:9px;padding:10px 20px;">⬇ Download</a>
+      </div>
+    </div>
+    <div class="feat-card reveal d2" style="padding:0;overflow:hidden;cursor:none;">
+      <div class="feat-top-line"></div>
+      <img src="assets/images/1772910843420.webp" alt="1142 Labs Computer" style="width:100%;display:block;transition:transform .5s,filter .4s;">
+      <div style="padding:24px 28px;">
+        <div class="feat-title">Tomorrow's Solutions Today</div>
+        <p class="feat-body" style="margin-bottom:16px;">The 1142 Labs logo embedded in the crystal burst computer. The tagline rendered in neon. The mission, visualised.</p>
+        <a href="assets/images/1772910843420.webp" download class="btn-neon" style="font-size:9px;padding:10px 20px;">⬇ Download</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="assets/images/logo-full-tagline.png" alt="1142 Labs">
+      <p>1142 is a spiritual jailbreak. A neurodivergent fortress. A scientific underground. Est. Dec 22, 2019.</p>
+    </div>
+    <div class="footer-col"><h4>The Fortress</h4><ul>
+      <li><a href="index.html">The Void (Home)</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="breakthroughs.html">Breakthroughs</a></li>
+      <li><a href="creators.html">Creators</a></li>
+      <li><a href="vision.html">Vision</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Tools & Resources</h4><ul>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="tools.html">Calculator</a></li>
+      <li><a href="archive.html">Archive</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>About</h4><ul>
+      <li><a href="about.html">Cole EverDark</a></li>
+      <li><a href="creators.html#personas">Persona Matrix</a></li>
+      <li><a href="archive.html#manifesto">The Manifesto</a></li>
+      <li><a href="archive.html#logs">Cole's Tab Corner</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>1142 established Dec 22nd 2019 · a Cole EverDark company · In loving memory of Katrina Jade Mutch Hasler ♥&nbsp;&nbsp;Dec 20th, 2021</p>
+    <div class="footer-badge"><div class="footer-dot"></div>AN EVERDARK PRODUCTION</div>
+  </div>
+</footer>
+<script src="assets/fx.js" defer></script>
+<script>
+(function(){
+  const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+  let mx=window.innerWidth/2,my=window.innerHeight/2,rx=mx,ry=my;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,button,.feat-card,.bt-card,.resource-card,.persona-card,.vision-card,.poster-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>ring.classList.add('big'));
+    el.addEventListener('mouseleave',()=>ring.classList.remove('big'));
+  });
+  const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}}){threshold:.08});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  document.querySelectorAll('.glitch').forEach(el=>{if(!el.dataset.text)el.dataset.text=el.textContent.trim();});
+})();
+</script>
+
+<script>
+/* ── Starfield / Nebula Background ── */
+(function(){
+  const c = document.getElementById('bg-canvas');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  let W, H, stars=[], nebs=[];
+
+  function resize(){
+    W = c.width  = window.innerWidth;
+    H = c.height = window.innerHeight;
+  }
+
+  function initStars(){
+    stars = [];
+    for(let i=0;i<220;i++){
+      stars.push({
+        x:Math.random()*W, y:Math.random()*H,
+        r:Math.random()*1.4+0.2,
+        a:Math.random(),
+        speed:Math.random()*0.004+0.001,
+        hue: Math.random()<0.55 ? 188 : Math.random()<0.5 ? 300 : 160
+      });
+    }
+    nebs = [
+      {x:W*0.15, y:H*0.25, r:340, c:'rgba(0,240,255,'},
+      {x:W*0.85, y:H*0.6,  r:280, c:'rgba(139,92,246,'},
+      {x:W*0.5,  y:H*0.85, r:200, c:'rgba(236,72,153,'},
+      {x:W*0.7,  y:H*0.15, r:180, c:'rgba(74,222,128,'},
+    ];
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    /* base void */
+    ctx.fillStyle='#060609';
+    ctx.fillRect(0,0,W,H);
+
+    /* nebula glows */
+    nebs.forEach(n=>{
+      const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);
+      g.addColorStop(0,n.c+'0.055)');
+      g.addColorStop(1,n.c+'0)');
+      ctx.fillStyle=g;
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.fill();
+    });
+
+    /* grid lines */
+    ctx.strokeStyle='rgba(0,240,255,0.028)';
+    ctx.lineWidth=1;
+    const gs=70;
+    for(let x=0;x<W;x+=gs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=gs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+    /* stars */
+    const t=Date.now()*0.001;
+    stars.forEach((s,i)=>{
+      s.a = 0.3+0.7*Math.abs(Math.sin(t*s.speed*6+i));
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`hsla(${s.hue},100%,85%,${s.a})`;
+      ctx.fill();
+      /* tiny glow for brighter stars */
+      if(s.r>1.1){
+        const g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*5);
+        g.addColorStop(0,`hsla(${s.hue},100%,85%,${s.a*0.25})`);
+        g.addColorStop(1,'transparent');
+        ctx.fillStyle=g;
+        ctx.beginPath();ctx.arc(s.x,s.y,s.r*5,0,Math.PI*2);ctx.fill();
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize',()=>{resize();initStars();});
+  resize(); initStars(); draw();
+})();
+
+/* ── Collapsible Nav ── */
+(function(){
+  const toggles = document.querySelectorAll('.nav-section-toggle');
+  toggles.forEach(btn => {
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      const targetId = this.dataset.target;
+      const drop = document.getElementById(targetId);
+      const isOpen = drop.classList.contains('open');
+
+      /* close all */
+      document.querySelectorAll('.nav-drop').forEach(d=>d.classList.remove('open'));
+      document.querySelectorAll('.nav-section-toggle').forEach(b=>b.classList.remove('open'));
+
+      /* open this one if it was closed */
+      if(!isOpen){
+        drop.classList.add('open');
+        this.classList.add('open');
+      }
+    });
+  });
+
+  /* click outside closes all */
+  document.addEventListener('click', function(){
+    document.querySelectorAll('.nav-drop').forEach(d=>d.classList.remove('open'));
+    document.querySelectorAll('.nav-section-toggle').forEach(b=>b.classList.remove('open'));
+  });
+})();
+</script>
+<script>
+(function(){
+  var c=document.getElementById('bg-canvas');
+  if(!c)return;
+  var ctx=c.getContext('2d'),W,H,stars=[],nebs=[],t=0;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  function init(){
+    stars=[];
+    for(var i=0;i<200;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.2,ph:Math.random()*6.28,sp:Math.random()*0.008+0.002,hue:Math.random()<.55?188:Math.random()<.5?300:140});
+    nebs=[{x:.12,y:.22,r:360,col:'0,240,255'},{x:.88,y:.55,r:300,col:'139,92,246'},{x:.5,y:.88,r:220,col:'236,72,153'},{x:.72,y:.14,r:190,col:'74,222,128'}];
+  }
+  function draw(){
+    t+=0.016;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#060609';ctx.fillRect(0,0,W,H);
+    nebs.forEach(function(n){var gx=n.x*W,gy=n.y*H,g=ctx.createRadialGradient(gx,gy,0,gx,gy,n.r);g.addColorStop(0,'rgba('+n.col+',0.06)');g.addColorStop(1,'rgba('+n.col+',0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(gx,gy,n.r,0,6.28);ctx.fill();});
+    ctx.strokeStyle='rgba(0,240,255,0.025)';ctx.lineWidth=1;
+    var gs=68;
+    for(var x=0;x<W;x+=gs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(var y=0;y<H;y+=gs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    stars.forEach(function(s,i){
+      var a=0.25+0.75*Math.abs(Math.sin(t*s.sp*4+s.ph));
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.28);
+      ctx.fillStyle='hsla('+s.hue+',90%,88%,'+a+')';ctx.fill();
+      if(s.r>1.0){var g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*6);g.addColorStop(0,'hsla('+s.hue+',100%,85%,'+(a*0.2)+')');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.beginPath();ctx.arc(s.x,s.y,s.r*6,0,6.28);ctx.fill();}
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',function(){resize();init();});
+  resize();init();draw();
+})();
+
+(function(){
+  var toggles=document.querySelectorAll('.nav-section-toggle');
+  toggles.forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      var id=this.dataset.target;
+      var drop=document.getElementById(id);
+      var isOpen=drop.classList.contains('open');
+      document.querySelectorAll('.nav-drop').forEach(function(d){d.classList.remove('open');});
+      document.querySelectorAll('.nav-section-toggle').forEach(function(b){b.classList.remove('open');});
+      if(!isOpen){drop.classList.add('open');this.classList.add('open');}
+    });
+  });
+  document.addEventListener('click',function(){
+    document.querySelectorAll('.nav-drop').forEach(function(d){d.classList.remove('open');});
+    document.querySelectorAll('.nav-section-toggle').forEach(function(b){b.classList.remove('open');});
+  });
+})();
+</script>
+<script>
+/* ═══ 1142 PLASMA STARFIELD v2 — PURPLE SCREEN ═══ */
+(function(){
+  var c=document.getElementById('bg-canvas');if(!c)return;
+  var ctx=c.getContext('2d'),W,H;
+  var stars=[],nebulae=[],plasmaArcs=[],t=0;
+
+  function resize(){
+    W=c.width=window.innerWidth;
+    H=c.height=window.innerHeight;
+    initStars();initNebulae();
+  }
+
+  function initStars(){
+    stars=[];
+    for(var i=0;i<280;i++){
+      var hues=[240,260,280,300,220,200][Math.floor(Math.random()*6)];
+      stars.push({
+        x:Math.random()*W,y:Math.random()*H,
+        r:Math.random()*1.8+.2,
+        a:Math.random(),sp:Math.random()*.014+.004,
+        h:hues,
+        s:Math.random()<.08  // shooting star?
+      });
+    }
+  }
+
+  function initNebulae(){
+    nebulae=[
+      {x:W*.15,y:H*.2,rx:W*.35,ry:H*.3,col:'136,68,255',a:.06},
+      {x:W*.85,y:H*.75,rx:W*.3,ry:H*.35,col:'61,142,255',a:.05},
+      {x:W*.5,y:H*.5,rx:W*.4,ry:H*.4,col:'204,61,255',a:.04},
+      {x:W*.7,y:H*.15,rx:W*.25,ry:H*.25,col:'0,170,255',a:.04},
+    ];
+  }
+
+  function drawNebulae(){
+    nebulae.forEach(function(n){
+      var pulse=n.a+Math.sin(t*0.006)*0.02;
+      var g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,Math.max(n.rx,n.ry));
+      g.addColorStop(0,'rgba('+n.col+','+pulse+')');
+      g.addColorStop(0.4,'rgba('+n.col+','+(pulse*.5)+')');
+      g.addColorStop(1,'rgba('+n.col+',0)');
+      ctx.save();
+      ctx.scale(1,n.ry/n.rx);
+      ctx.beginPath();
+      ctx.arc(n.x,n.y*n.rx/n.ry,n.rx,0,Math.PI*2);
+      ctx.fillStyle=g;ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  function drawStars(){
+    stars.forEach(function(s){
+      s.a+=s.sp;
+      var alpha=.1+.5*Math.abs(Math.sin(s.a));
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle='hsla('+s.h+',90%,80%,'+alpha+')';
+      ctx.fill();
+      // Cross sparkle on bright stars
+      if(s.r>1.3&&Math.abs(Math.sin(s.a))>.85){
+        ctx.strokeStyle='hsla('+s.h+',100%,90%,'+(alpha*.5)+')';
+        ctx.lineWidth=.5;
+        ctx.beginPath();ctx.moveTo(s.x-s.r*3,s.y);ctx.lineTo(s.x+s.r*3,s.y);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(s.x,s.y-s.r*3);ctx.lineTo(s.x,s.y+s.r*3);ctx.stroke();
+      }
+    });
+  }
+
+  /* Moving purple plasma grid */
+  function drawGrid(){
+    var offset=t*.4%60;
+    ctx.strokeStyle='rgba(136,68,255,.04)';
+    ctx.lineWidth=.5;
+    for(var x=offset%60;x<W;x+=60){
+      ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();
+    }
+    for(var y=offset%60;y<H;y+=60){
+      ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();
+    }
+    /* diagonal accent lines */
+    ctx.strokeStyle='rgba(61,142,255,.025)';
+    for(var d=-W;d<W+H;d+=120){
+      ctx.beginPath();ctx.moveTo(d,0);ctx.lineTo(d+H,H);ctx.stroke();
+    }
+  }
+
+  /* Ghost "1142" watermark rotating */
+  function draw1142(){
+    ctx.save();
+    ctx.translate(W*.5,H*.5);
+    ctx.rotate(Math.sin(t*.0008)*.04);
+    ctx.font='bold '+(Math.min(W,H)*.55)+'px Orbitron,sans-serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    var pulse=.018+Math.sin(t*.007)*.008;
+    ctx.fillStyle='rgba(136,68,255,'+pulse+')';
+    ctx.fillText('1142',0,0);
+    ctx.restore();
+  }
+
+  /* Plasma arc between two random points */
+
+    /* Crystal spike rays from center */
+    function drawCrystalSpikes(cx, cy, time){
+      var numSpikes = 24;
+      for(var i=0;i<numSpikes;i++){
+        var angle = (i/numSpikes)*Math.PI*2 + time*0.003;
+        var len = (80 + Math.sin(time*0.02+i)*40 + Math.random()*20) * (Math.min(W,H)/600);
+        var width = 2 + Math.sin(time*0.05+i*0.7)*1.5;
+        var col = i%3===0?'0,207,255':i%3===1?'0,102,255':'102,51,204';
+        var alpha = 0.04 + Math.sin(time*0.015+i)*0.02;
+        
+        var ex = cx + Math.cos(angle)*len;
+        var ey = cy + Math.sin(angle)*len;
+        var lx = cx + Math.cos(angle+Math.PI/numSpikes)*len*0.6;
+        var ly = cy + Math.sin(angle+Math.PI/numSpikes)*len*0.6;
+        var rx = cx + Math.cos(angle-Math.PI/numSpikes)*len*0.6;
+        var ry = cy + Math.sin(angle-Math.PI/numSpikes)*len*0.6;
+        
+        ctx.beginPath();
+        ctx.moveTo(cx,cy);
+        ctx.lineTo(lx,ly);
+        ctx.lineTo(ex,ey);
+        ctx.lineTo(rx,ry);
+        ctx.closePath();
+        
+        var g = ctx.createLinearGradient(cx,cy,ex,ey);
+        g.addColorStop(0,'rgba('+col+','+alpha*3+')');
+        g.addColorStop(0.6,'rgba('+col+','+alpha+')');
+        g.addColorStop(1,'rgba('+col+',0)');
+        ctx.fillStyle = g;
+        ctx.fill();
+      }
+    }
+
+  function drawPlasmaArcs(){
+    if(t%90<2){
+      plasmaArcs.push({
+        x1:Math.random()*W,y1:Math.random()*H,
+        x2:Math.random()*W,y2:Math.random()*H,
+        life:1,col:Math.random()<.5?'136,68,255':'61,142,255'
+      });
+    }
+    for(var i=plasmaArcs.length-1;i>=0;i--){
+      var arc=plasmaArcs[i];
+      arc.life-=.035;
+      if(arc.life<=0){plasmaArcs.splice(i,1);continue;}
+      ctx.beginPath();
+      /* jagged lightning path */
+      ctx.moveTo(arc.x1,arc.y1);
+      var steps=6,mx=(arc.x2-arc.x1)/steps,my=(arc.y2-arc.y1)/steps;
+      for(var j=1;j<steps;j++){
+        ctx.lineTo(arc.x1+mx*j+(Math.random()-.5)*40,arc.y1+my*j+(Math.random()-.5)*40);
+      }
+      ctx.lineTo(arc.x2,arc.y2);
+      ctx.strokeStyle='rgba('+arc.col+','+arc.life*.4+')';
+      ctx.lineWidth=1+arc.life;
+      ctx.stroke();
+    }
+  }
+
+  function draw(){
+    t++;
+    ctx.clearRect(0,0,W,H);
+    drawGrid();
+    drawNebulae();
+    drawCrystalSpikes(W*.5,H*.5,t);
+    draw1142();
+    drawStars();
+    drawPlasmaArcs();
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize);
+  resize();draw();
+})();
+</script>
+<script>
+/* ═══ MOBILE MENU JS ═══ */
+(function(){
+  var btn = document.getElementById('mobileMenuBtn');
+  var menu = document.getElementById('mobileMenu');
+  if(!btn || !menu) return;
+
+  function openMenu(){
+    btn.classList.add('open');
+    menu.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu(){
+    btn.classList.remove('open');
+    menu.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function toggleMenu(){
+    if(menu.classList.contains('open')) closeMenu(); else openMenu();
+  }
+
+  btn.addEventListener('click', toggleMenu);
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', closeMenu);
+  });
+
+  // Close on swipe right
+  var startX = 0;
+  menu.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; }, {passive:true});
+  menu.addEventListener('touchend', function(e){
+    if(e.changedTouches[0].clientX - startX > 60) closeMenu();
+  }, {passive:true});
+
+  // Close on escape
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMenu(); });
+})();
+</script>
+</body>
+</html>

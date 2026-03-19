@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>1142 LABS — CHEMICALS OF STUDY</title>
+<link rel="icon" href="assets/images/1142_logo.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/global.css">
+<style>
+
+  :root {
+    --void: #030308;
+    --deep: #06060f;
+    --panel: #0a0a1a;
+    --border: rgba(255,255,255,0.07);
+    --acid: #c8ff00;
+    --nexus: #ff2d78;
+    --myco: #a855f7;
+    --peyote: #f97316;
+    --dmt: #00e5ff;
+    --dob: #ff6b35;
+    --mda: #ff1493;
+    --pcp: #39ff14;
+    --glow: rgba(200,255,0,0.12);
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ── CANVAS BACKGROUND ── */
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 60px 20px 40px;
+  }
+
+  .header-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    animation: fadeUp 1s ease forwards;
+    opacity: 0;
+  }
+
+  .header-title {
+    font-family: 'Syncopate', sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 6vw, 72px);
+    line-height: 0.95;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #fff 0%, var(--acid) 40%, var(--dmt) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeUp 1s 0.2s ease forwards;
+    opacity: 0;
+  }
+
+  .header-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 4px;
+    margin-top: 14px;
+    animation: fadeUp 1s 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  .header-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--acid), transparent);
+    margin: 30px auto 0;
+    animation: fadeUp 1s 0.6s ease forwards;
+    opacity: 0;
+  }
+
+  /* ── FILTER TABS ── */
+  .filter-bar {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 20px 40px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--acid);
+    color: var(--acid);
+    background: rgba(200,255,0,0.05);
+    box-shadow: 0 0 12px rgba(200,255,0,0.15);
+  }
+
+  /* ── GRID ── */
+  .grid {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2px;
+    padding: 0 2px 2px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  /* ── CARD ── */
+  .card {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), border-color 0.3s;
+    animation: cardIn 0.8s ease forwards;
+    opacity: 0;
+  }
+
+  .card:hover {
+    border-color: var(--c);
+    transform: translateY(-4px);
+    z-index: 5;
+  }
+
+  .card:hover .card-glow {
+    opacity: 1;
+  }
+
+  .card:hover .mol-canvas {
+    animation-play-state: running;
+  }
+
+  .card-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, var(--glow-c, rgba(200,255,0,0.08)) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+
+  /* ── MOLECULE CANVAS ── */
+  .mol-canvas {
+    display: block;
+    width: 100%;
+    height: 180px;
+  }
+
+  /* ── CARD CONTENT ── */
+  .card-body {
+    padding: 20px 22px 22px;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .card-name {
+    font-family: 'Syncopate', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 1px;
+    line-height: 1.2;
+    color: #fff;
+  }
+
+  .card-alias {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    margin-top: 3px;
+    opacity: 0.6;
+  }
+
+  .card-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 4px 8px;
+    border: 1px solid var(--c);
+    color: var(--c);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .duration-bar {
+    margin: 14px 0 10px;
+  }
+
+  .duration-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .duration-track {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .duration-fill {
+    height: 100%;
+    background: var(--c);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--c);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1.2s cubic-bezier(0.23,1,0.32,1);
+  }
+
+  .card.visible .duration-fill {
+    transform: scaleX(1);
+  }
+
+  .duration-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--c);
+    margin-top: 5px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(232,232,240,0.7);
+    margin-bottom: 14px;
+  }
+
+  /* ── EXPAND BUTTON ── */
+  .expand-btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--c);
+    background: transparent;
+    border: 1px solid var(--c);
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    width: 100%;
+  }
+
+  .expand-btn:hover {
+    background: var(--c);
+    color: #000;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(3,3,8,0.92);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+    backdrop-filter: blur(6px);
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--deep);
+    border: 1px solid var(--border);
+    max-width: 680px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    transform: translateY(30px) scale(0.97);
+    transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+  }
+
+  .modal-overlay.open .modal {
+    transform: translateY(0) scale(1);
+  }
+
+  .modal-top {
+    position: sticky;
+    top: 0;
+    background: var(--deep);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .modal-title {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--mc, #fff);
+  }
+
+  .modal-close {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .modal-close:hover {
+    border-color: #fff;
+    color: #fff;
+  }
+
+  .modal-body {
+    padding: 24px;
+  }
+
+  .modal-section {
+    margin-bottom: 26px;
+  }
+
+  .modal-section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--mc, var(--muted));
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-text {
+    font-size: 14px;
+    line-height: 1.75;
+    color: rgba(232,232,240,0.82);
+  }
+
+  .effects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .effect-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 7px 10px;
+    border-left: 2px solid var(--mc, var(--acid));
+    background: rgba(255,255,255,0.03);
+    color: rgba(232,232,240,0.8);
+  }
+
+  .modal-canvas-wrap {
+    height: 120px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .modal-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 60px 20px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--void); }
+  ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+
+
+/* ── SITE INTEGRATION OVERRIDES ── */
+body { background: var(--void, #0A0A0A); padding-top: 72px; }
+.site-footer { margin-top: 80px; }
+</style>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#030510">
+</head>
+<body>
+
+<nav class="hud">
+  <a href="index.html" class="hud-logo">
+    <img src="assets/images/1142_logo.png" alt="1142 Labs">
+    <span>1142 LABS</span>
+  </a>
+
+  <!-- hamburger (mobile) -->
+  <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="nav-panel" id="navPanel">
+
+    <!-- ── THE FORTRESS ── -->
+    <div class="nav-section">
+      <button class="nav-section-toggle" data-target="drop-fortress">
+        THE FORTRESS <span class="nav-caret">&#9660;</span>
+      </button>
+      <div class="nav-drop" id="drop-fortress">
+        <a href="index.html">&#9632; The Void &nbsp;<em>Home</em></a>
+        <a href="research.html">&#9632; The Brain &nbsp;<em>Research</em></a>
+        <a href="tools.html">&#9632; The Engine &nbsp;<em>Tools</em></a>
+        <a href="archive.html">&#9632; The Archive</a>
+        <a href="creators.html">&#9632; The Creator</a>
+      </div>
+    </div>
+
+    <!-- ── RESEARCH ── -->
+    <div class="nav-section">
+      <button class="nav-section-toggle" data-target="drop-research">
+        RESEARCH <span class="nav-caret">&#9660;</span>
+      </button>
+      <div class="nav-drop" id="drop-research">
+        <span class="drop-label" style="color:var(--green)">Studies</span>
+        <a href="breakthroughs.html">Breakthroughs</a>
+        <a href="pdf_portal.html">PDF Portal</a>
+        <span class="drop-label" style="color:var(--green)">Chemical DB</span>
+        <a href="chemlog.html">Chem Log</a>
+        <a href="1142_chemicals.html">Chemicals of Study</a>
+        <span class="drop-label" style="color:var(--green)">Calculators</span>
+        <a href="tools.html">Combo Calc</a>
+        <a href="withdrawal.html">Withdrawal Calc</a>
+      </div>
+    </div>
+
+    <!-- ── ABOUT ── -->
+    <div class="nav-section">
+      <button class="nav-section-toggle" data-target="drop-about">
+        ABOUT <span class="nav-caret">&#9660;</span>
+      </button>
+      <div class="nav-drop" id="drop-about">
+        <span class="drop-label" style="color:var(--pink)">Creator</span>
+        <a href="creators.html">Cole EverDark</a>
+        <a href="creators.html#personas">Persona Matrix</a>
+        <span class="drop-label" style="color:var(--pink)">Manifesto</span>
+        <a href="vision.html">The Manifesto</a>
+        <a href="archive.html">Cole's Tab Corner</a>
+        <span class="drop-label" style="color:var(--pink)">More</span>
+        <a href="posters.html">Visualizations</a>
+        <a href="socials.html">Network</a>
+        <a href="resources.html">Resources</a>
+      </div>
+    </div>
+
+  </div><!-- /nav-panel -->
+
+  <div class="hud-status"><div class="hud-dot"></div>ONLINE</div>
+</nav>
+<!-- ═══ MOBILE MENU ═══ -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <div class="mobile-channel">
+      <div class="mobile-ch-num">11·42</div>
+      <div class="mobile-ch-info">1142 LABS<br>COGNITIVE LIBERATION TV</div>
+      <div class="mobile-onair"><div class="mobile-onair-dot"></div><span>ON AIR</span></div>
+    </div>
+
+    <div class="mobile-section-label">The Fortress</div>
+    <a href="index.html">The Void <em>Home</em></a>
+    <a href="research.html">The Brain <em>Research</em></a>
+    <a href="tools.html">The Engine <em>Tools</em></a>
+    <a href="archive.html">The Archive</a>
+    <a href="creators.html">The Creator</a>
+
+    <div class="mobile-section-label">Research</div>
+    <a href="breakthroughs.html">Breakthroughs</a>
+    <a href="pdf_portal.html">PDF Portal</a>
+    <a href="chemlog.html">Chem Log</a>
+    <a href="1142_chemicals.html">Chemicals of Study</a>
+    <a href="tools.html">Combo Calc</a>
+    <a href="withdrawal.html">Withdrawal Calc</a>
+
+    <div class="mobile-section-label">About</div>
+    <a href="creators.html">Cole EverDark</a>
+    <a href="vision.html">The Manifesto</a>
+    <a href="archive.html">Cole's Tab Corner</a>
+    <a href="socials.html">Network</a>
+    <a href="resources.html">Resources</a>
+    <a href="posters.html">Visualizations</a>
+  </div>
+</div>
+<!-- ═══ END MOBILE MENU ═══ -->
+
+
+
+<canvas id="bg-canvas"></canvas>
+<!-- ═══ 1142 BROADCAST SYSTEM ═══ -->
+<div id="crt-overlay"></div>
+<div id="scanlines"></div>
+<div id="phosphor"></div>
+<div id="crt-flicker"></div>
+<div id="scan-sweep"></div>
+<canvas id="static-canvas"></canvas>
+
+<!-- TV Corner Registration Marks -->
+<div id="tv-corners">
+  <div class="tv-corner tl"></div>
+  <div class="tv-corner tr"></div>
+  <div class="tv-corner bl"></div>
+  <div class="tv-corner br"></div>
+</div>
+
+<!-- Broadcast HUD -->
+<div id="broadcast-hud">
+
+  <!-- TOP LEFT: Channel -->
+  <div id="bcast-channel">
+    <div>
+      <div id="bcast-ch-num">11·42</div>
+      <div id="bcast-ch-label">1142 LABS<br><span id="bcast-ch-sub">COGNITIVE LIBERATION TV</span></div>
+    </div>
+  </div>
+
+  <!-- TOP CENTER: ON AIR -->
+  <div id="bcast-onair">
+    <div id="bcast-onair-dot"></div>
+    <span>ON AIR &nbsp;·&nbsp; CH.07</span>
+  </div>
+
+  <!-- TOP RIGHT: Time + Signal -->
+  <div id="bcast-topright">
+    <div id="bcast-time" id="bcast-time-el">11:42</div>
+    <div id="bcast-date">EST. DEC 22 2019</div>
+    <div id="bcast-signal">
+      <div class="sig-bar"></div>
+      <div class="sig-bar"></div>
+      <div class="sig-bar"></div>
+      <div class="sig-bar"></div>
+      <div class="sig-bar"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LOWER THIRD -->
+  <div id="bcast-lower">
+    <div id="lower-third-bar"></div>
+    <div id="lower-ticker-wrap">
+      <div id="lower-ticker-tag">1142 LABS</div>
+      <div id="lower-ticker-scroll">
+        <div id="lower-ticker-inner">
+          COLE EVERDARK · FOUNDER · BARRIE ONTARIO · EST DEC 22 2019 · 11:42 PM → 11:42 AM · THE SPIRITUAL JAILBREAK · COGNITIVE LIBERATION · NEURODIVERGENT EMPOWERMENT · 20+ RESEARCH PAPERS · METHYLPHENIDATE SERIES COMPLETE · STIM BLASTING REPORT PUBLISHED · ERGOPATHICS DISCOVERED JUN 2023 · PHARMACEUTICAL SOVEREIGNTY · THE RITLITILIN METHOD · SURGING BRAIN · METHYL NUTRIENTS · 7-DAY SLEEP DEPRIVATION STUDY · FENTANYL NEUROVASCULAR RISK · DOWN SYNDROME COGNITIVE PROCESS · THE COST OF KNOWLEDGE · BLUE METH WAR 2020-2022 · METHYL WINS · IN LOVING MEMORY: KATRINA JADE MUTCH HASLER ♥ DEC 20 2021 · 1142 IS INEVITABLE · TOMORROW'S SOLUTIONS TODAY · A TIME · A MOVEMENT · A MINDSET · ST. JIMMY PHENIDATE: PHENIDATE TV COMING · 1142 GAME STUDIOS · FERROFLUID · THE FORTRESS · THE BRAIN · THE ENGINE · THE ARCHIVE · THE CREATOR · COGNITIVE LIBERATION TV · CHANNEL 11·42 · BROADCASTING LIVE · ∞
+        </div>
+      </div>
+      <div id="lower-ticker-corner" id="bcast-uptime">LIVE</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LEFT: Watermark -->
+  <div id="bcast-watermark">
+    <div id="bcast-wm-ch">1142</div>
+    <div id="bcast-wm-sub">COGNITIVE LIBERATION TV</div>
+  </div>
+
+  <!-- BOTTOM RIGHT: Stats -->
+  <div id="bcast-stats">
+    <div class="bstat"><div class="bstat-dot"></div>20+ PAPERS PUBLISHED</div>
+    <div class="bstat"><div class="bstat-dot" style="background:var(--purple);box-shadow:0 0 5px var(--purple);"></div>SIGNAL STABLE</div>
+    <div class="bstat"><div class="bstat-dot" style="background:var(--pink);box-shadow:0 0 5px var(--pink);"></div>BARRIE · ONTARIO · CA</div>
+  </div>
+
+</div>
+
+<!-- ═══ BROADCAST SCRIPTS ═══ -->
+<script>
+(function(){
+  /* Live clock */
+  function updateTime(){
+    var now=new Date();
+    var h=now.getHours().toString().padStart(2,'0');
+    var m=now.getMinutes().toString().padStart(2,'0');
+    var s=now.getSeconds().toString().padStart(2,'0');
+    var el=document.getElementById('bcast-time');
+    if(el)el.textContent=h+':'+m+':'+s;
+    var mo=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][now.getMonth()];
+    var de=document.getElementById('bcast-date');
+    if(de)de.textContent=mo+' '+now.getDate()+' '+now.getFullYear()+' · BARRIE CA';
+  }
+  updateTime();setInterval(updateTime,1000);
+
+  /* Signal bar animation */
+  function animateSignal(){
+    var bars=document.querySelectorAll('.sig-bar');
+    bars.forEach(function(b,i){
+      var base=[4,7,10,13,16][i];
+      var vary=Math.max(2,base+Math.round((Math.random()-.3)*4));
+      b.style.height=vary+'px';
+      var alive=Math.random()>.12;
+      b.style.opacity=alive?'1':'.2';
+      b.style.background=alive?'var(--cyan)':'rgba(0,240,255,.2)';
+    });
+    setTimeout(animateSignal,280+Math.random()*420);
+  }
+  animateSignal();
+
+  /* Static canvas noise flash on page load */
+  var sc=document.getElementById('static-canvas');
+  if(sc){
+    sc.width=window.innerWidth;sc.height=window.innerHeight;
+    var ctx=sc.getContext('2d');
+    function drawStatic(a){
+      var id=ctx.createImageData(sc.width,sc.height);
+      for(var i=0;i<id.data.length;i+=4){
+        var v=Math.random()<.5?0:255;
+        id.data[i]=id.data[i+1]=id.data[i+2]=v;
+        id.data[i+3]=Math.floor(Math.random()*a);
+      }
+      ctx.putImageData(id,0,0);
+    }
+    /* fade-in static on load */
+    var alpha=120,frames=0;
+    sc.classList.add('visible');
+    var fade=setInterval(function(){
+      alpha-=8;frames++;
+      if(alpha<=0){clearInterval(fade);sc.classList.remove('visible');ctx.clearRect(0,0,sc.width,sc.height);return;}
+      drawStatic(alpha);
+    },30);
+  }
+
+  /* Periodic signal disruption */
+  function randomDisrupt(){
+    var sc2=document.getElementById('static-canvas');
+    if(!sc2)return;
+    sc2.width=window.innerWidth;sc2.height=window.innerHeight;
+    var ctx2=sc2.getContext('2d');
+    sc2.classList.add('visible');
+    var a=40,cnt=0;
+    var fl=setInterval(function(){
+      a-=6;cnt++;
+      if(a<=0||cnt>8){clearInterval(fl);sc2.classList.remove('visible');ctx2.clearRect(0,0,sc2.width,sc2.height);return;}
+      var id=ctx2.createImageData(sc2.width,sc2.height);
+      for(var i=0;i<id.data.length;i+=4){var v=Math.random()<.5?0:255;id.data[i]=id.data[i+1]=id.data[i+2]=v;id.data[i+3]=Math.floor(Math.random()*a);}
+      ctx2.putImageData(id,0,0);
+    },40);
+    setTimeout(randomDisrupt,12000+Math.random()*18000);
+  }
+  setTimeout(randomDisrupt,5000+Math.random()*8000);
+
+  /* Uptime counter */
+  var start=new Date('2019-12-22T23:42:00');
+  function uptime(){
+    var diff=Date.now()-start.getTime();
+    var d=Math.floor(diff/86400000);
+    var h=Math.floor((diff%86400000)/3600000);
+    var el=document.getElementById('bcast-uptime');
+    if(el)el.textContent='UP '+d+'D '+h+'H';
+    setTimeout(uptime,60000);
+  }
+  uptime();
+})();
+</script>
+<!-- ═══ END BROADCAST SYSTEM ═══ -->
+
+
+<header>
+  <div class="header-tag">1142 · Research Archive · Classified</div>
+  <h1 class="header-title">CHEMICALS<br>OF STUDY</h1>
+  <p class="header-sub">[ 8 substances · psychedelic class · field notes ]</p>
+  <div class="header-line"></div>
+</header>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterCards('all', this)">ALL</button>
+  <button class="filter-btn" onclick="filterCards('classic', this)">CLASSIC</button>
+  <button class="filter-btn" onclick="filterCards('phenethylamine', this)">2C-x CLASS</button>
+  <button class="filter-btn" onclick="filterCards('tryptamine', this)">TRYPTAMINES</button>
+  <button class="filter-btn" onclick="filterCards('dissociative', this)">DISSOCIATIVES</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>
+  1142 · CHEMICALS OF STUDY · FOR EDUCATIONAL PURPOSES ONLY<br>
+  <span style="opacity:0.4;margin-top:6px;display:block">KNOWLEDGE IS NOT ENDORSEMENT</span>
+</footer>
+
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-top">
+      <div class="modal-title" id="modal-title"></div>
+      <button class="modal-close" onclick="closeModalDirect()">[ CLOSE ]</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const chemicals = [
+  {
+    id: 'lsd',
+    name: 'LSD',
+    alias: '"Acid" · Lysergic Acid Diethylamide',
+    badge: 'LYSERGAMIDE',
+    class: 'classic',
+    color: '#c8ff00',
+    duration: '8–12 hours',
+    durationPct: 0.85,
+    desc: 'The archetype. Synthesized by Albert Hofmann in 1938, its psychedelic properties discovered accidentally in 1943. One of the most potent psychoactive compounds known.',
+    history: 'Albert Hofmann first synthesized LSD-25 in 1938 at Sandoz Laboratories while researching ergot alkaloids. Its psychedelic properties were discovered on April 19, 1943 — "Bicycle Day" — when Hofmann accidentally absorbed a small amount through his fingertips. Sandoz later marketed it as "Delysid" for psychiatric research throughout the 1950s–60s. It became central to the counterculture movement before being scheduled in 1968.',
+    effects: ['Geometric hallucinations', 'Ego dissolution', 'Synesthesia', 'Time distortion', 'Emotional amplification', 'Pattern recognition', 'Profound empathy', 'Altered thought loops'],
+    knowledge: 'Acts primarily as a 5-HT2A agonist. Doses measured in micrograms (50–200µg). No physical toxicity at normal doses. Set and setting critical. Tolerance builds rapidly and cross-tolerates with psilocybin and mescaline.',
+    molPoints: 26
+  },
+  {
+    id: '2cb',
+    name: '2C-B',
+    alias: '"Nexus" · 4-Bromo-2,5-dimethoxyphenethylamine',
+    badge: 'PHENETHYLAMINE',
+    class: 'phenethylamine',
+    color: '#ff2d78',
+    duration: '4–6 hours',
+    durationPct: 0.45,
+    desc: 'Synthesized by Alexander Shulgin in 1974. Known for combining psychedelic visuals with entactogenic warmth. Considered by many the ideal recreational psychedelic.',
+    history: 'Developed by Alexander "Sasha" Shulgin in 1974 and detailed in his landmark text PiHKAL (1991). Originally sold legally as a substitute for MDMA after the scheduling of MDA. Particularly popular in European rave culture during the 1990s. Shulgin considered it among his most successful creations.',
+    effects: ['Rich CEV/OEV visuals', 'Heightened sensory pleasure', 'Euphoria', 'Body warmth', 'Enhanced music appreciation', 'Mild empathy', 'Sexual enhancement', 'Clear-headed lucidity'],
+    knowledge: 'Active at 12–25mg. 5-HT2A/2B/2C agonist with dopamine and alpha-adrenergic activity. Notably dose-sensitive: threshold, recreational, and intense experiences separated by just milligrams. Duration shorter than LSD making it more manageable.',
+    molPoints: 18
+  },
+  {
+    id: 'psilocybin',
+    name: 'PSILOCYBIN',
+    alias: '"Magic Mushrooms" · 4-PO-DMT',
+    badge: 'TRYPTAMINE',
+    class: 'tryptamine',
+    color: '#a855f7',
+    duration: '4–6 hours',
+    durationPct: 0.45,
+    desc: 'The original sacrament. Found in 200+ species of fungi globally. Used ceremonially for millennia. Psilocybin dephosphorylates to psilocin — the active compound — in the body.',
+    history: 'Indigenous Mesoamerican cultures used psilocybin mushrooms ("teonanácatl") in religious ceremonies for thousands of years. R. Gordon Wasson participated in a Mazatec ritual in 1955, later publishing in LIFE magazine (1957). Albert Hofmann isolated psilocybin in 1958. Research halted after 1970 scheduling but resumed aggressively in the 2010s, with major trials at Johns Hopkins and NYU showing efficacy for depression and addiction.',
+    effects: ['Introspective visions', 'Emotional breakthroughs', 'Nature connectedness', 'Ego death (high dose)', 'Laughter and wonder', 'Philosophical insight', 'Visual fractals', 'Time dilation'],
+    knowledge: 'Prodrug of psilocin. Typical doses 1–5g dried mushrooms (1.5–35mg psilocybin). Cross-tolerates with LSD. Currently in Phase 2/3 clinical trials for treatment-resistant depression, PTSD, and addiction. Oregon legalized supervised psilocybin services in 2023.',
+    molPoints: 20
+  },
+  {
+    id: 'peyote',
+    name: 'PEYOTE',
+    alias: '"The Sacred Cactus" · Mescaline',
+    badge: 'PHENETHYLAMINE',
+    class: 'classic',
+    color: '#f97316',
+    duration: '8–12 hours',
+    durationPct: 0.85,
+    desc: 'A small, spineless cactus native to Mexico and southwestern Texas. Contains mescaline as its primary alkaloid. Considered sacred by the Huichol, Rarámuri, and Native American Church.',
+    history: 'Peyote use in indigenous ritual dates back at least 5,700 years, evidenced by archaeological finds in Texas. The Native American Church, incorporating peyote ceremonies, was formally organized in 1918. Mescaline was isolated by Arthur Heffter in 1897 and synthesized by Ernst Späth in 1919. Aldous Huxley\'s "The Doors of Perception" (1954) described his mescaline experience and became enormously influential.',
+    effects: ['Complex colorful visions', 'Deep spiritual connection', 'Nausea (onset)', 'Profound introspection', 'Sensory enhancement', 'Time standing still', 'Geometric patterns', 'Ancestral feeling'],
+    knowledge: 'Active alkaloid mescaline (3,4,5-trimethoxyphenethylamine). Doses 200–400mg mescaline / 20–30g fresh peyote. Longest onset (1–2hrs). Contains 50+ other alkaloids. Legal for NAC members in the US. Peyote cactus is slow-growing and endangered in the wild.',
+    molPoints: 16
+  },
+  {
+    id: 'dmt',
+    name: 'DMT',
+    alias: '"The Spirit Molecule" · N,N-Dimethyltryptamine',
+    badge: 'TRYPTAMINE',
+    class: 'tryptamine',
+    color: '#00e5ff',
+    duration: '15–45 min (smoked)',
+    durationPct: 0.15,
+    desc: 'The most intense psychedelic known. Occurs endogenously in humans and throughout the plant kingdom. Smoked form produces a complete reality break within seconds. The active compound in ayahuasca.',
+    history: 'First synthesized by Richard Manske in 1931. Its psychedelic properties discovered by Stephen Szára in 1956. Found naturally in the human body and in hundreds of plants. Ayahuasca — combining DMT-containing plants with MAOIs — has been used by Amazonian peoples for centuries. Rick Strassman conducted the first approved clinical DMT study in the 1990s, documenting entity contact experiences, published in "DMT: The Spirit Molecule" (2000).',
+    effects: ['Complete reality displacement', 'Entity encounters', 'Geometric hyperspace', 'Ego obliteration', 'Time collapse', 'Profound awe/terror', 'Ineffable realms', 'Rapid onset/offset'],
+    knowledge: 'Endogenous trace amine. Smoked: active 15–45min. Oral (ayahuasca with MAOI): 4–6hrs. Tolerance negligible. Potentially produced in human pineal gland. 5-HT2A agonist, sigma-1 receptor agonist. Among the most researched substances for NDE-like experiences.',
+    molPoints: 14
+  },
+  {
+    id: 'dob',
+    name: 'DOB',
+    alias: '"Brolamfetamine" · 4-Bromo-2,5-dimethoxamphetamine',
+    badge: 'AMPHETAMINE',
+    class: 'phenethylamine',
+    color: '#ff6b35',
+    duration: '16–30 hours',
+    durationPct: 1.0,
+    desc: 'An extraordinarily long-lasting psychedelic amphetamine. Rare and potent. Often mistaken for LSD. Can persist beyond 24 hours. Requires extreme caution due to potency and duration.',
+    history: 'Synthesized by Alexander Shulgin in 1967 and documented in PiHKAL. One of the first DOx compounds discovered. Rarely encountered in pure form — often misrepresented as LSD on blotter paper. Gained notoriety in the 2000s when several hospitalizations resulted from users unknowingly taking DOB while expecting LSD. Its vasoconstrictive properties make high doses medically dangerous.',
+    effects: ['Intense geometric visuals', 'Stimulant body load', 'Prolonged time dilation', 'Mental clarity', 'Physical tension', 'Vasoconstriction', 'Insomnia', 'Extreme duration'],
+    knowledge: 'Active 1–3mg. Amphetamine backbone with psychedelic action. 5-HT2A agonist plus adrenergic activity. Vasoconstriction poses risk at high doses. Cross-tolerates with other serotonergic psychedelics. Extremely important to have accurate substance ID — reagent test essential.',
+    molPoints: 20
+  },
+  {
+    id: 'mda',
+    name: 'MDA',
+    alias: '"The Love Drug" · 3,4-Methylenedioxyamphetamine',
+    badge: 'ENTACTOGEN',
+    class: 'classic',
+    color: '#ff1493',
+    duration: '6–8 hours',
+    durationPct: 0.65,
+    desc: 'The original "love drug." Precursor to MDMA. More psychedelic and introspective than its successor, with stronger hallucinogenic properties and a reputation for deep emotional excavation.',
+    history: 'First synthesized by G. Mannish and W. Jacobsohn in 1910. Patented by Merck in 1914. Independently rediscovered by Shulgin and used in psychotherapy in the 1970s by therapists like Richard Yensen. Briefly sold as a street drug "the love pill" in the 1960s-70s. Scheduled in 1970. MDMA was later developed partly as a less toxic alternative.',
+    effects: ['Emotional openness', 'Empathy surge', 'Mild hallucinations', 'Sensory enhancement', 'Introspective depth', 'Physical stimulation', 'Euphoria', 'Love and connection'],
+    knowledge: 'Releases serotonin, dopamine, norepinephrine. More serotonergic than MDMA. Active 80–160mg. Longer and more psychedelic than MDMA. Neurotoxic potential at high doses or repeated use — serotonin syndrome risk. Historically used in PTSD therapy contexts before scheduling.',
+    molPoints: 18
+  },
+  {
+    id: 'pcp',
+    name: 'PCP',
+    alias: '"Angel Dust" · Phencyclidine',
+    badge: 'DISSOCIATIVE',
+    class: 'dissociative',
+    color: '#39ff14',
+    duration: '4–8 hours',
+    durationPct: 0.6,
+    desc: 'The prototype dissociative anesthetic. Developed as a surgical anesthetic in 1956. Produces profound dissociation, analgesia, and at high doses, full sensory disconnection from the physical body.',
+    history: 'Developed by Parke-Davis as a surgical anesthetic (Sernyl) in 1956. Discontinued in 1965 due to emergence delirium in patients. Street use emerged in the 1970s. Led to the discovery of the NMDA receptor system — PCP\'s binding site is now among the most studied in neuroscience. Research into the NMDA receptor pathway directly informed development of ketamine (a shorter-acting analog) and eventually esketamine (Spravato), now FDA-approved for depression.',
+    effects: ['Complete dissociation', 'Analgesia/numbness', 'Out-of-body states', 'Time distortion', 'Superhuman feeling', 'Dissociative hallucinations', 'Amnesia (high dose)', 'Depersonalization'],
+    knowledge: 'NMDA receptor antagonist. Active threshold ~5mg smoked. Highly lipophilic — accumulates in fat tissue causing prolonged effects. Street forms often highly variable purity. High-dose use can produce psychosis indistinguishable from schizophrenia. Bladder toxicity with heavy use. Its receptor action inspired the sigma hypothesis of schizophrenia.',
+    molPoints: 16
+  }
+];
+
+// ── MOLECULE DRAW ─────────────────────────────────────────────────────────────
+function drawMolecule(canvas, color, seed, animated = true) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth || 340;
+  const H = canvas.height = canvas.offsetHeight || 180;
+  
+  let t = 0;
+  const rng = (n) => {
+    let x = Math.sin(n + seed * 137.5) * 43758.5453;
+    return x - Math.floor(x);
+  };
+
+  // Generate nodes
+  const nodeCount = 8 + Math.floor(rng(0) * 6);
+  const nodes = [];
+  const cx = W / 2, cy = H / 2;
+  const R = Math.min(W, H) * 0.32;
+
+  for (let i = 0; i < nodeCount; i++) {
+    const angle = (i / nodeCount) * Math.PI * 2;
+    const r = R * (0.4 + rng(i * 3) * 0.6);
+    nodes.push({
+      bx: cx + Math.cos(angle) * r,
+      by: cy + Math.sin(angle) * r,
+      x: 0, y: 0,
+      vx: (rng(i * 7) - 0.5) * 0.3,
+      vy: (rng(i * 11) - 0.5) * 0.3,
+      r: 3 + rng(i * 5) * 3,
+      label: ['C','N','O','S','H','Br','Cl','P'][Math.floor(rng(i * 13) * 8)]
+    });
+    nodes[i].x = nodes[i].bx;
+    nodes[i].y = nodes[i].by;
+  }
+
+  // Generate bonds
+  const bonds = [];
+  for (let i = 0; i < nodeCount; i++) {
+    bonds.push({ a: i, b: (i + 1) % nodeCount, type: Math.random() > 0.7 ? 2 : 1 });
+    if (rng(i * 17) > 0.6 && i < nodeCount - 2) {
+      bonds.push({ a: i, b: i + 2, type: 1 });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Background
+    const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.4);
+    bg.addColorStop(0, `${color}0a`);
+    bg.addColorStop(1, 'transparent');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    if (animated) t += 0.008;
+
+    nodes.forEach((n, i) => {
+      const wave = Math.sin(t * 1.2 + i * 0.8) * 4;
+      const wave2 = Math.cos(t * 0.9 + i * 1.1) * 3;
+      n.x = n.bx + wave;
+      n.y = n.by + wave2;
+    });
+
+    // Draw bonds
+    bonds.forEach(b => {
+      const a = nodes[b.a], bb = nodes[b.b];
+      const dx = bb.x - a.x, dy = bb.y - a.y;
+      const len = Math.sqrt(dx*dx+dy*dy);
+      const nx = -dy/len, ny = dx/len;
+
+      if (b.type === 2) {
+        const off = 2.5;
+        [[off,off],[-off,-off]].forEach(([ox,oy]) => {
+          ctx.beginPath();
+          ctx.moveTo(a.x + nx*ox, a.y + ny*oy);
+          ctx.lineTo(bb.x + nx*ox, bb.y + ny*oy);
+          ctx.strokeStyle = color + '60';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        });
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(bb.x, bb.y);
+        ctx.strokeStyle = color + '55';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    });
+
+    // Draw nodes
+    nodes.forEach((n, i) => {
+      const pulse = 1 + Math.sin(t * 2 + i) * 0.15;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r * pulse, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      ctx.font = `bold ${8 + n.r}px 'Share Tech Mono', monospace`;
+      ctx.fillStyle = '#000';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(n.label, n.x, n.y);
+    });
+
+    // Orbital rings
+    ctx.beginPath();
+    ctx.arc(cx, cy, R * 0.85, 0, Math.PI * 2);
+    ctx.strokeStyle = color + '15';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 8]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  let animId;
+  function loop() {
+    draw();
+    if (animated) animId = requestAnimationFrame(loop);
+  }
+  loop();
+  return () => cancelAnimationFrame(animId);
+}
+
+// ── BG CANVAS ─────────────────────────────────────────────────────────────────
+(function initBg() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function initParticles() {
+    particles = Array.from({length: 60}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.2,
+      vy: -Math.random() * 0.3 - 0.1,
+      life: Math.random(),
+      color: ['#c8ff00','#00e5ff','#ff2d78','#a855f7'][Math.floor(Math.random()*4)]
+    }));
+  }
+
+  function animateBg() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.life -= 0.003;
+      if (p.life <= 0) { p.x = Math.random()*W; p.y = H + 10; p.life = 0.8 + Math.random()*0.2; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2);
+      ctx.fillStyle = p.color + Math.floor(p.life * 80).toString(16).padStart(2,'0');
+      ctx.fill();
+    });
+    requestAnimationFrame(animateBg);
+  }
+
+  resize(); initParticles(); animateBg();
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+})();
+
+// ── BUILD CARDS ───────────────────────────────────────────────────────────────
+const grid = document.getElementById('grid');
+const cleanupFns = [];
+
+chemicals.forEach((chem, i) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.class = chem.class;
+  card.style.setProperty('--c', chem.color);
+  card.style.setProperty('--glow-c', chem.color + '15');
+  card.style.animationDelay = `${i * 0.1}s`;
+
+  card.innerHTML = `
+    <canvas class="mol-canvas" id="mol-${chem.id}"></canvas>
+    <div class="card-glow"></div>
+    <div class="card-body">
+      <div class="card-header">
+        <div>
+          <div class="card-name">${chem.name}</div>
+          <div class="card-alias" style="color:${chem.color}">${chem.alias}</div>
+        </div>
+        <div class="card-badge">${chem.badge}</div>
+      </div>
+      <div class="duration-bar">
+        <div class="duration-label">DURATION RANGE</div>
+        <div class="duration-track">
+          <div class="duration-fill" style="background:${chem.color};box-shadow:0 0 8px ${chem.color};width:${chem.durationPct*100}%"></div>
+        </div>
+        <div class="duration-text">${chem.duration}</div>
+      </div>
+      <p class="card-desc">${chem.desc}</p>
+      <button class="expand-btn" onclick="openModal('${chem.id}')">[ VIEW FULL PROFILE ]</button>
+    </div>
+  `;
+
+  grid.appendChild(card);
+});
+
+// Initialize molecule animations after DOM insert
+requestAnimationFrame(() => {
+  chemicals.forEach((chem, i) => {
+    const canvas = document.getElementById(`mol-${chem.id}`);
+    if (canvas) {
+      const cleanup = drawMolecule(canvas, chem.color, i * 31 + 7);
+      cleanupFns.push(cleanup);
+    }
+  });
+
+  // Intersection observer for duration bars
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.card').forEach(c => observer.observe(c));
+});
+
+// ── FILTER ────────────────────────────────────────────────────────────────────
+function filterCards(cls, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.card').forEach(card => {
+    const show = cls === 'all' || card.dataset.class === cls;
+    card.style.display = show ? '' : 'none';
+  });
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+let modalCleanup = null;
+
+function openModal(id) {
+  const chem = chemicals.find(c => c.id === id);
+  if (!chem) return;
+
+  document.getElementById('modal-title').textContent = chem.name;
+  document.getElementById('modal-title').style.color = chem.color;
+  document.getElementById('modal').style.setProperty('--mc', chem.color);
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-canvas-wrap">
+      <canvas class="modal-canvas" id="modal-mol"></canvas>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Substance</div>
+      <p class="modal-text"><strong style="color:${chem.color}">${chem.alias}</strong></p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Historical Context</div>
+      <p class="modal-text">${chem.history}</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Duration · ${chem.duration}</div>
+      <div class="duration-track" style="margin-bottom:8px"><div class="duration-fill" style="background:${chem.color};box-shadow:0 0 8px ${chem.color};width:${chem.durationPct*100}%;transform:scaleX(1)"></div></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Effects Profile</div>
+      <div class="effects-grid">
+        ${chem.effects.map(e => `<div class="effect-tag">${e}</div>`).join('')}
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Pharmacological Notes</div>
+      <p class="modal-text">${chem.knowledge}</p>
+    </div>
+  `;
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  requestAnimationFrame(() => {
+    const mc = document.getElementById('modal-mol');
+    if (mc) modalCleanup = drawMolecule(mc, chem.color, chemicals.indexOf(chem) * 31 + 7, true);
+  });
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  if (modalCleanup) { modalCleanup(); modalCleanup = null; }
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+</script>
+
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="assets/images/logo-full-tagline.png" alt="1142 Labs">
+      <p>1142 is a spiritual jailbreak. A neurodivergent fortress. A scientific underground. Est. Dec 22, 2019.</p>
+    </div>
+    <div class="footer-col"><h4>The Fortress</h4><ul>
+      <li><a href="index.html">The Void (Home)</a></li>
+      <li><a href="research.html">The Brain (Research)</a></li>
+      <li><a href="tools.html">The Engine (Tools)</a></li>
+      <li><a href="archive.html">The Archive</a></li>
+      <li><a href="about.html">The Creator</a></li>
+      <li><a href="1142_chemicals.html">Chemicals</a></li>
+      <li><a href="pdf_portal.html">PDF Portal</a></li>
+      <li><a href="socials.html">Network</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Research</h4><ul>
+      <li><a href="research.html">Breakthroughs</a></li>
+      <li><a href="research.html#chemicals">Chemical DB</a></li>
+      <li><a href="research.html#charts">Visualizations</a></li>
+      <li><a href="tools.html#combos">Combo Calc</a></li>
+      <li><a href="tools.html#withdrawal">Withdrawal Calc</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>About</h4><ul>
+      <li><a href="about.html">Cole EverDark</a></li>
+      <li><a href="about.html#personas">Persona Matrix</a></li>
+      <li><a href="archive.html#manifesto">The Manifesto</a></li>
+      <li><a href="archive.html#logs">Cole's Tab Corner</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>1142 established Dec 22nd 2019 · a Cole EverDark company · In loving memory of Katrina Jade Mutch Hasler ♥&nbsp;&nbsp;Dec 20th, 2021</p>
+    <div class="footer-badge"><div class="footer-dot"></div>AN EVERDARK PRODUCTION</div>
+  </div>
+</footer>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const chemicals = [
+  {
+    id: 'lsd',
+    name: 'LSD',
+    alias: '"Acid" · Lysergic Acid Diethylamide',
+    badge: 'LYSERGAMIDE',
+    class: 'classic',
+    color: '#c8ff00',
+    duration: '8–12 hours',
+    durationPct: 0.85,
+    desc: 'The archetype. Synthesized by Albert Hofmann in 1938, its psychedelic properties discovered accidentally in 1943. One of the most potent psychoactive compounds known.',
+    history: 'Albert Hofmann first synthesized LSD-25 in 1938 at Sandoz Laboratories while researching ergot alkaloids. Its psychedelic properties were discovered on April 19, 1943 — "Bicycle Day" — when Hofmann accidentally absorbed a small amount through his fingertips. Sandoz later marketed it as "Delysid" for psychiatric research throughout the 1950s–60s. It became central to the counterculture movement before being scheduled in 1968.',
+    effects: ['Geometric hallucinations', 'Ego dissolution', 'Synesthesia', 'Time distortion', 'Emotional amplification', 'Pattern recognition', 'Profound empathy', 'Altered thought loops'],
+    knowledge: 'Acts primarily as a 5-HT2A agonist. Doses measured in micrograms (50–200µg). No physical toxicity at normal doses. Set and setting critical. Tolerance builds rapidly and cross-tolerates with psilocybin and mescaline.',
+    molPoints: 26
+  },
+  {
+    id: '2cb',
+    name: '2C-B',
+    alias: '"Nexus" · 4-Bromo-2,5-dimethoxyphenethylamine',
+    badge: 'PHENETHYLAMINE',
+    class: 'phenethylamine',
+    color: '#ff2d78',
+    duration: '4–6 hours',
+    durationPct: 0.45,
+    desc: 'Synthesized by Alexander Shulgin in 1974. Known for combining psychedelic visuals with entactogenic warmth. Considered by many the ideal recreational psychedelic.',
+    history: 'Developed by Alexander "Sasha" Shulgin in 1974 and detailed in his landmark text PiHKAL (1991). Originally sold legally as a substitute for MDMA after the scheduling of MDA. Particularly popular in European rave culture during the 1990s. Shulgin considered it among his most successful creations.',
+    effects: ['Rich CEV/OEV visuals', 'Heightened sensory pleasure', 'Euphoria', 'Body warmth', 'Enhanced music appreciation', 'Mild empathy', 'Sexual enhancement', 'Clear-headed lucidity'],
+    knowledge: 'Active at 12–25mg. 5-HT2A/2B/2C agonist with dopamine and alpha-adrenergic activity. Notably dose-sensitive: threshold, recreational, and intense experiences separated by just milligrams. Duration shorter than LSD making it more manageable.',
+    molPoints: 18
+  },
+  {
+    id: 'psilocybin',
+    name: 'PSILOCYBIN',
+    alias: '"Magic Mushrooms" · 4-PO-DMT',
+    badge: 'TRYPTAMINE',
+    class: 'tryptamine',
+    color: '#a855f7',
+    duration: '4–6 hours',
+    durationPct: 0.45,
+    desc: 'The original sacrament. Found in 200+ species of fungi globally. Used ceremonially for millennia. Psilocybin dephosphorylates to psilocin — the active compound — in the body.',
+    history: 'Indigenous Mesoamerican cultures used psilocybin mushrooms ("teonanácatl") in religious ceremonies for thousands of years. R. Gordon Wasson participated in a Mazatec ritual in 1955, later publishing in LIFE magazine (1957). Albert Hofmann isolated psilocybin in 1958. Research halted after 1970 scheduling but resumed aggressively in the 2010s, with major trials at Johns Hopkins and NYU showing efficacy for depression and addiction.',
+    effects: ['Introspective visions', 'Emotional breakthroughs', 'Nature connectedness', 'Ego death (high dose)', 'Laughter and wonder', 'Philosophical insight', 'Visual fractals', 'Time dilation'],
+    knowledge: 'Prodrug of psilocin. Typical doses 1–5g dried mushrooms (1.5–35mg psilocybin). Cross-tolerates with LSD. Currently in Phase 2/3 clinical trials for treatment-resistant depression, PTSD, and addiction. Oregon legalized supervised psilocybin services in 2023.',
+    molPoints: 20
+  },
+  {
+    id: 'peyote',
+    name: 'PEYOTE',
+    alias: '"The Sacred Cactus" · Mescaline',
+    badge: 'PHENETHYLAMINE',
+    class: 'classic',
+    color: '#f97316',
+    duration: '8–12 hours',
+    durationPct: 0.85,
+    desc: 'A small, spineless cactus native to Mexico and southwestern Texas. Contains mescaline as its primary alkaloid. Considered sacred by the Huichol, Rarámuri, and Native American Church.',
+    history: 'Peyote use in indigenous ritual dates back at least 5,700 years, evidenced by archaeological finds in Texas. The Native American Church, incorporating peyote ceremonies, was formally organized in 1918. Mescaline was isolated by Arthur Heffter in 1897 and synthesized by Ernst Späth in 1919. Aldous Huxley\'s "The Doors of Perception" (1954) described his mescaline experience and became enormously influential.',
+    effects: ['Complex colorful visions', 'Deep spiritual connection', 'Nausea (onset)', 'Profound introspection', 'Sensory enhancement', 'Time standing still', 'Geometric patterns', 'Ancestral feeling'],
+    knowledge: 'Active alkaloid mescaline (3,4,5-trimethoxyphenethylamine). Doses 200–400mg mescaline / 20–30g fresh peyote. Longest onset (1–2hrs). Contains 50+ other alkaloids. Legal for NAC members in the US. Peyote cactus is slow-growing and endangered in the wild.',
+    molPoints: 16
+  },
+  {
+    id: 'dmt',
+    name: 'DMT',
+    alias: '"The Spirit Molecule" · N,N-Dimethyltryptamine',
+    badge: 'TRYPTAMINE',
+    class: 'tryptamine',
+    color: '#00e5ff',
+    duration: '15–45 min (smoked)',
+    durationPct: 0.15,
+    desc: 'The most intense psychedelic known. Occurs endogenously in humans and throughout the plant kingdom. Smoked form produces a complete reality break within seconds. The active compound in ayahuasca.',
+    history: 'First synthesized by Richard Manske in 1931. Its psychedelic properties discovered by Stephen Szára in 1956. Found naturally in the human body and in hundreds of plants. Ayahuasca — combining DMT-containing plants with MAOIs — has been used by Amazonian peoples for centuries. Rick Strassman conducted the first approved clinical DMT study in the 1990s, documenting entity contact experiences, published in "DMT: The Spirit Molecule" (2000).',
+    effects: ['Complete reality displacement', 'Entity encounters', 'Geometric hyperspace', 'Ego obliteration', 'Time collapse', 'Profound awe/terror', 'Ineffable realms', 'Rapid onset/offset'],
+    knowledge: 'Endogenous trace amine. Smoked: active 15–45min. Oral (ayahuasca with MAOI): 4–6hrs. Tolerance negligible. Potentially produced in human pineal gland. 5-HT2A agonist, sigma-1 receptor agonist. Among the most researched substances for NDE-like experiences.',
+    molPoints: 14
+  },
+  {
+    id: 'dob',
+    name: 'DOB',
+    alias: '"Brolamfetamine" · 4-Bromo-2,5-dimethoxamphetamine',
+    badge: 'AMPHETAMINE',
+    class: 'phenethylamine',
+    color: '#ff6b35',
+    duration: '16–30 hours',
+    durationPct: 1.0,
+    desc: 'An extraordinarily long-lasting psychedelic amphetamine. Rare and potent. Often mistaken for LSD. Can persist beyond 24 hours. Requires extreme caution due to potency and duration.',
+    history: 'Synthesized by Alexander Shulgin in 1967 and documented in PiHKAL. One of the first DOx compounds discovered. Rarely encountered in pure form — often misrepresented as LSD on blotter paper. Gained notoriety in the 2000s when several hospitalizations resulted from users unknowingly taking DOB while expecting LSD. Its vasoconstrictive properties make high doses medically dangerous.',
+    effects: ['Intense geometric visuals', 'Stimulant body load', 'Prolonged time dilation', 'Mental clarity', 'Physical tension', 'Vasoconstriction', 'Insomnia', 'Extreme duration'],
+    knowledge: 'Active 1–3mg. Amphetamine backbone with psychedelic action. 5-HT2A agonist plus adrenergic activity. Vasoconstriction poses risk at high doses. Cross-tolerates with other serotonergic psychedelics. Extremely important to have accurate substance ID — reagent test essential.',
+    molPoints: 20
+  },
+  {
+    id: 'mda',
+    name: 'MDA',
+    alias: '"The Love Drug" · 3,4-Methylenedioxyamphetamine',
+    badge: 'ENTACTOGEN',
+    class: 'classic',
+    color: '#ff1493',
+    duration: '6–8 hours',
+    durationPct: 0.65,
+    desc: 'The original "love drug." Precursor to MDMA. More psychedelic and introspective than its successor, with stronger hallucinogenic properties and a reputation for deep emotional excavation.',
+    history: 'First synthesized by G. Mannish and W. Jacobsohn in 1910. Patented by Merck in 1914. Independently rediscovered by Shulgin and used in psychotherapy in the 1970s by therapists like Richard Yensen. Briefly sold as a street drug "the love pill" in the 1960s-70s. Scheduled in 1970. MDMA was later developed partly as a less toxic alternative.',
+    effects: ['Emotional openness', 'Empathy surge', 'Mild hallucinations', 'Sensory enhancement', 'Introspective depth', 'Physical stimulation', 'Euphoria', 'Love and connection'],
+    knowledge: 'Releases serotonin, dopamine, norepinephrine. More serotonergic than MDMA. Active 80–160mg. Longer and more psychedelic than MDMA. Neurotoxic potential at high doses or repeated use — serotonin syndrome risk. Historically used in PTSD therapy contexts before scheduling.',
+    molPoints: 18
+  },
+  {
+    id: 'pcp',
+    name: 'PCP',
+    alias: '"Angel Dust" · Phencyclidine',
+    badge: 'DISSOCIATIVE',
+    class: 'dissociative',
+    color: '#39ff14',
+    duration: '4–8 hours',
+    durationPct: 0.6,
+    desc: 'The prototype dissociative anesthetic. Developed as a surgical anesthetic in 1956. Produces profound dissociation, analgesia, and at high doses, full sensory disconnection from the physical body.',
+    history: 'Developed by Parke-Davis as a surgical anesthetic (Sernyl) in 1956. Discontinued in 1965 due to emergence delirium in patients. Street use emerged in the 1970s. Led to the discovery of the NMDA receptor system — PCP\'s binding site is now among the most studied in neuroscience. Research into the NMDA receptor pathway directly informed development of ketamine (a shorter-acting analog) and eventually esketamine (Spravato), now FDA-approved for depression.',
+    effects: ['Complete dissociation', 'Analgesia/numbness', 'Out-of-body states', 'Time distortion', 'Superhuman feeling', 'Dissociative hallucinations', 'Amnesia (high dose)', 'Depersonalization'],
+    knowledge: 'NMDA receptor antagonist. Active threshold ~5mg smoked. Highly lipophilic — accumulates in fat tissue causing prolonged effects. Street forms often highly variable purity. High-dose use can produce psychosis indistinguishable from schizophrenia. Bladder toxicity with heavy use. Its receptor action inspired the sigma hypothesis of schizophrenia.',
+    molPoints: 16
+  }
+];
+
+// ── MOLECULE DRAW ─────────────────────────────────────────────────────────────
+function drawMolecule(canvas, color, seed, animated = true) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = canvas.offsetWidth || 340;
+  const H = canvas.height = canvas.offsetHeight || 180;
+  
+  let t = 0;
+  const rng = (n) => {
+    let x = Math.sin(n + seed * 137.5) * 43758.5453;
+    return x - Math.floor(x);
+  };
+
+  // Generate nodes
+  const nodeCount = 8 + Math.floor(rng(0) * 6);
+  const nodes = [];
+  const cx = W / 2, cy = H / 2;
+  const R = Math.min(W, H) * 0.32;
+
+  for (let i = 0; i < nodeCount; i++) {
+    const angle = (i / nodeCount) * Math.PI * 2;
+    const r = R * (0.4 + rng(i * 3) * 0.6);
+    nodes.push({
+      bx: cx + Math.cos(angle) * r,
+      by: cy + Math.sin(angle) * r,
+      x: 0, y: 0,
+      vx: (rng(i * 7) - 0.5) * 0.3,
+      vy: (rng(i * 11) - 0.5) * 0.3,
+      r: 3 + rng(i * 5) * 3,
+      label: ['C','N','O','S','H','Br','Cl','P'][Math.floor(rng(i * 13) * 8)]
+    });
+    nodes[i].x = nodes[i].bx;
+    nodes[i].y = nodes[i].by;
+  }
+
+  // Generate bonds
+  const bonds = [];
+  for (let i = 0; i < nodeCount; i++) {
+    bonds.push({ a: i, b: (i + 1) % nodeCount, type: Math.random() > 0.7 ? 2 : 1 });
+    if (rng(i * 17) > 0.6 && i < nodeCount - 2) {
+      bonds.push({ a: i, b: i + 2, type: 1 });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Background
+    const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.4);
+    bg.addColorStop(0, `${color}0a`);
+    bg.addColorStop(1, 'transparent');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    if (animated) t += 0.008;
+
+    nodes.forEach((n, i) => {
+      const wave = Math.sin(t * 1.2 + i * 0.8) * 4;
+      const wave2 = Math.cos(t * 0.9 + i * 1.1) * 3;
+      n.x = n.bx + wave;
+      n.y = n.by + wave2;
+    });
+
+    // Draw bonds
+    bonds.forEach(b => {
+      const a = nodes[b.a], bb = nodes[b.b];
+      const dx = bb.x - a.x, dy = bb.y - a.y;
+      const len = Math.sqrt(dx*dx+dy*dy);
+      const nx = -dy/len, ny = dx/len;
+
+      if (b.type === 2) {
+        const off = 2.5;
+        [[off,off],[-off,-off]].forEach(([ox,oy]) => {
+          ctx.beginPath();
+          ctx.moveTo(a.x + nx*ox, a.y + ny*oy);
+          ctx.lineTo(bb.x + nx*ox, bb.y + ny*oy);
+          ctx.strokeStyle = color + '60';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        });
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(bb.x, bb.y);
+        ctx.strokeStyle = color + '55';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    });
+
+    // Draw nodes
+    nodes.forEach((n, i) => {
+      const pulse = 1 + Math.sin(t * 2 + i) * 0.15;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r * pulse, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      ctx.font = `bold ${8 + n.r}px 'Share Tech Mono', monospace`;
+      ctx.fillStyle = '#000';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(n.label, n.x, n.y);
+    });
+
+    // Orbital rings
+    ctx.beginPath();
+    ctx.arc(cx, cy, R * 0.85, 0, Math.PI * 2);
+    ctx.strokeStyle = color + '15';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 8]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  let animId;
+  function loop() {
+    draw();
+    if (animated) animId = requestAnimationFrame(loop);
+  }
+  loop();
+  return () => cancelAnimationFrame(animId);
+}
+
+// ── BG CANVAS ─────────────────────────────────────────────────────────────────
+(function initBg() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function initParticles() {
+    particles = Array.from({length: 60}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.2,
+      vy: -Math.random() * 0.3 - 0.1,
+      life: Math.random(),
+      color: ['#c8ff00','#00e5ff','#ff2d78','#a855f7'][Math.floor(Math.random()*4)]
+    }));
+  }
+
+  function animateBg() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.life -= 0.003;
+      if (p.life <= 0) { p.x = Math.random()*W; p.y = H + 10; p.life = 0.8 + Math.random()*0.2; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2);
+      ctx.fillStyle = p.color + Math.floor(p.life * 80).toString(16).padStart(2,'0');
+      ctx.fill();
+    });
+    requestAnimationFrame(animateBg);
+  }
+
+  resize(); initParticles(); animateBg();
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+})();
+
+// ── BUILD CARDS ───────────────────────────────────────────────────────────────
+const grid = document.getElementById('grid');
+const cleanupFns = [];
+
+chemicals.forEach((chem, i) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.class = chem.class;
+  card.style.setProperty('--c', chem.color);
+  card.style.setProperty('--glow-c', chem.color + '15');
+  card.style.animationDelay = `${i * 0.1}s`;
+
+  card.innerHTML = `
+    <canvas class="mol-canvas" id="mol-${chem.id}"></canvas>
+    <div class="card-glow"></div>
+    <div class="card-body">
+      <div class="card-header">
+        <div>
+          <div class="card-name">${chem.name}</div>
+          <div class="card-alias" style="color:${chem.color}">${chem.alias}</div>
+        </div>
+        <div class="card-badge">${chem.badge}</div>
+      </div>
+      <div class="duration-bar">
+        <div class="duration-label">DURATION RANGE</div>
+        <div class="duration-track">
+          <div class="duration-fill" style="background:${chem.color};box-shadow:0 0 8px ${chem.color};width:${chem.durationPct*100}%"></div>
+        </div>
+        <div class="duration-text">${chem.duration}</div>
+      </div>
+      <p class="card-desc">${chem.desc}</p>
+      <button class="expand-btn" onclick="openModal('${chem.id}')">[ VIEW FULL PROFILE ]</button>
+    </div>
+  `;
+
+  grid.appendChild(card);
+});
+
+// Initialize molecule animations after DOM insert
+requestAnimationFrame(() => {
+  chemicals.forEach((chem, i) => {
+    const canvas = document.getElementById(`mol-${chem.id}`);
+    if (canvas) {
+      const cleanup = drawMolecule(canvas, chem.color, i * 31 + 7);
+      cleanupFns.push(cleanup);
+    }
+  });
+
+  // Intersection observer for duration bars
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.card').forEach(c => observer.observe(c));
+});
+
+// ── FILTER ────────────────────────────────────────────────────────────────────
+function filterCards(cls, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.card').forEach(card => {
+    const show = cls === 'all' || card.dataset.class === cls;
+    card.style.display = show ? '' : 'none';
+  });
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+let modalCleanup = null;
+
+function openModal(id) {
+  const chem = chemicals.find(c => c.id === id);
+  if (!chem) return;
+
+  document.getElementById('modal-title').textContent = chem.name;
+  document.getElementById('modal-title').style.color = chem.color;
+  document.getElementById('modal').style.setProperty('--mc', chem.color);
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-canvas-wrap">
+      <canvas class="modal-canvas" id="modal-mol"></canvas>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Substance</div>
+      <p class="modal-text"><strong style="color:${chem.color}">${chem.alias}</strong></p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Historical Context</div>
+      <p class="modal-text">${chem.history}</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Duration · ${chem.duration}</div>
+      <div class="duration-track" style="margin-bottom:8px"><div class="duration-fill" style="background:${chem.color};box-shadow:0 0 8px ${chem.color};width:${chem.durationPct*100}%;transform:scaleX(1)"></div></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Effects Profile</div>
+      <div class="effects-grid">
+        ${chem.effects.map(e => `<div class="effect-tag">${e}</div>`).join('')}
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Pharmacological Notes</div>
+      <p class="modal-text">${chem.knowledge}</p>
+    </div>
+  `;
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  requestAnimationFrame(() => {
+    const mc = document.getElementById('modal-mol');
+    if (mc) modalCleanup = drawMolecule(mc, chem.color, chemicals.indexOf(chem) * 31 + 7, true);
+  });
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  if (modalCleanup) { modalCleanup(); modalCleanup = null; }
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+</script>
+<script src="assets/fx.js"></script>
+
+<script>
+/* ── Starfield / Nebula Background ── */
+(function(){
+  const c = document.getElementById('bg-canvas');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  let W, H, stars=[], nebs=[];
+
+  function resize(){
+    W = c.width  = window.innerWidth;
+    H = c.height = window.innerHeight;
+  }
+
+  function initStars(){
+    stars = [];
+    for(let i=0;i<220;i++){
+      stars.push({
+        x:Math.random()*W, y:Math.random()*H,
+        r:Math.random()*1.4+0.2,
+        a:Math.random(),
+        speed:Math.random()*0.004+0.001,
+        hue: Math.random()<0.55 ? 188 : Math.random()<0.5 ? 300 : 160
+      });
+    }
+    nebs = [
+      {x:W*0.15, y:H*0.25, r:340, c:'rgba(0,240,255,'},
+      {x:W*0.85, y:H*0.6,  r:280, c:'rgba(139,92,246,'},
+      {x:W*0.5,  y:H*0.85, r:200, c:'rgba(236,72,153,'},
+      {x:W*0.7,  y:H*0.15, r:180, c:'rgba(74,222,128,'},
+    ];
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    /* base void */
+    ctx.fillStyle='#060609';
+    ctx.fillRect(0,0,W,H);
+
+    /* nebula glows */
+    nebs.forEach(n=>{
+      const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);
+      g.addColorStop(0,n.c+'0.055)');
+      g.addColorStop(1,n.c+'0)');
+      ctx.fillStyle=g;
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.fill();
+    });
+
+    /* grid lines */
+    ctx.strokeStyle='rgba(0,240,255,0.028)';
+    ctx.lineWidth=1;
+    const gs=70;
+    for(let x=0;x<W;x+=gs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=gs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+    /* stars */
+    const t=Date.now()*0.001;
+    stars.forEach((s,i)=>{
+      s.a = 0.3+0.7*Math.abs(Math.sin(t*s.speed*6+i));
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`hsla(${s.hue},100%,85%,${s.a})`;
+      ctx.fill();
+      /* tiny glow for brighter stars */
+      if(s.r>1.1){
+        const g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*5);
+        g.addColorStop(0,`hsla(${s.hue},100%,85%,${s.a*0.25})`);
+        g.addColorStop(1,'transparent');
+        ctx.fillStyle=g;
+        ctx.beginPath();ctx.arc(s.x,s.y,s.r*5,0,Math.PI*2);ctx.fill();
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize',()=>{resize();initStars();});
+  resize(); initStars(); draw();
+})();
+
+/* ── Collapsible Nav ── */
+(function(){
+  const toggles = document.querySelectorAll('.nav-section-toggle');
+  toggles.forEach(btn => {
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      const targetId = this.dataset.target;
+      const drop = document.getElementById(targetId);
+      const isOpen = drop.classList.contains('open');
+
+      /* close all */
+      document.querySelectorAll('.nav-drop').forEach(d=>d.classList.remove('open'));
+      document.querySelectorAll('.nav-section-toggle').forEach(b=>b.classList.remove('open'));
+
+      /* open this one if it was closed */
+      if(!isOpen){
+        drop.classList.add('open');
+        this.classList.add('open');
+      }
+    });
+  });
+
+  /* click outside closes all */
+  document.addEventListener('click', function(){
+    document.querySelectorAll('.nav-drop').forEach(d=>d.classList.remove('open'));
+    document.querySelectorAll('.nav-section-toggle').forEach(b=>b.classList.remove('open'));
+  });
+})();
+</script>
+<script>
+(function(){
+  var c=document.getElementById('bg-canvas');
+  if(!c)return;
+  var ctx=c.getContext('2d'),W,H,stars=[],nebs=[],t=0;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  function init(){
+    stars=[];
+    for(var i=0;i<200;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.2,ph:Math.random()*6.28,sp:Math.random()*0.008+0.002,hue:Math.random()<.55?188:Math.random()<.5?300:140});
+    nebs=[{x:.12,y:.22,r:360,col:'0,240,255'},{x:.88,y:.55,r:300,col:'139,92,246'},{x:.5,y:.88,r:220,col:'236,72,153'},{x:.72,y:.14,r:190,col:'74,222,128'}];
+  }
+  function draw(){
+    t+=0.016;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#060609';ctx.fillRect(0,0,W,H);
+    nebs.forEach(function(n){var gx=n.x*W,gy=n.y*H,g=ctx.createRadialGradient(gx,gy,0,gx,gy,n.r);g.addColorStop(0,'rgba('+n.col+',0.06)');g.addColorStop(1,'rgba('+n.col+',0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(gx,gy,n.r,0,6.28);ctx.fill();});
+    ctx.strokeStyle='rgba(0,240,255,0.025)';ctx.lineWidth=1;
+    var gs=68;
+    for(var x=0;x<W;x+=gs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(var y=0;y<H;y+=gs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    stars.forEach(function(s,i){
+      var a=0.25+0.75*Math.abs(Math.sin(t*s.sp*4+s.ph));
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.28);
+      ctx.fillStyle='hsla('+s.hue+',90%,88%,'+a+')';ctx.fill();
+      if(s.r>1.0){var g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*6);g.addColorStop(0,'hsla('+s.hue+',100%,85%,'+(a*0.2)+')');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.beginPath();ctx.arc(s.x,s.y,s.r*6,0,6.28);ctx.fill();}
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',function(){resize();init();});
+  resize();init();draw();
+})();
+
+(function(){
+  var toggles=document.querySelectorAll('.nav-section-toggle');
+  toggles.forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      var id=this.dataset.target;
+      var drop=document.getElementById(id);
+      var isOpen=drop.classList.contains('open');
+      document.querySelectorAll('.nav-drop').forEach(function(d){d.classList.remove('open');});
+      document.querySelectorAll('.nav-section-toggle').forEach(function(b){b.classList.remove('open');});
+      if(!isOpen){drop.classList.add('open');this.classList.add('open');}
+    });
+  });
+  document.addEventListener('click',function(){
+    document.querySelectorAll('.nav-drop').forEach(function(d){d.classList.remove('open');});
+    document.querySelectorAll('.nav-section-toggle').forEach(function(b){b.classList.remove('open');});
+  });
+})();
+</script>
+<script>
+/* ═══ 1142 PLASMA STARFIELD v2 — PURPLE SCREEN ═══ */
+(function(){
+  var c=document.getElementById('bg-canvas');if(!c)return;
+  var ctx=c.getContext('2d'),W,H;
+  var stars=[],nebulae=[],plasmaArcs=[],t=0;
+
+  function resize(){
+    W=c.width=window.innerWidth;
+    H=c.height=window.innerHeight;
+    initStars();initNebulae();
+  }
+
+  function initStars(){
+    stars=[];
+    for(var i=0;i<280;i++){
+      var hues=[240,260,280,300,220,200][Math.floor(Math.random()*6)];
+      stars.push({
+        x:Math.random()*W,y:Math.random()*H,
+        r:Math.random()*1.8+.2,
+        a:Math.random(),sp:Math.random()*.014+.004,
+        h:hues,
+        s:Math.random()<.08  // shooting star?
+      });
+    }
+  }
+
+  function initNebulae(){
+    nebulae=[
+      {x:W*.15,y:H*.2,rx:W*.35,ry:H*.3,col:'136,68,255',a:.06},
+      {x:W*.85,y:H*.75,rx:W*.3,ry:H*.35,col:'61,142,255',a:.05},
+      {x:W*.5,y:H*.5,rx:W*.4,ry:H*.4,col:'204,61,255',a:.04},
+      {x:W*.7,y:H*.15,rx:W*.25,ry:H*.25,col:'0,170,255',a:.04},
+    ];
+  }
+
+  function drawNebulae(){
+    nebulae.forEach(function(n){
+      var pulse=n.a+Math.sin(t*0.006)*0.02;
+      var g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,Math.max(n.rx,n.ry));
+      g.addColorStop(0,'rgba('+n.col+','+pulse+')');
+      g.addColorStop(0.4,'rgba('+n.col+','+(pulse*.5)+')');
+      g.addColorStop(1,'rgba('+n.col+',0)');
+      ctx.save();
+      ctx.scale(1,n.ry/n.rx);
+      ctx.beginPath();
+      ctx.arc(n.x,n.y*n.rx/n.ry,n.rx,0,Math.PI*2);
+      ctx.fillStyle=g;ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  function drawStars(){
+    stars.forEach(function(s){
+      s.a+=s.sp;
+      var alpha=.1+.5*Math.abs(Math.sin(s.a));
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle='hsla('+s.h+',90%,80%,'+alpha+')';
+      ctx.fill();
+      // Cross sparkle on bright stars
+      if(s.r>1.3&&Math.abs(Math.sin(s.a))>.85){
+        ctx.strokeStyle='hsla('+s.h+',100%,90%,'+(alpha*.5)+')';
+        ctx.lineWidth=.5;
+        ctx.beginPath();ctx.moveTo(s.x-s.r*3,s.y);ctx.lineTo(s.x+s.r*3,s.y);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(s.x,s.y-s.r*3);ctx.lineTo(s.x,s.y+s.r*3);ctx.stroke();
+      }
+    });
+  }
+
+  /* Moving purple plasma grid */
+  function drawGrid(){
+    var offset=t*.4%60;
+    ctx.strokeStyle='rgba(136,68,255,.04)';
+    ctx.lineWidth=.5;
+    for(var x=offset%60;x<W;x+=60){
+      ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();
+    }
+    for(var y=offset%60;y<H;y+=60){
+      ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();
+    }
+    /* diagonal accent lines */
+    ctx.strokeStyle='rgba(61,142,255,.025)';
+    for(var d=-W;d<W+H;d+=120){
+      ctx.beginPath();ctx.moveTo(d,0);ctx.lineTo(d+H,H);ctx.stroke();
+    }
+  }
+
+  /* Ghost "1142" watermark rotating */
+  function draw1142(){
+    ctx.save();
+    ctx.translate(W*.5,H*.5);
+    ctx.rotate(Math.sin(t*.0008)*.04);
+    ctx.font='bold '+(Math.min(W,H)*.55)+'px Orbitron,sans-serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    var pulse=.018+Math.sin(t*.007)*.008;
+    ctx.fillStyle='rgba(136,68,255,'+pulse+')';
+    ctx.fillText('1142',0,0);
+    ctx.restore();
+  }
+
+  /* Plasma arc between two random points */
+
+    /* Crystal spike rays from center */
+    function drawCrystalSpikes(cx, cy, time){
+      var numSpikes = 24;
+      for(var i=0;i<numSpikes;i++){
+        var angle = (i/numSpikes)*Math.PI*2 + time*0.003;
+        var len = (80 + Math.sin(time*0.02+i)*40 + Math.random()*20) * (Math.min(W,H)/600);
+        var width = 2 + Math.sin(time*0.05+i*0.7)*1.5;
+        var col = i%3===0?'0,207,255':i%3===1?'0,102,255':'102,51,204';
+        var alpha = 0.04 + Math.sin(time*0.015+i)*0.02;
+        
+        var ex = cx + Math.cos(angle)*len;
+        var ey = cy + Math.sin(angle)*len;
+        var lx = cx + Math.cos(angle+Math.PI/numSpikes)*len*0.6;
+        var ly = cy + Math.sin(angle+Math.PI/numSpikes)*len*0.6;
+        var rx = cx + Math.cos(angle-Math.PI/numSpikes)*len*0.6;
+        var ry = cy + Math.sin(angle-Math.PI/numSpikes)*len*0.6;
+        
+        ctx.beginPath();
+        ctx.moveTo(cx,cy);
+        ctx.lineTo(lx,ly);
+        ctx.lineTo(ex,ey);
+        ctx.lineTo(rx,ry);
+        ctx.closePath();
+        
+        var g = ctx.createLinearGradient(cx,cy,ex,ey);
+        g.addColorStop(0,'rgba('+col+','+alpha*3+')');
+        g.addColorStop(0.6,'rgba('+col+','+alpha+')');
+        g.addColorStop(1,'rgba('+col+',0)');
+        ctx.fillStyle = g;
+        ctx.fill();
+      }
+    }
+
+  function drawPlasmaArcs(){
+    if(t%90<2){
+      plasmaArcs.push({
+        x1:Math.random()*W,y1:Math.random()*H,
+        x2:Math.random()*W,y2:Math.random()*H,
+        life:1,col:Math.random()<.5?'136,68,255':'61,142,255'
+      });
+    }
+    for(var i=plasmaArcs.length-1;i>=0;i--){
+      var arc=plasmaArcs[i];
+      arc.life-=.035;
+      if(arc.life<=0){plasmaArcs.splice(i,1);continue;}
+      ctx.beginPath();
+      /* jagged lightning path */
+      ctx.moveTo(arc.x1,arc.y1);
+      var steps=6,mx=(arc.x2-arc.x1)/steps,my=(arc.y2-arc.y1)/steps;
+      for(var j=1;j<steps;j++){
+        ctx.lineTo(arc.x1+mx*j+(Math.random()-.5)*40,arc.y1+my*j+(Math.random()-.5)*40);
+      }
+      ctx.lineTo(arc.x2,arc.y2);
+      ctx.strokeStyle='rgba('+arc.col+','+arc.life*.4+')';
+      ctx.lineWidth=1+arc.life;
+      ctx.stroke();
+    }
+  }
+
+  function draw(){
+    t++;
+    ctx.clearRect(0,0,W,H);
+    drawGrid();
+    drawNebulae();
+    drawCrystalSpikes(W*.5,H*.5,t);
+    draw1142();
+    drawStars();
+    drawPlasmaArcs();
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize);
+  resize();draw();
+})();
+</script>
+<script>
+/* ═══ MOBILE MENU JS ═══ */
+(function(){
+  var btn = document.getElementById('mobileMenuBtn');
+  var menu = document.getElementById('mobileMenu');
+  if(!btn || !menu) return;
+
+  function openMenu(){
+    btn.classList.add('open');
+    menu.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu(){
+    btn.classList.remove('open');
+    menu.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function toggleMenu(){
+    if(menu.classList.contains('open')) closeMenu(); else openMenu();
+  }
+
+  btn.addEventListener('click', toggleMenu);
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', closeMenu);
+  });
+
+  // Close on swipe right
+  var startX = 0;
+  menu.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; }, {passive:true});
+  menu.addEventListener('touchend', function(e){
+    if(e.changedTouches[0].clientX - startX > 60) closeMenu();
+  }, {passive:true});
+
+  // Close on escape
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMenu(); });
+})();
+</script>
+</body>
+</html>
