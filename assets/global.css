@@ -3442,3 +3442,287 @@ img[src*="1000110"] {
   .nav-hamburger { height: 48px !important; width: 48px !important; }
   .mobile-menu { top: 48px !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   EPIC VISUAL OVERHAUL v3.0
+   Crystal · Plasma · Neon Depth · Section Aura
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── SECTION TITLE EPIC UPGRADE ── */
+.section-title {
+  font-family: 'Orbitron',sans-serif !important;
+  font-weight: 900 !important;
+  font-size: clamp(28px,5vw,58px) !important;
+  line-height: 1.05 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
+  color: var(--white) !important;
+  position: relative !important;
+  margin-bottom: 20px !important;
+}
+
+/* Glowing underline sweep */
+.section-title::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: -10px !important; left: 0 !important;
+  height: 2px !important; width: 0 !important;
+  background: linear-gradient(90deg, var(--primary), var(--purple), var(--pink)) !important;
+  box-shadow: 0 0 14px var(--primary), 0 0 28px rgba(0,102,255,.3) !important;
+  transition: width .7s cubic-bezier(.4,0,.2,1) !important;
+}
+.section-title.visible::after { width: 100% !important; }
+
+/* ── SECTION LABEL EPIC ── */
+.section-label {
+  font-family: 'Share Tech Mono',monospace !important;
+  font-size: 9px !important;
+  letter-spacing: .55em !important;
+  text-transform: uppercase !important;
+  color: var(--primary) !important;
+  text-shadow: 0 0 10px rgba(0,207,255,.5) !important;
+  margin-bottom: 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+.section-label::before {
+  content: '' !important;
+  display: block !important; flex-shrink: 0 !important;
+  width: 32px !important; height: 1px !important;
+  background: linear-gradient(90deg, var(--primary), var(--blue)) !important;
+  box-shadow: 0 0 8px var(--primary) !important;
+}
+.section-label::after {
+  content: '' !important;
+  display: block !important; flex: 1 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, rgba(0,102,255,.2), transparent) !important;
+}
+
+/* ── FEAT CARD EPIC UPGRADE ── */
+.feat-card {
+  background: linear-gradient(135deg, rgba(4,6,28,.95) 0%, rgba(3,5,20,.98) 100%) !important;
+  border: 1px solid rgba(0,102,255,.22) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: transform .3s cubic-bezier(.2,0,.1,1), box-shadow .3s, border-color .25s !important;
+}
+
+/* crystal corner flare */
+.feat-card::after {
+  content: '' !important;
+  position: absolute !important; top: 0 !important; right: 0 !important;
+  width: 60px !important; height: 60px !important;
+  background: conic-gradient(from 225deg at 100% 0%, rgba(0,207,255,.14), transparent 40%) !important;
+  pointer-events: none !important;
+}
+
+.feat-card:hover {
+  transform: translateY(-8px) rotateX(2deg) rotateY(-1deg) !important;
+  border-color: var(--primary) !important;
+  box-shadow:
+    0 0 0 1px rgba(0,207,255,.3),
+    0 30px 80px rgba(0,0,0,.9),
+    0 0 60px rgba(0,102,255,.12),
+    6px 6px 0 rgba(0,207,255,.05),
+    -2px -2px 0 rgba(102,51,204,.04),
+    inset 0 0 30px rgba(0,102,255,.03) !important;
+}
+
+/* ── SECTION AURA ── */
+.section-void, .section-dark, .section-darker {
+  position: relative;
+}
+.section-void::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,102,255,.2), rgba(0,207,255,.1), transparent);
+  pointer-events: none;
+}
+
+/* ── PLASMA ORBS – global fixed depth layer ── */
+.site-orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(70px);
+  animation: orbFloat 20s ease-in-out infinite alternate;
+}
+.site-orb-1 {
+  width: 900px; height: 900px;
+  top: -250px; right: -200px;
+  background: radial-gradient(circle, rgba(0,102,255,.16) 0%, rgba(0,207,255,.06) 45%, transparent 70%);
+  animation-duration: 18s;
+}
+.site-orb-2 {
+  width: 800px; height: 800px;
+  bottom: -200px; left: -180px;
+  background: radial-gradient(circle, rgba(102,51,204,.18) 0%, rgba(0,102,255,.07) 50%, transparent 70%);
+  animation-duration: 24s;
+  animation-direction: alternate-reverse;
+}
+.site-orb-3 {
+  width: 500px; height: 500px;
+  top: 40%; left: 50%;
+  transform: translate(-50%,-50%);
+  background: radial-gradient(circle, rgba(204,61,255,.08) 0%, transparent 70%);
+  animation-duration: 14s;
+}
+
+/* ── NEON PLASMA DIVIDER ── */
+.plasma-div {
+  position: relative;
+  height: 64px;
+  overflow: hidden;
+  display: flex; align-items: center;
+}
+.plasma-div::before {
+  content: '';
+  position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--primary) 20%, var(--blue) 50%, var(--purple) 80%, transparent 100%);
+  box-shadow: 0 0 20px var(--primary), 0 0 40px rgba(0,102,255,.3);
+}
+.plasma-div::after {
+  content: '◆';
+  position: relative; z-index: 1;
+  margin: 0 auto;
+  font-size: 10px; color: var(--primary);
+  background: var(--void);
+  padding: 0 16px;
+  text-shadow: 0 0 12px var(--primary), 0 0 24px var(--primary);
+  animation: anaglyphShift 4s ease-in-out infinite;
+}
+.plasma-div-pink::before { background: linear-gradient(90deg, transparent, var(--pink), var(--purple), var(--pink), transparent); box-shadow: 0 0 20px var(--pink); }
+.plasma-div-pink::after { color: var(--pink); text-shadow: 0 0 12px var(--pink); }
+.plasma-div-green::before { background: linear-gradient(90deg, transparent, var(--green), var(--primary), var(--green), transparent); box-shadow: 0 0 20px var(--green); }
+.plasma-div-green::after { color: var(--green); text-shadow: 0 0 12px var(--green); }
+
+/* ── BIG WATERMARK TEXT ── */
+.bg-watermark {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Orbitron',sans-serif; font-weight: 900;
+  font-size: clamp(80px, 22vw, 260px);
+  color: rgba(0,102,255,.035);
+  pointer-events: none; user-select: none;
+  white-space: nowrap; line-height: 1; z-index: 0;
+  letter-spacing: -.02em;
+}
+
+/* ── CRYSTAL HERO PANEL ── */
+.crystal-hero {
+  position: relative;
+  overflow: hidden;
+}
+.crystal-hero::before {
+  content: '';
+  position: absolute; inset: -50%;
+  background: conic-gradient(from 0deg at 50% 50%,
+    transparent 0deg, rgba(0,102,255,.025) 8deg, transparent 16deg,
+    transparent 30deg, rgba(0,207,255,.03) 38deg, transparent 46deg,
+    transparent 60deg, rgba(0,102,255,.025) 68deg, transparent 76deg,
+    transparent 90deg, rgba(0,207,255,.03) 98deg, transparent 106deg,
+    transparent 120deg, rgba(0,102,255,.025) 128deg, transparent 136deg,
+    transparent 150deg, rgba(0,207,255,.03) 158deg, transparent 166deg,
+    transparent 180deg, rgba(0,102,255,.025) 188deg, transparent 196deg,
+    transparent 210deg, rgba(0,207,255,.03) 218deg, transparent 226deg,
+    transparent 240deg, rgba(0,102,255,.025) 248deg, transparent 256deg,
+    transparent 270deg, rgba(0,207,255,.03) 278deg, transparent 286deg,
+    transparent 300deg, rgba(0,102,255,.025) 308deg, transparent 316deg,
+    transparent 330deg, rgba(0,207,255,.03) 338deg, transparent 346deg
+  );
+  animation: crystalSpin 90s linear infinite;
+  pointer-events: none; z-index: 0;
+}
+
+/* ── STAT STRIP GLOW ── */
+.stat-strip .stat-cell, .sstrip .scell {
+  position: relative;
+  transition: background .25s;
+}
+.stat-strip .stat-cell:hover, .sstrip .scell:hover {
+  background: rgba(0,102,255,.08) !important;
+}
+.stat-strip .stat-cell::after, .sstrip .scell::after {
+  content: '';
+  position: absolute; bottom: 0; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  opacity: 0; transition: opacity .25s;
+}
+.stat-strip .stat-cell:hover::after, .sstrip .scell:hover::after { opacity: 1; }
+
+/* ── HERO IMAGE DEPTH TREATMENT ── */
+.hero-img-float {
+  position: absolute;
+  right: -40px; top: 50%;
+  transform: translateY(-50%);
+  width: 42vw; max-width: 480px;
+  opacity: .18;
+  pointer-events: none;
+  filter: saturate(1.3) brightness(.85) contrast(1.05)
+          drop-shadow(0 0 40px rgba(0,102,255,.5))
+          drop-shadow(0 0 80px rgba(0,207,255,.2));
+  mask-image: linear-gradient(to left, rgba(0,0,0,.7) 0%, rgba(0,0,0,.4) 50%, transparent 100%);
+  transition: opacity .3s;
+  animation: orbFloat 12s ease-in-out infinite alternate;
+}
+
+/* ── GLITCH TITLE EPIC ── */
+.glitch {
+  position: relative;
+}
+.glitch::before, .glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  overflow: hidden;
+  clip-path: inset(0 0 0 0);
+}
+.glitch::before {
+  color: rgba(255,0,80,.7);
+  animation: glitchTop 3.5s ease-in-out infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 42%, 0 42%);
+  transform: translateX(-2px);
+}
+.glitch::after {
+  color: rgba(0,207,255,.7);
+  animation: glitchBot 3.5s ease-in-out infinite;
+  clip-path: polygon(0 58%, 100% 58%, 100% 100%, 0 100%);
+  transform: translateX(2px);
+}
+@keyframes glitchTop {
+  0%,94%,100% { transform: translateX(-2px) skewX(0deg); opacity: .55; }
+  95% { transform: translateX(3px) skewX(-4deg); opacity: .8; }
+  97% { transform: translateX(-3px) skewX(2deg); opacity: .6; }
+}
+@keyframes glitchBot {
+  0%,91%,100% { transform: translateX(2px) skewX(0deg); opacity: .55; }
+  92% { transform: translateX(-4px) skewX(3deg); opacity: .8; }
+  94% { transform: translateX(3px) skewX(-2deg); opacity: .6; }
+}
+
+/* ── AURORA HERO CANVAS ── */
+.aurora-wrap {
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 1;
+}
+.aurora-canvas-el {
+  width: 100%; height: 100%;
+  opacity: .55;
+}
+
+/* ── FLOATING ORB PAIRS ── */
+.orb-pair {
+  position: absolute; pointer-events: none; z-index: 0;
+}
+.orb-pair .op-a {
+  position: absolute; border-radius: 50%;
+  filter: blur(55px); animation: orbFloat 16s ease-in-out infinite alternate;
+}
+.orb-pair .op-b {
+  position: absolute; border-radius: 50%;
+  filter: blur(45px); animation: orbFloat 20s ease-in-out infinite alternate-reverse;
+}

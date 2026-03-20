@@ -366,6 +366,9 @@
 
 <img src="assets/images/1000110200.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.09;filter:saturate(1.5);pointer-events:none;">
   <canvas id="bg-canvas"></canvas>
+<div class="site-orb site-orb-1"></div>
+<div class="site-orb site-orb-2"></div>
+<div class="site-orb site-orb-3"></div>
 <!-- ═══ 1142 BROADCAST SYSTEM ═══ -->
 <div id="crt-overlay"></div>
 <div id="scanlines"></div>
@@ -1271,6 +1274,34 @@
 
   // Close on escape
   document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMenu(); });
+})();
+</script>
+<script>
+(function(){
+  var c=document.getElementById('aurora-withdrawal');if(!c)return;
+  var ctx=c.getContext('2d'),W,H,t=0;
+  function resize(){W=c.width=c.offsetWidth||window.innerWidth;H=c.height=c.offsetHeight||400;}
+  var bands=[
+    {f:.8,ph:0,a:55,cy:.55,col:'0,102,255',tk:28},
+    {f:.6,ph:2.1,a:40,cy:.65,col:'0,207,255',tk:18},
+    {f:1,ph:4.2,a:35,cy:.45,col:'102,51,204',tk:14},
+    {f:.5,ph:1,a:50,cy:.72,col:'0,255,170',tk:10}
+  ];
+  function draw(){t+=.008;ctx.clearRect(0,0,W,H);
+    bands.forEach(function(b){
+      var pts=[];
+      for(var x=0;x<=W;x+=8)pts.push({x:x,y:H*b.cy+Math.sin(x*.006*b.f+t+b.ph)*b.a+Math.sin(x*.003+t*.7)*18});
+      ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+      for(var i=1;i<pts.length-1;i++){var mx=(pts[i].x+pts[i+1].x)/2,my=(pts[i].y+pts[i+1].y)/2;ctx.quadraticCurveTo(pts[i].x,pts[i].y,mx,my);}
+      ctx.lineTo(pts[pts.length-1].x,pts[pts.length-1].y);
+      var g=ctx.createLinearGradient(0,0,W,0);
+      g.addColorStop(0,'rgba('+b.col+',0)');g.addColorStop(.2,'rgba('+b.col+',.1)');
+      g.addColorStop(.5,'rgba('+b.col+',.2)');g.addColorStop(.8,'rgba('+b.col+',.1)');g.addColorStop(1,'rgba('+b.col+',0)');
+      ctx.strokeStyle=g;ctx.lineWidth=b.tk;ctx.stroke();
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize);resize();draw();
 })();
 </script>
 </body>
