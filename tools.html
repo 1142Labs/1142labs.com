@@ -184,7 +184,10 @@
 <nav class="hud">
   <a href="index.html" class="hud-logo">
     <img src="assets/images/1142_logo.png" alt="1142 Labs">
-    <span>1142 LABS</span>
+    <div class="hud-logo-text">
+      <span>1142 LABS</span>
+      <span class="hud-logo-sub">Cognitive Liberation TV</span>
+    </div>
   </a>
   <div class="nav-panel" id="navPanel">
     <div class="nav-section">
@@ -203,6 +206,7 @@
         <span class="drop-label" style="color:var(--green)">Studies</span>
         <a href="breakthroughs.html">Breakthroughs</a>
         <a href="pdf_portal.html">PDF Portal</a>
+        <a href="library.html">PDF Library <em>All 19</em></a>
         <span class="drop-label" style="color:var(--green)">Chemical DB</span>
         <a href="chemlog.html">Chem Log</a>
         <a href="1142_chemicals.html">Chemicals of Study</a>
@@ -229,7 +233,38 @@
   </div>
   <div class="hud-status"><div class="hud-dot"></div>ONLINE · 1142</div>
   <button class="nav-hamburger" id="mobileMenuBtn" aria-label="Open Menu"><span></span><span></span><span></span></button>
-</nav><section style="position:relative;min-height:60vh;display:flex;flex-direction:column;justify-content:center;padding:120px 48px 80px;overflow:hidden;text-align:left;">
+</nav>
+<!-- ═══ MOBILE MENU ═══ -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <div class="mobile-channel">
+      <div class="mobile-ch-num">11·42</div>
+      <div class="mobile-ch-info">1142 LABS<br>COGNITIVE LIBERATION TV</div>
+      <div class="mobile-onair"><div class="mobile-onair-dot"></div><span>ON AIR</span></div>
+    </div>
+    <div class="mobile-section-label">The Fortress</div>
+    <a href="index.html">The Void <em>Home</em></a>
+    <a href="research.html">The Brain <em>Research</em></a>
+    <a href="tools.html">The Engine <em>Tools</em></a>
+    <a href="archive.html">The Archive</a>
+    <a href="creators.html">The Creator</a>
+    <div class="mobile-section-label">Research</div>
+    <a href="breakthroughs.html">Breakthroughs</a>
+    <a href="pdf_portal.html">PDF Portal</a>
+    <a href="chemlog.html">Chem Log</a>
+    <a href="1142_chemicals.html">Chemicals of Study</a>
+    <a href="tools.html">Combo Calc</a>
+    <a href="withdrawal.html">Withdrawal Calc</a>
+    <div class="mobile-section-label">About</div>
+    <a href="creators.html">Cole EverDark</a>
+    <a href="vision.html">The Manifesto</a>
+    <a href="archive.html">Cole's Tab Corner</a>
+    <a href="socials.html">Network</a>
+    <a href="resources.html">Resources</a>
+    <a href="posters.html">Visualizations</a>
+  </div>
+</div>
+<!-- ═══ END MOBILE MENU ═══ --><section style="position:relative;min-height:60vh;display:flex;flex-direction:column;justify-content:center;padding:120px 48px 80px;overflow:hidden;text-align:left;">
   <div class="vortex-grid" style="opacity:.5;"></div>
   <div class="orb orb-p" style="opacity:.6;"></div>
   <div class="orb orb-c" style="opacity:.5;top:auto;bottom:-60px;right:0;"></div>
@@ -275,30 +310,86 @@
         <div>
           <div style="font-family:'Neon Tubes','Share Tech Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:8px;text-shadow:0 0 5px var(--cyan);">Substance 1</div>
           <select id="s1" style="width:100%;background:var(--void2);border:1px solid var(--border-c);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 12px;outline:none;cursor:pointer;">
-            <option value="">— Select —</option>
-            <option>LSD</option><option>Methylphenidate</option><option>MDMA</option><option>Psilocybin</option><option>DMT</option><option>Cannabis</option><option>Alcohol</option><option>Caffeine</option>
-          </select>
+              <option value="">— Select —</option>
+              <option value="LSD">LSD</option>
+              <option value="Methylphenidate">Methylphenidate</option>
+              <option value="MDMA">MDMA</option>
+              <option value="Psilocybin">Psilocybin</option>
+              <option value="DMT">DMT</option>
+              <option value="Cannabis">Cannabis</option>
+              <option value="Alcohol">Alcohol</option>
+              <option value="Caffeine">Caffeine</option>
+              <option value="Amphetamine">Amphetamine</option>
+              <option value="Cocaine">Cocaine</option>
+              <option value="Ketamine">Ketamine</option>
+              <option value="Opioids">Opioids</option>
+              <option value="Benzodiazepines">Benzodiazepines</option>
+              <option value="Nicotine">Nicotine</option>
+              <option value="2C-B">2C-B</option>
+            </select>
         </div>
         <div>
           <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--purple);text-transform:uppercase;margin-bottom:8px;">Substance 2</div>
           <select id="s2" style="width:100%;background:var(--void2);border:1px solid var(--border-p);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 12px;outline:none;cursor:pointer;">
-            <option value="">— Select —</option>
-            <option>LSD</option><option>Methylphenidate</option><option>MDMA</option><option>Psilocybin</option><option>DMT</option><option>Cannabis</option><option>Alcohol</option><option>Caffeine</option>
-          </select>
+              <option value="">— Select —</option>
+              <option value="LSD">LSD</option>
+              <option value="Methylphenidate">Methylphenidate</option>
+              <option value="MDMA">MDMA</option>
+              <option value="Psilocybin">Psilocybin</option>
+              <option value="DMT">DMT</option>
+              <option value="Cannabis">Cannabis</option>
+              <option value="Alcohol">Alcohol</option>
+              <option value="Caffeine">Caffeine</option>
+              <option value="Amphetamine">Amphetamine</option>
+              <option value="Cocaine">Cocaine</option>
+              <option value="Ketamine">Ketamine</option>
+              <option value="Opioids">Opioids</option>
+              <option value="Benzodiazepines">Benzodiazepines</option>
+              <option value="Nicotine">Nicotine</option>
+              <option value="2C-B">2C-B</option>
+            </select>
         </div>
         <div>
           <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--pink);text-transform:uppercase;margin-bottom:8px;">Substance 3 (opt.)</div>
           <select id="s3" style="width:100%;background:var(--void2);border:1px solid var(--border-m);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 12px;outline:none;cursor:pointer;">
-            <option value="">— None —</option>
-            <option>LSD</option><option>Methylphenidate</option><option>MDMA</option><option>Psilocybin</option><option>DMT</option><option>Cannabis</option><option>Alcohol</option><option>Caffeine</option>
-          </select>
+              <option value="">— Select —</option>
+              <option value="LSD">LSD</option>
+              <option value="Methylphenidate">Methylphenidate</option>
+              <option value="MDMA">MDMA</option>
+              <option value="Psilocybin">Psilocybin</option>
+              <option value="DMT">DMT</option>
+              <option value="Cannabis">Cannabis</option>
+              <option value="Alcohol">Alcohol</option>
+              <option value="Caffeine">Caffeine</option>
+              <option value="Amphetamine">Amphetamine</option>
+              <option value="Cocaine">Cocaine</option>
+              <option value="Ketamine">Ketamine</option>
+              <option value="Opioids">Opioids</option>
+              <option value="Benzodiazepines">Benzodiazepines</option>
+              <option value="Nicotine">Nicotine</option>
+              <option value="2C-B">2C-B</option>
+            </select>
         </div>
         <div>
           <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--green);text-transform:uppercase;margin-bottom:8px;">Substance 4 (opt.)</div>
           <select id="s4" style="width:100%;background:var(--void2);border:1px solid rgba(74,222,128,.3);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 12px;outline:none;cursor:pointer;">
-            <option value="">— None —</option>
-            <option>LSD</option><option>Methylphenidate</option><option>MDMA</option><option>Psilocybin</option><option>DMT</option><option>Cannabis</option><option>Alcohol</option><option>Caffeine</option>
-          </select>
+              <option value="">— Select —</option>
+              <option value="LSD">LSD</option>
+              <option value="Methylphenidate">Methylphenidate</option>
+              <option value="MDMA">MDMA</option>
+              <option value="Psilocybin">Psilocybin</option>
+              <option value="DMT">DMT</option>
+              <option value="Cannabis">Cannabis</option>
+              <option value="Alcohol">Alcohol</option>
+              <option value="Caffeine">Caffeine</option>
+              <option value="Amphetamine">Amphetamine</option>
+              <option value="Cocaine">Cocaine</option>
+              <option value="Ketamine">Ketamine</option>
+              <option value="Opioids">Opioids</option>
+              <option value="Benzodiazepines">Benzodiazepines</option>
+              <option value="Nicotine">Nicotine</option>
+              <option value="2C-B">2C-B</option>
+            </select>
         </div>
       </div>
       <button onclick="calcCombo()" class="btn-neon" style="width:100%;">⚡ CALCULATE RISK SCORE →</button>
@@ -373,33 +464,64 @@
 
 <script>
 function calcCombo(){
-  const subs=[document.getElementById('s1').value,document.getElementById('s2').value,document.getElementById('s3').value,document.getElementById('s4').value].filter(Boolean);
-  if(subs.length<2){document.getElementById('combo-output').innerHTML='<div style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--pink);letter-spacing:.2em;">⚠ Select at least 2 substances</div>';return;}
-  const risks={LSD:5,Methylphenidate:6,MDMA:8,Psilocybin:4,DMT:6,Cannabis:3,Alcohol:9,Caffeine:2};
-  let base=subs.reduce((a,s)=>a+(risks[s]||5),0)/subs.length;
-  const combo=subs.length>2?base*1.3:base*1.1;
-  const score=Math.min(100,Math.round(combo*8));
-  const level=score<30?['LOW','var(--green)']:score<60?['MODERATE','var(--cyan)']:score<80?['HIGH','var(--pink)']:['EXTREME','#ff0000'];
-  document.getElementById('combo-output').innerHTML=`
-    <div style="width:100%;">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.4em;color:var(--gray);text-transform:uppercase;margin-bottom:20px;">RISK ANALYSIS OUTPUT</div>
-      <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:72px;line-height:1;color:${level[1]};text-shadow:0 0 30px ${level[1]};margin-bottom:8px;">${score}</div>
-      <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:18px;color:${level[1]};letter-spacing:.2em;margin-bottom:16px;">${level[0]} RISK</div>
-      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gray);letter-spacing:.15em;">${subs.join(' + ')}</div>
-      <div style="margin-top:16px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--gray);line-height:1.8;">Always research interactions independently.<br>Consider set, setting, and personal health factors.</div>
-    </div>`;
+  var subs=[document.getElementById('s1').value,document.getElementById('s2').value,document.getElementById('s3').value,document.getElementById('s4').value].filter(Boolean);
+  var out=document.getElementById('combo-output');
+  if(subs.length<2){out.innerHTML='<div style="text-align:center;font-family:monospace;font-size:10px;color:var(--pink);letter-spacing:.2em;">⚠ Select at least 2 substances</div>';return;}
+  var risks={LSD:5,Methylphenidate:6,MDMA:8,Psilocybin:4,DMT:6,Cannabis:3,Alcohol:9,Caffeine:2,Amphetamine:7,Ketamine:6,Cocaine:8,Opioids:9,Benzodiazepines:8};
+  var base=subs.reduce(function(a,s){return a+(risks[s]||5);},0)/subs.length;
+  var combo=subs.length>2?base*1.3:base*1.1;
+  var score=Math.min(100,Math.round(combo*8));
+  var level=score<30?['LOW','var(--green)','🟢']:score<60?['MODERATE','var(--cyan)','🔵']:score<80?['HIGH','var(--pink)','🟠']:['EXTREME','#ff4444','🔴'];
+  var pairNotes={};
+  for(var i=0;i<subs.length;i++)for(var j=i+1;j<subs.length;j++){
+    var pair=[subs[i],subs[j]].sort().join('+');
+    var known={'Alcohol+MDMA':'Dehydration risk elevated','Cannabis+LSD':'Potentiates visuals — set/setting critical','Methylphenidate+LSD':'Serotonergic load — monitor closely','Cocaine+Alcohol':'Forms cocaethylene — cardiac load','Benzodiazepines+Opioids':'Respiratory depression risk — DANGEROUS','Amphetamine+MDMA':'Neurotoxicity risk — heat + serotonin'};
+    if(known[pair])pairNotes[pair]=known[pair];
+  }
+  var noteHTML='';
+  for(var k in pairNotes)noteHTML+='<div style="margin-top:6px;padding:6px 10px;border-left:2px solid var(--pink);font-size:9px;color:rgba(240,244,255,.55);">'+k.replace('+',' + ')+': '+pairNotes[k]+'</div>';
+  out.innerHTML='<div style="width:100%;">'
+    +'<div style="font-family:monospace;font-size:8px;letter-spacing:.4em;color:var(--gray);text-transform:uppercase;margin-bottom:16px;">RISK ANALYSIS OUTPUT</div>'
+    +'<div style="font-family:Orbitron,sans-serif;font-weight:900;font-size:64px;line-height:1;color:'+level[1]+';text-shadow:0 0 30px '+level[1]+';margin-bottom:6px;">'+score+'</div>'
+    +'<div style="font-family:Orbitron,sans-serif;font-weight:700;font-size:16px;color:'+level[1]+';letter-spacing:.2em;margin-bottom:12px;">'+level[2]+' '+level[0]+' RISK</div>'
+    +'<div style="font-family:monospace;font-size:10px;color:var(--gray);letter-spacing:.15em;">'+subs.join(' + ')+'</div>'
+    +(noteHTML?'<div style="margin-top:14px;">'+noteHTML+'</div>':'')
+    +'<div style="margin-top:14px;font-family:monospace;font-size:8px;color:rgba(240,244,255,.3);line-height:1.8;">Educational use only. Always research independently.<br>Consider set, setting, and personal health factors.</div>'
+    +'</div>';
 }
 function calcWithdrawal(){
-  const sub=document.getElementById('wsub').value;
-  const dur=parseInt(document.getElementById('wdur').value);
-  const amt=parseFloat(document.getElementById('wamt').value)/10;
-  const d={crack:{n:'Crack Cocaine',peak:'24–72 hrs',acute:'1–2 wks',paws:'1–3 mo',note:'Psychological symptoms dominant. Intense cravings.'},meth:{n:'Methamphetamine',peak:'24–48 hrs',acute:'2–3 wks',paws:'2–6 mo',note:'Prolonged anhedonia. Sleep disruption common.'},fent:{n:'Fentanyl',peak:'12–36 hrs',acute:'5–10 days',paws:'3–12 mo',note:'Medical supervision strongly advised. High relapse risk.'}};
-  const info=d[sub];const sev=Math.min(10,Math.round(dur*.6+amt*4));
-  const sevC=sev<=3?'var(--green)':sev<=6?'var(--cyan)':sev<=8?'var(--pink)':'#ff4444';
-  const rows=[['Substance',info.n],['Duration',dur+' year'+(dur>1?'s':'')],['Daily Amount',amt.toFixed(1)+'g'],['Peak Withdrawal',info.peak],['Acute Phase',info.acute],['PAWS',info.paws],['Severity',`<span style="color:${sevC};font-weight:700">${sev}/10</span>`],['Note',info.note]];
-  let html='<div style="width:100%;"><div style="font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.4em;color:var(--gray);text-transform:uppercase;margin-bottom:16px;">TIMELINE OUTPUT</div><table style="width:100%;border-collapse:collapse;">';
-  rows.forEach(([k,v],i)=>html+=`<tr style="${i%2===0?'background:rgba(255,255,255,.02)':''}"><td style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.2em;color:var(--gray);text-transform:uppercase;padding:8px 10px;border-bottom:1px solid rgba(139,92,246,.1);white-space:nowrap;">${k}</td><td style="font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(240,244,255,.7);padding:8px 10px;border-bottom:1px solid rgba(139,92,246,.1);">${v}</td></tr>`);
-  html+='</table></div>';
+  var sub=document.getElementById('wsub').value;
+  var dur=parseInt(document.getElementById('wdur').value);
+  var amt=parseFloat(document.getElementById('wamt').value)/10;
+  var d={
+    crack:{n:'Crack Cocaine',peak:'24–72 hrs',acute:'1–2 wks',paws:'1–3 months',note:'Psychological symptoms dominant. Intense cravings. High relapse risk.'},
+    meth:{n:'Methamphetamine',peak:'24–48 hrs',acute:'2–3 wks',paws:'2–6 months',note:'Prolonged anhedonia. Sleep disruption common. Dopamine depletion can persist.'},
+    fent:{n:'Fentanyl',peak:'12–36 hrs',acute:'5–10 days',paws:'3–12 months',note:'Medical supervision strongly advised. Respiratory risk. High relapse potential.'},
+    mph:{n:'Methylphenidate',peak:'12–24 hrs',acute:'1–2 wks',paws:'1–3 months',note:'Fatigue, low motivation, cognitive fog. Generally manageable with support.'},
+    alc:{n:'Alcohol',peak:'24–72 hrs',acute:'1–2 wks',paws:'3–12 months',note:'Potentially life-threatening. Seizure risk. Medical supervision required.'},
+    benzo:{n:'Benzodiazepines',peak:'2–7 days',acute:'2–4 wks',paws:'6–18 months',note:'Potentially life-threatening. Never cold-turkey. Taper under medical supervision.'}
+  };
+  var info=d[sub];
+  if(!info){document.getElementById('w-output').innerHTML='<div style="color:var(--pink);font-family:monospace;text-align:center;">Select a substance</div>';return;}
+  var sev=Math.min(10,Math.round(dur*.6+amt*4));
+  var sevC=sev<=3?'var(--green)':sev<=6?'var(--cyan)':sev<=8?'var(--pink)':'#ff4444';
+  var rows=[
+    ['Substance',info.n,'var(--white)'],
+    ['Duration Used',dur+' year'+(dur>1?'s':''),'var(--cyan)'],
+    ['Daily Amount',amt.toFixed(1)+'g / day','var(--cyan)'],
+    ['Peak Withdrawal',info.peak,'var(--white)'],
+    ['Acute Phase',info.acute,'rgba(255,180,100,.9)'],
+    ['PAWS',info.paws,'rgba(255,180,100,.9)'],
+    ['Severity Score','<span style="color:'+sevC+';font-weight:900;font-size:16px;">'+sev+'/10</span>',''],
+    ['Clinical Note',info.note,'rgba(200,232,255,.5)']
+  ];
+  var html='<div style="width:100%;">'
+    +'<div style="font-family:monospace;font-size:8px;letter-spacing:.4em;color:var(--gray);text-transform:uppercase;margin-bottom:14px;">WITHDRAWAL TIMELINE OUTPUT</div>'
+    +'<table style="width:100%;border-collapse:collapse;">';
+  rows.forEach(function(r,i){
+    html+='<tr style="'+(i%2===0?'background:rgba(255,255,255,.025)':'')+'"><td style="font-family:monospace;font-size:8px;letter-spacing:.2em;color:var(--gray);text-transform:uppercase;padding:9px 10px;border-bottom:1px solid rgba(0,102,255,.12);white-space:nowrap;width:38%;">'+r[0]+'</td><td style="font-family:monospace;font-size:11px;color:'+(r[2]||'rgba(240,244,255,.7)')+';padding:9px 10px;border-bottom:1px solid rgba(0,102,255,.12);">'+r[1]+'</td></tr>';
+  });
+  html+='</table><div style="margin-top:12px;font-family:monospace;font-size:8px;color:rgba(240,244,255,.3);line-height:1.8;">Educational use only. Not medical advice. Seek professional support for withdrawal management.</div></div>';
   document.getElementById('w-output').innerHTML=html;
 }
 </script>

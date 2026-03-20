@@ -412,7 +412,10 @@ body { padding-top: 72px; }
 <nav class="hud">
   <a href="index.html" class="hud-logo">
     <img src="assets/images/1142_logo.png" alt="1142 Labs">
-    <span>1142 LABS</span>
+    <div class="hud-logo-text">
+      <span>1142 LABS</span>
+      <span class="hud-logo-sub">Cognitive Liberation TV</span>
+    </div>
   </a>
 
   <!-- hamburger (mobile) -->
@@ -445,6 +448,7 @@ body { padding-top: 72px; }
         <span class="drop-label" style="color:var(--green)">Studies</span>
         <a href="breakthroughs.html">Breakthroughs</a>
         <a href="pdf_portal.html">PDF Portal</a>
+        <a href="library.html">PDF Library <em>All 19</em></a>
         <span class="drop-label" style="color:var(--green)">Chemical DB</span>
         <a href="chemlog.html">Chem Log</a>
         <a href="1142_chemicals.html">Chemicals of Study</a>
@@ -682,54 +686,7 @@ body { padding-top: 72px; }
 <!-- ═══ END BROADCAST SYSTEM ═══ -->
 
 <div id="cursor-ring"></div>
-<nav class="hud">
-  <a href="index.html" class="hud-logo">
-    <img src="assets/images/1142_logo.png" alt="1142 Labs">
-    <span>1142 LABS</span>
-  </a>
-  <div class="nav-panel" id="navPanel">
-    <div class="nav-section">
-      <button class="nav-section-toggle" data-target="drop-fortress">THE FORTRESS <span class="nav-caret">&#9660;</span></button>
-      <div class="nav-drop" id="drop-fortress">
-        <a href="index.html">The Void <em>Home</em></a>
-        <a href="research.html">The Brain <em>Research</em></a>
-        <a href="tools.html">The Engine <em>Tools</em></a>
-        <a href="archive.html">The Archive</a>
-        <a href="creators.html">The Creator</a>
-      </div>
-    </div>
-    <div class="nav-section">
-      <button class="nav-section-toggle" data-target="drop-research">RESEARCH <span class="nav-caret">&#9660;</span></button>
-      <div class="nav-drop" id="drop-research">
-        <span class="drop-label" style="color:var(--green)">Studies</span>
-        <a href="breakthroughs.html">Breakthroughs</a>
-        <a href="pdf_portal.html">PDF Portal</a>
-        <span class="drop-label" style="color:var(--green)">Chemical DB</span>
-        <a href="chemlog.html">Chem Log</a>
-        <a href="1142_chemicals.html">Chemicals of Study</a>
-        <span class="drop-label" style="color:var(--green)">Calculators</span>
-        <a href="tools.html">Combo Calc</a>
-        <a href="withdrawal.html">Withdrawal Calc</a>
-      </div>
-    </div>
-    <div class="nav-section">
-      <button class="nav-section-toggle" data-target="drop-about">ABOUT <span class="nav-caret">&#9660;</span></button>
-      <div class="nav-drop" id="drop-about">
-        <span class="drop-label" style="color:var(--pink)">Creator</span>
-        <a href="creators.html">Cole EverDark</a>
-        <a href="creators.html#personas">Persona Matrix</a>
-        <span class="drop-label" style="color:var(--pink)">Manifesto</span>
-        <a href="vision.html">The Manifesto</a>
-        <a href="archive.html">Cole's Tab Corner</a>
-        <span class="drop-label" style="color:var(--pink)">More</span>
-        <a href="posters.html">Visualizations</a>
-        <a href="socials.html">Network</a>
-        <a href="resources.html">Resources</a>
-      </div>
-    </div>
-  </div>
-  <div class="hud-status"><div class="hud-dot"></div>ONLINE · 1142</div>
-</nav>
+
 
 <!-- HERO -->
 <section class="hero" style="position:relative;overflow:hidden;">
@@ -825,7 +782,7 @@ body { padding-top: 72px; }
     <div class="footer-col"><h4>Research</h4><ul>
       <li><a href="research.html">Breakthroughs</a></li>
       <li><a href="research.html#chemicals">Chemical DB</a></li>
-      <li><a href="pdf_portal_1142_ultra.html">PDF Archive</a></li>
+      <li><a href="pdf_portal.html">PDF Archive</a></li>
     </ul></div>
     <div class="footer-col"><h4>About</h4><ul>
       <li><a href="about.html">Cole EverDark</a></li>
@@ -846,7 +803,11 @@ body { padding-top: 72px; }
       <h2 id="modalTitle">Document</h2>
       <p>1142 LABS · RESEARCH ARCHIVE · PRESS ESC TO CLOSE</p>
     </div>
-    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <a id="modalDownload" href="#" download target="_blank" style="font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.25em;color:var(--primary);border:1px solid var(--primary);padding:6px 12px;text-decoration:none;background:rgba(0,102,255,.06);transition:all .18s;" onmouseover="this.style.background='rgba(0,102,255,.15)'" onmouseout="this.style.background='rgba(0,102,255,.06)'">⬇ DOWNLOAD</a>
+      <a id="modalNewTab" href="#" target="_blank" style="font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.25em;color:rgba(200,232,255,.5);border:1px solid rgba(0,102,255,.2);padding:6px 12px;text-decoration:none;background:transparent;transition:all .18s;" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='rgba(200,232,255,.5)'">↗ OPEN TAB</a>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
   </div>
   <div class="modal-body">
     <iframe id="modalFrame" title="PDF Viewer"></iframe>
@@ -860,151 +821,157 @@ const DOCS = [
     plain:'A Brief Study of Carcinogenic Substances and Their Impact on Necronemothorax',
     desc:'Investigative analysis of carcinogenic compound exposure and its relationship to necronemothorax development. Documents pathological findings and proposes mechanistic pathways for expanded clinical study.',
     author:'1142 Research Foundation', tags:[['Pathology','hi'],['Carcinogens','pp'],['Research','']],
-    size:'429 KB', url:'/pdfs/Study_Carcinogenic_Necronemothorax.pdf' },
+    size:'429 KB', url:'pdfs/Study_Carcinogenic_Necronemothorax.pdf' },
   { id:'DOC-002', type:'Comparative', cat:['pharmacology','stimulants'],
     title:'Amphetamines <em>Over</em> Sedatives',
     plain:'Amphetamines Over Sedatives — Comparative Pharmacological Assessment',
     desc:'Direct comparative evaluation of amphetamine-class stimulants versus sedative-hypnotics across cognitive, physiological, and performance domains. Examines differential risk-benefit profiles and optimization criteria.',
     author:'1142 Research Foundation', tags:[['Stimulants','hi'],['Sedatives',''],['Pharmacology','pp']],
-    size:'430 KB', url:'/pdfs/Amphetimines_over_sedatives.pdf' },
+    size:'430 KB', url:'pdfs/Amphetimines_over_sedatives.pdf' },
   { id:'DOC-003', type:'Medical Research', cat:['autism','neuroscience'],
     title:'<em>DOWNED</em> — Autism & Periconceptional Exposure',
     plain:'DOWNED — Autism Spectrum Disorder Caused by Substance Exposure During Conception',
     desc:'Explores the hypothesis that specific substance exposures during periconceptional windows influence neurodevelopmental trajectories. Focused analysis of autism spectrum disorder onset mechanisms.',
     author:'1142 Research Foundation', tags:[['Autism','pk'],['Neurodevelopment','hi'],['Medical','']],
-    size:'427 KB', url:'/pdfs/Down_Syndrome_Process.pdf' },
+    size:'427 KB', url:'pdfs/Down_Syndrome_Process.pdf' },
   { id:'DOC-004', type:'Protocol Study', cat:['pharmacology','stimulants','cognitive'],
     title:'Enhancing <em>Methylphenidate</em> Efficacy',
     plain:'Enhancing Methylphenidate Efficacy Through Synergistic Substance Pairing',
     desc:'Strategic compound stacking architectures designed to amplify and extend methylphenidate therapeutic windows. Covers bioavailability enhancement, receptor sensitization, and washout cycle optimization.',
     author:'1142 Research Foundation', tags:[['Methylphenidate','hi'],['Synergy','gn'],['Protocol','pp']],
-    size:'428 KB', url:'/pdfs/Ritlitilin_Method_Methylphenidate.pdf' },
+    size:'428 KB', url:'pdfs/Ritlitilin_Method_Methylphenidate.pdf' },
   { id:'DOC-005', type:'ASD Research', cat:['autism','neuroscience','cognitive'],
     title:'From Low to <em>High Functioning</em> Autism',
     plain:'From Low to High Functioning Autism — Evolution and the Rise of Adaptive Cognition',
     desc:'Longitudinal framework examining the trajectory from low to high-functioning autism. Investigates environmental modulators, pharmacological interventions, and cognitive training variables correlated with functional improvement.',
     author:'1142 Research Foundation', tags:[['Autism','pk'],['Longitudinal','hi'],['Intervention','pp']],
-    size:'429 KB', url:'/pdfs/Down_Syndrome_Process_Long.pdf' },
+    size:'429 KB', url:'pdfs/Down_Syndrome_Process_Long.pdf' },
   { id:'DOC-006', type:'Neuroscience', cat:['neuroscience','pharmacology','cognitive'],
     title:'Recovering <em>Memories</em> with Amphetamines & LSD',
     plain:'Recovering Memories with Amphetamines and LSD — A Computer Data Approach',
     desc:'Experimental methodology combining psychostimulant and psychedelic-assisted approaches to probe latent memory retrieval and reconsolidation. Applies computational data modeling to map memory consolidation under altered neurochemical states.',
     author:'1142 Research Foundation', tags:[['Memory','hi'],['LSD','pk'],['Amphetamines','pp']],
-    size:'428 KB', url:'/pdfs/Methyl_Nutrient.pdf' },
+    size:'428 KB', url:'pdfs/Methyl_Nutrient.pdf' },
   { id:'DOC-007', type:'Neurological Study', cat:['neuroscience','stimulants','cognitive'],
     title:'Lowering <em>Methylphenidate</em> Lowers IQ',
     plain:"How Lowering Someone's Methylphenidate Can Lower Their IQ",
     desc:"Observational and mechanistic evidence that reduction or abrupt withdrawal of methylphenidate in cognitively-dependent populations correlates with measurable IQ metric decline. Explores dopaminergic dependency thresholds and cognitive performance floors.",
     author:'1142 Research Foundation', tags:[['IQ','hi'],['MPH','pp'],['Cognition','gn']],
-    size:'428 KB', url:'/pdfs/Infinite_Methylphenidate_Case_Study.pdf' },
+    size:'428 KB', url:'pdfs/Infinite_Methylphenidate_Case_Study.pdf' },
   { id:'DOC-008', type:'Chemical Compendium', cat:['pharmacology','neuroscience'],
     title:'Lysergic Acid <em>Diethylamide</em> — Technical Compendium',
     plain:'LYSERGIC ACID DIETHYLAMIDE — Technical Research Compendium',
     desc:'Comprehensive technical compendium covering LSD-25 receptor pharmacology, serotonergic binding profiles, neuroplasticity applications, and controlled experimental cognitive enhancement protocols.',
     author:'1142 Research Foundation', tags:[['LSD-25','hi'],['Psychedelic','pk'],['Serotonin','pp']],
-    size:'427 KB', url:'/pdfs/Stim_Blasting_Report_Cole_Everdark.pdf' },
+    size:'427 KB', url:'pdfs/Stim_Blasting_Report_Cole_Everdark.pdf' },
   { id:'DOC-009', type:'Case Study', cat:['stimulants','cognitive','pharmacology'],
     title:'Stim Blasting & <em>Cognitive Enhancement</em>',
     plain:'Stim Blasting and Cognitive Enhancement — A Case Study',
     desc:'Protocol design and outcomes of high-intensity stimulant administration cycles intended to maximize cognitive output windows. Tracks performance metrics, recovery intervals, and neurochemical marker shifts throughout.',
     author:'Cole Everdark', tags:[['Stim Blast','hi'],['Performance','gn'],['Case Study','pk']],
-    size:'429 KB', url:'/pdfs/Stim_Blasting_Report_Cole_Everdark_final.pdf' },
+    size:'429 KB', url:'pdfs/Stim_Blasting_Report_Cole_Everdark_final.pdf' },
   { id:'DOC-010', type:'Neuroscience Doc', cat:['neuroscience','stimulants'],
     title:'Surging <em>Brain</em> — Neural Activation Cascades',
     plain:'Surging Brain — Neural Activation Cascade Study',
     desc:'Documents intense, high-amplitude neural activation cascades under specific stimulant and nootropic compound conditions. Proposes the "surge" model of transient hyper-cognition as a distinct, measurable neurological state.',
     author:'1142 Research Foundation', tags:[['Neural','hi'],['Hyper-Cognition','pk'],['EEG','']],
-    size:'427 KB', url:'/pdfs/Surging_brain.pdf' },
+    size:'427 KB', url:'pdfs/Surging_brain.pdf' },
   { id:'DOC-011', type:'Sleep Research', cat:['sleep','neuroscience','cognitive'],
     title:'The Effects of <em>Sleep Deprivation</em>',
     plain:'The Effects of Sleep Deprivation on Cognitive and Physical Functioning',
     desc:'Systematic analysis of progressive sleep deprivation impact on cognitive processing speed, working memory, emotional regulation, physical performance, and neurochemical balance. Drawn from extended controlled deprivation trials.',
     author:'1142 Research Foundation', tags:[['Sleep','hi'],['Cognition','gn'],['Deprivation','pk']],
-    size:'429 KB', url:'/pdfs/Sleep_Deprivation.pdf' },
+    size:'429 KB', url:'pdfs/Sleep_Deprivation.pdf' },
   { id:'DOC-012', type:'Personal Research', cat:['stimulants','cognitive','pharmacology'],
     title:'The Reality of <em>Infinite</em> Methylphenidate',
     plain:'The Reality of Infinite Methylphenidate — A Personal Research Account',
     desc:'First-person research account exploring extended and escalating methylphenidate administration. Documents subjective cognitive state evolution, physiological adaptation, and frameworks for sustainable stimulant research protocols.',
     author:'1142 Research Foundation', tags:[['MPH','hi'],['Personal','pp'],['Long-Term','gn']],
-    size:'429 KB', url:'/pdfs/Infinite_Methylphenidate_Case_Study.pdf' },
+    size:'429 KB', url:'pdfs/Infinite_Methylphenidate_Case_Study.pdf' },
   { id:'DOC-013', type:'Medical Analysis', cat:['pharmacology','stimulants','cognitive'],
     title:'The <em>Ritalin</em> Experience',
     plain:'The Ritalin Experience — Balancing Performance and Well-being',
     desc:'Analytical review of the lived pharmacological experience of Ritalin across a spectrum of dosing ranges. Examines the core tension between peak cognitive performance and sustainable physiological and psychological well-being.',
     author:'1142 Research Foundation', tags:[['Ritalin','hi'],['Performance','gn'],['Well-being','pk']],
-    size:'430 KB', url:'/pdfs/Ritlitilin_Method_Methylphenidate.pdf' },
+    size:'430 KB', url:'pdfs/Ritlitilin_Method_Methylphenidate.pdf' },
   { id:'DOC-014', type:'Methodology', cat:['cognitive','stimulants','pharmacology'],
     title:'The <em>Ritlitilin</em> Method',
     plain:'The Ritlitilin Method — A Transformative Framework for Cognitive Enhancement',
     desc:'Introduces the Ritlitilin Method: a proprietary cognitive enhancement framework built around optimized methylphenidate cycling, precision dietary protocols, and behaviorally-conditioned performance windows for sustained intellectual output.',
     author:'Cole Everdark', tags:[['Method','hi'],['Framework','gn'],['Cognitive','pk']],
-    size:'428 KB', url:'/pdfs/Ritlitilin_Method_Methylphenidate.pdf' },
+    size:'428 KB', url:'pdfs/Ritlitilin_Method_Methylphenidate.pdf' },
   { id:'DOC-015', type:'Medical Research', cat:['pharmacology','stimulants'],
     title:'Therapeutic <em>Potential</em> of Stimulants',
     plain:'Therapeutic Potential of Stimulant Medications in the Management Of',
     desc:'Explores underutilized therapeutic applications of stimulant medications beyond ADHD treatment — including treatment-resistant depression, acquired cognitive impairment, post-viral fatigue, and neurological rehabilitation.',
     author:'1142 Research Foundation', tags:[['Therapeutic','hi'],['Stimulants','pp'],['Medical','']],
-    size:'426 KB', url:'/pdfs/Therapeutic_Potential_Stimulants.pdf' },
+    size:'426 KB', url:'pdfs/Therapeutic_Potential_Stimulants.pdf' },
   { id:'DOC-016', type:'Medical Evaluation', cat:['pharmacology','neuroscience'],
     title:'Fentanyl & <em>Neurovascular</em> Risk',
     plain:'Fentanyl and Neurovascular Risk — A Critical Evaluation',
     desc:"Critical evaluation of fentanyl's neurovascular risk profile. Focus on cerebrovascular event induction through multiple mechanistic pathways. Reviews acute and chronic exposure data and proposes risk stratification guidelines.",
     author:'1142 Research Foundation', tags:[['Fentanyl','pk'],['Neurovascular','hi'],['Risk','pp']],
-    size:'430 KB', url:'/pdfs/Fentanyl_Neurovascular_Risk.pdf' },
+    size:'430 KB', url:'pdfs/Fentanyl_Neurovascular_Risk.pdf' },
   { id:'DOC-017', type:'Cognitive Research', cat:['autism','neuroscience','cognitive'],
     title:'Down Syndrome <em>Processing</em> Modalities',
     plain:'Understanding How People with Down Syndrome Process',
     desc:"Research documentation on the distinctive cognitive processing modalities of individuals with Down syndrome. Examines neurological architecture, learning mechanisms, and identifies pharmacological and behavioral interventions with measurable outcomes.",
     author:'1142 Research Foundation', tags:[['Down Syndrome','pk'],['Processing','hi'],['Cognitive','pp']],
-    size:'428 KB', url:'/pdfs/Down_Syndrome_Process.pdf' },
+    size:'428 KB', url:'pdfs/Down_Syndrome_Process.pdf' },
   { id:'DOC-018', type:'Biochemical Research', cat:['pharmacology','cognitive'],
     title:'Methyl Nutrient — <em>Methylation</em> Optimization',
     plain:'Methyl Nutrient — Methylation Pathway Optimization Protocol',
     desc:'Targeted investigation into methylation pathway optimization using precision nutritional supplementation. Documents interplay between methyl donor compounds, cognitive function, mood regulation, and neurotransmitter synthesis efficiency.',
     author:'1142 Research Foundation', tags:[['Methylation','hi'],['Nutrition','gn'],['Biochemistry','pp']],
-    size:'428 KB', url:'/pdfs/Methyl_Nutrient.pdf' },
+    size:'428 KB', url:'pdfs/Methyl_Nutrient.pdf' },
   { id:'DOC-019', type:'Abstract', cat:['sleep','neuroscience'],
     title:'Sleep Deprivation <em>Abstract</em>',
     plain:'Sleep Deprivation Abstract — Condensed Findings Report',
     desc:'Condensed abstract presenting key findings from the extended Sleep Deprivation study series. High-density summary of cognitive and physiological outcome data for rapid reference and cross-study citation.',
     author:'1142 Research Foundation', tags:[['Sleep','hi'],['Abstract',''],['Summary','gn']],
-    size:'429 KB', url:'/pdfs/Sleep_Deprivation_Abstract.pdf' },
+    size:'429 KB', url:'pdfs/Sleep_Deprivation_Abstract.pdf' },
   { id:'DOC-020', type:'Extended Study', cat:['sleep','neuroscience','cognitive'],
     title:'Sleep Deprivation — <em>Extended</em> Variant',
     plain:'Sleep Deprivation — Extended Variant Study',
     desc:'Extended variant of the core sleep deprivation study. Incorporates longer deprivation windows and expanded measurement protocols. Documents divergent cognitive failure modes beyond the 48-hour threshold and recovery trajectory data.',
     author:'1142 Research Foundation', tags:[['Sleep','hi'],['Extended','pk'],['72hr+','pp']],
-    size:'429 KB', url:'/pdfs/Sleep_Deprivation_1.pdf' },
+    size:'429 KB', url:'pdfs/Sleep_Deprivation_1.pdf' },
   { id:'DOC-021', type:'Variant Protocol', cat:['pharmacology','stimulants'],
     title:'Amphetamines Over Sedatives — <em>Variant</em>',
     plain:'Amphetamines Over Sedatives — Variant Study Protocol',
     desc:'Modified protocol iteration of the core amphetamines vs. sedatives comparative study. Adjusted dosing windows, additional outcome measures, and expanded subject demographics. Cross-references primary study for replication validation.',
     author:'1142 Research Foundation', tags:[['Stimulants','hi'],['Variant',''],['Protocol','pp']],
-    size:'430 KB', url:'/pdfs/Amphetimines_over_sedatives_1.pdf' },
+    size:'430 KB', url:'pdfs/Amphetimines_over_sedatives_1.pdf' },
   { id:'DOC-022', type:'Longitudinal Study', cat:['autism','neuroscience','cognitive'],
     title:'Down Syndrome — <em>Longitudinal</em> Extended',
     plain:'Down Syndrome Processing — Extended Longitudinal Study',
     desc:'Extended longitudinal investigation into processing modality evolution in Down syndrome individuals across developmental stages. Documents cognitive trajectory shifts in response to targeted interventions over multi-year observation windows.',
     author:'1142 Research Foundation', tags:[['Down Syndrome','pk'],['Longitudinal','hi'],['Development','gn']],
-    size:'428 KB', url:'/pdfs/Down_Syndrome_Process_Long.pdf' },
+    size:'428 KB', url:'pdfs/Down_Syndrome_Process_Long.pdf' },
   { id:'DOC-023', type:'Case Study (Final)', cat:['stimulants','cognitive','pharmacology'],
     title:'Stim Blasting — <em>Final</em> Revision',
     plain:'Stim Blasting Report — Final Revision',
     desc:'Final revised edition of the Stim Blasting cognitive enhancement case study. Incorporates follow-up observation period data, refined performance metric analysis, and updated conclusions on long-term neuroadaptive consequences of intensive stimulant cycling.',
     author:'Cole Everdark', tags:[['Stim Blast','hi'],['Final Rev','gn'],['Neuroadaptive','pk']],
-    size:'430 KB', url:'/pdfs/Stim_Blasting_Report_Cole_Everdark_final.pdf' },
+    size:'430 KB', url:'pdfs/Stim_Blasting_Report_Cole_Everdark_final.pdf' },
   { id:'DOC-024', type:'Follow-Up Study', cat:['pharmacology'],
     title:'<em>Necronemothorax</em> — Resounding Follow-Up',
     plain:'Carcinogenic Necronemothorax — Resounding Study Follow-Up',
     desc:'Follow-up documentation extending the original carcinogenic necronemothorax study. Expanded tissue sample analysis, refined mechanistic models, and corroborating evidence strengthening the foundational findings of the original report.',
     author:'1142 Research Foundation', tags:[['Carcinogens','hi'],['Follow-Up','pp'],['Pathology','']],
-    size:'429 KB', url:'/pdfs/Study_Carcinogenic_Necronemothorax_Resounding.pdf' },
+    size:'429 KB', url:'pdfs/Study_Carcinogenic_Necronemothorax_Resounding.pdf' },
+  { id:'DOC-026', type:'Research Doc', cat:['neurodiversity','neuroscience'],
+    title:'Down Syndrome Process — Multi-Faceted Analysis',
+    plain:'Cognitive Processing and Knowledge Acquisition in Individuals with Down Syndrome: A Multi-Faceted Analysis',
+    desc:'Extended multi-faceted analysis of cognitive architecture in Down syndrome. Covers repetition-based learning, step-by-step scaffolding, background processing phenomena, and the role of pharmacological neuro-enhancement. Includes developmental milestone framework for educators.',
+    author:'Cole Chenard', tags:[['Neurodiversity','ci'],['Down Syndrome','pi'],['Learning','gn']],
+    size:'428 KB', url:'pdfs/Down_Syndrome_Process_1.pdf' },
   { id:'DOC-025', type:'Research Essay', cat:['cognitive'],
     title:'The Cost of <em>Knowledge</em>',
     plain:'The Cost of Knowledge — A Philosophical Research Essay',
     desc:"Philosophical research essay exploring the personal, neurological, and societal costs associated with relentless knowledge amplification. Examines the ethical dimensions of cognitive enhancement research and the 1142 Foundation's broader mission.",
     author:'1142 Research Foundation', tags:[['Philosophy','hi'],['Ethics','pk'],['Knowledge','gn']],
-    size:'425 KB', url:'/pdfs/The_Cost_of_Knowledge.pdf' }
+    size:'425 KB', url:'pdfs/The_Cost_of_Knowledge.pdf' }
 ];
 
 let activeFilter = 'all';
@@ -1043,10 +1010,13 @@ function renderDocs(list) {
       </div>
       <div class="card-footer">
         <div class="card-meta">⬛ PDF · ${d.size}</div>
-        <button class="card-view-btn" onclick='openModal(${JSON.stringify(d.plain)}, ${JSON.stringify(d.url)})'>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          VIEW PDF
-        </button>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button class="card-view-btn" onclick='openModal(${JSON.stringify(d.plain)}, ${JSON.stringify(d.url)})'>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            VIEW
+          </button>
+          <a href="${d.url}" target="_blank" style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.2em;color:rgba(0,207,255,.6);border:1px solid rgba(0,102,255,.25);padding:7px 10px;text-decoration:none;background:rgba(0,0,0,.3);transition:all .18s;white-space:nowrap;" onmouseover="this.style.color='var(--white)';this.style.borderColor='rgba(0,207,255,.5)'" onmouseout="this.style.color='rgba(0,207,255,.6)';this.style.borderColor='rgba(0,102,255,.25)'">↗ PDF</a>
+        </div>
       </div>`;
     grid.appendChild(el);
   });
@@ -1079,6 +1049,9 @@ document.getElementById('searchInput').addEventListener('input', go);
 function openModal(title, url) {
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalFrame').src = url + '#toolbar=1&navpanes=0';
+  document.getElementById('modalDownload').href = url;
+  document.getElementById('modalDownload').download = url.split('/').pop();
+  document.getElementById('modalNewTab').href = url;
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -1151,266 +1124,7 @@ renderDocs(DOCS);
   </div>
 </footer>
 
-<script>
-const DOCS = [
-  { id:'DOC-001', type:'Research Doc', cat:['pharmacology'],
-    title:'A Brief Study of <em>Carcinogenic</em> Substances',
-    plain:'A Brief Study of Carcinogenic Substances and Their Impact on Necronemothorax',
-    desc:'Investigative analysis of carcinogenic compound exposure and its relationship to necronemothorax development. Documents pathological findings and proposes mechanistic pathways for expanded clinical study.',
-    author:'1142 Research Foundation', tags:[['Pathology','hi'],['Carcinogens','pp'],['Research','']],
-    size:'429 KB', url:'/pdfs/Study_Carcinogenic_Necronemothorax.pdf' },
-  { id:'DOC-002', type:'Comparative', cat:['pharmacology','stimulants'],
-    title:'Amphetamines <em>Over</em> Sedatives',
-    plain:'Amphetamines Over Sedatives — Comparative Pharmacological Assessment',
-    desc:'Direct comparative evaluation of amphetamine-class stimulants versus sedative-hypnotics across cognitive, physiological, and performance domains. Examines differential risk-benefit profiles and optimization criteria.',
-    author:'1142 Research Foundation', tags:[['Stimulants','hi'],['Sedatives',''],['Pharmacology','pp']],
-    size:'430 KB', url:'/pdfs/Amphetimines_over_sedatives.pdf' },
-  { id:'DOC-003', type:'Medical Research', cat:['autism','neuroscience'],
-    title:'<em>DOWNED</em> — Autism & Periconceptional Exposure',
-    plain:'DOWNED — Autism Spectrum Disorder Caused by Substance Exposure During Conception',
-    desc:'Explores the hypothesis that specific substance exposures during periconceptional windows influence neurodevelopmental trajectories. Focused analysis of autism spectrum disorder onset mechanisms.',
-    author:'1142 Research Foundation', tags:[['Autism','pk'],['Neurodevelopment','hi'],['Medical','']],
-    size:'427 KB', url:'/pdfs/Down_Syndrome_Process.pdf' },
-  { id:'DOC-004', type:'Protocol Study', cat:['pharmacology','stimulants','cognitive'],
-    title:'Enhancing <em>Methylphenidate</em> Efficacy',
-    plain:'Enhancing Methylphenidate Efficacy Through Synergistic Substance Pairing',
-    desc:'Strategic compound stacking architectures designed to amplify and extend methylphenidate therapeutic windows. Covers bioavailability enhancement, receptor sensitization, and washout cycle optimization.',
-    author:'1142 Research Foundation', tags:[['Methylphenidate','hi'],['Synergy','gn'],['Protocol','pp']],
-    size:'428 KB', url:'/pdfs/Ritlitilin_Method_Methylphenidate.pdf' },
-  { id:'DOC-005', type:'ASD Research', cat:['autism','neuroscience','cognitive'],
-    title:'From Low to <em>High Functioning</em> Autism',
-    plain:'From Low to High Functioning Autism — Evolution and the Rise of Adaptive Cognition',
-    desc:'Longitudinal framework examining the trajectory from low to high-functioning autism. Investigates environmental modulators, pharmacological interventions, and cognitive training variables correlated with functional improvement.',
-    author:'1142 Research Foundation', tags:[['Autism','pk'],['Longitudinal','hi'],['Intervention','pp']],
-    size:'429 KB', url:'/pdfs/Down_Syndrome_Process_Long.pdf' },
-  { id:'DOC-006', type:'Neuroscience', cat:['neuroscience','pharmacology','cognitive'],
-    title:'Recovering <em>Memories</em> with Amphetamines & LSD',
-    plain:'Recovering Memories with Amphetamines and LSD — A Computer Data Approach',
-    desc:'Experimental methodology combining psychostimulant and psychedelic-assisted approaches to probe latent memory retrieval and reconsolidation. Applies computational data modeling to map memory consolidation under altered neurochemical states.',
-    author:'1142 Research Foundation', tags:[['Memory','hi'],['LSD','pk'],['Amphetamines','pp']],
-    size:'428 KB', url:'/pdfs/Methyl_Nutrient.pdf' },
-  { id:'DOC-007', type:'Neurological Study', cat:['neuroscience','stimulants','cognitive'],
-    title:'Lowering <em>Methylphenidate</em> Lowers IQ',
-    plain:"How Lowering Someone's Methylphenidate Can Lower Their IQ",
-    desc:"Observational and mechanistic evidence that reduction or abrupt withdrawal of methylphenidate in cognitively-dependent populations correlates with measurable IQ metric decline. Explores dopaminergic dependency thresholds and cognitive performance floors.",
-    author:'1142 Research Foundation', tags:[['IQ','hi'],['MPH','pp'],['Cognition','gn']],
-    size:'428 KB', url:'/pdfs/Infinite_Methylphenidate_Case_Study.pdf' },
-  { id:'DOC-008', type:'Chemical Compendium', cat:['pharmacology','neuroscience'],
-    title:'Lysergic Acid <em>Diethylamide</em> — Technical Compendium',
-    plain:'LYSERGIC ACID DIETHYLAMIDE — Technical Research Compendium',
-    desc:'Comprehensive technical compendium covering LSD-25 receptor pharmacology, serotonergic binding profiles, neuroplasticity applications, and controlled experimental cognitive enhancement protocols.',
-    author:'1142 Research Foundation', tags:[['LSD-25','hi'],['Psychedelic','pk'],['Serotonin','pp']],
-    size:'427 KB', url:'/pdfs/Stim_Blasting_Report_Cole_Everdark.pdf' },
-  { id:'DOC-009', type:'Case Study', cat:['stimulants','cognitive','pharmacology'],
-    title:'Stim Blasting & <em>Cognitive Enhancement</em>',
-    plain:'Stim Blasting and Cognitive Enhancement — A Case Study',
-    desc:'Protocol design and outcomes of high-intensity stimulant administration cycles intended to maximize cognitive output windows. Tracks performance metrics, recovery intervals, and neurochemical marker shifts throughout.',
-    author:'Cole Everdark', tags:[['Stim Blast','hi'],['Performance','gn'],['Case Study','pk']],
-    size:'429 KB', url:'/pdfs/Stim_Blasting_Report_Cole_Everdark_final.pdf' },
-  { id:'DOC-010', type:'Neuroscience Doc', cat:['neuroscience','stimulants'],
-    title:'Surging <em>Brain</em> — Neural Activation Cascades',
-    plain:'Surging Brain — Neural Activation Cascade Study',
-    desc:'Documents intense, high-amplitude neural activation cascades under specific stimulant and nootropic compound conditions. Proposes the "surge" model of transient hyper-cognition as a distinct, measurable neurological state.',
-    author:'1142 Research Foundation', tags:[['Neural','hi'],['Hyper-Cognition','pk'],['EEG','']],
-    size:'427 KB', url:'/pdfs/Surging_brain.pdf' },
-  { id:'DOC-011', type:'Sleep Research', cat:['sleep','neuroscience','cognitive'],
-    title:'The Effects of <em>Sleep Deprivation</em>',
-    plain:'The Effects of Sleep Deprivation on Cognitive and Physical Functioning',
-    desc:'Systematic analysis of progressive sleep deprivation impact on cognitive processing speed, working memory, emotional regulation, physical performance, and neurochemical balance. Drawn from extended controlled deprivation trials.',
-    author:'1142 Research Foundation', tags:[['Sleep','hi'],['Cognition','gn'],['Deprivation','pk']],
-    size:'429 KB', url:'/pdfs/Sleep_Deprivation.pdf' },
-  { id:'DOC-012', type:'Personal Research', cat:['stimulants','cognitive','pharmacology'],
-    title:'The Reality of <em>Infinite</em> Methylphenidate',
-    plain:'The Reality of Infinite Methylphenidate — A Personal Research Account',
-    desc:'First-person research account exploring extended and escalating methylphenidate administration. Documents subjective cognitive state evolution, physiological adaptation, and frameworks for sustainable stimulant research protocols.',
-    author:'1142 Research Foundation', tags:[['MPH','hi'],['Personal','pp'],['Long-Term','gn']],
-    size:'429 KB', url:'/pdfs/Infinite_Methylphenidate_Case_Study.pdf' },
-  { id:'DOC-013', type:'Medical Analysis', cat:['pharmacology','stimulants','cognitive'],
-    title:'The <em>Ritalin</em> Experience',
-    plain:'The Ritalin Experience — Balancing Performance and Well-being',
-    desc:'Analytical review of the lived pharmacological experience of Ritalin across a spectrum of dosing ranges. Examines the core tension between peak cognitive performance and sustainable physiological and psychological well-being.',
-    author:'1142 Research Foundation', tags:[['Ritalin','hi'],['Performance','gn'],['Well-being','pk']],
-    size:'430 KB', url:'/pdfs/Ritlitilin_Method_Methylphenidate.pdf' },
-  { id:'DOC-014', type:'Methodology', cat:['cognitive','stimulants','pharmacology'],
-    title:'The <em>Ritlitilin</em> Method',
-    plain:'The Ritlitilin Method — A Transformative Framework for Cognitive Enhancement',
-    desc:'Introduces the Ritlitilin Method: a proprietary cognitive enhancement framework built around optimized methylphenidate cycling, precision dietary protocols, and behaviorally-conditioned performance windows for sustained intellectual output.',
-    author:'Cole Everdark', tags:[['Method','hi'],['Framework','gn'],['Cognitive','pk']],
-    size:'428 KB', url:'/pdfs/Ritlitilin_Method_Methylphenidate.pdf' },
-  { id:'DOC-015', type:'Medical Research', cat:['pharmacology','stimulants'],
-    title:'Therapeutic <em>Potential</em> of Stimulants',
-    plain:'Therapeutic Potential of Stimulant Medications in the Management Of',
-    desc:'Explores underutilized therapeutic applications of stimulant medications beyond ADHD treatment — including treatment-resistant depression, acquired cognitive impairment, post-viral fatigue, and neurological rehabilitation.',
-    author:'1142 Research Foundation', tags:[['Therapeutic','hi'],['Stimulants','pp'],['Medical','']],
-    size:'426 KB', url:'/pdfs/Therapeutic_Potential_Stimulants.pdf' },
-  { id:'DOC-016', type:'Medical Evaluation', cat:['pharmacology','neuroscience'],
-    title:'Fentanyl & <em>Neurovascular</em> Risk',
-    plain:'Fentanyl and Neurovascular Risk — A Critical Evaluation',
-    desc:"Critical evaluation of fentanyl's neurovascular risk profile. Focus on cerebrovascular event induction through multiple mechanistic pathways. Reviews acute and chronic exposure data and proposes risk stratification guidelines.",
-    author:'1142 Research Foundation', tags:[['Fentanyl','pk'],['Neurovascular','hi'],['Risk','pp']],
-    size:'430 KB', url:'/pdfs/Fentanyl_Neurovascular_Risk.pdf' },
-  { id:'DOC-017', type:'Cognitive Research', cat:['autism','neuroscience','cognitive'],
-    title:'Down Syndrome <em>Processing</em> Modalities',
-    plain:'Understanding How People with Down Syndrome Process',
-    desc:"Research documentation on the distinctive cognitive processing modalities of individuals with Down syndrome. Examines neurological architecture, learning mechanisms, and identifies pharmacological and behavioral interventions with measurable outcomes.",
-    author:'1142 Research Foundation', tags:[['Down Syndrome','pk'],['Processing','hi'],['Cognitive','pp']],
-    size:'428 KB', url:'/pdfs/Down_Syndrome_Process.pdf' },
-  { id:'DOC-018', type:'Biochemical Research', cat:['pharmacology','cognitive'],
-    title:'Methyl Nutrient — <em>Methylation</em> Optimization',
-    plain:'Methyl Nutrient — Methylation Pathway Optimization Protocol',
-    desc:'Targeted investigation into methylation pathway optimization using precision nutritional supplementation. Documents interplay between methyl donor compounds, cognitive function, mood regulation, and neurotransmitter synthesis efficiency.',
-    author:'1142 Research Foundation', tags:[['Methylation','hi'],['Nutrition','gn'],['Biochemistry','pp']],
-    size:'428 KB', url:'/pdfs/Methyl_Nutrient.pdf' },
-  { id:'DOC-019', type:'Abstract', cat:['sleep','neuroscience'],
-    title:'Sleep Deprivation <em>Abstract</em>',
-    plain:'Sleep Deprivation Abstract — Condensed Findings Report',
-    desc:'Condensed abstract presenting key findings from the extended Sleep Deprivation study series. High-density summary of cognitive and physiological outcome data for rapid reference and cross-study citation.',
-    author:'1142 Research Foundation', tags:[['Sleep','hi'],['Abstract',''],['Summary','gn']],
-    size:'429 KB', url:'/pdfs/Sleep_Deprivation_Abstract.pdf' },
-  { id:'DOC-020', type:'Extended Study', cat:['sleep','neuroscience','cognitive'],
-    title:'Sleep Deprivation — <em>Extended</em> Variant',
-    plain:'Sleep Deprivation — Extended Variant Study',
-    desc:'Extended variant of the core sleep deprivation study. Incorporates longer deprivation windows and expanded measurement protocols. Documents divergent cognitive failure modes beyond the 48-hour threshold and recovery trajectory data.',
-    author:'1142 Research Foundation', tags:[['Sleep','hi'],['Extended','pk'],['72hr+','pp']],
-    size:'429 KB', url:'/pdfs/Sleep_Deprivation_1.pdf' },
-  { id:'DOC-021', type:'Variant Protocol', cat:['pharmacology','stimulants'],
-    title:'Amphetamines Over Sedatives — <em>Variant</em>',
-    plain:'Amphetamines Over Sedatives — Variant Study Protocol',
-    desc:'Modified protocol iteration of the core amphetamines vs. sedatives comparative study. Adjusted dosing windows, additional outcome measures, and expanded subject demographics. Cross-references primary study for replication validation.',
-    author:'1142 Research Foundation', tags:[['Stimulants','hi'],['Variant',''],['Protocol','pp']],
-    size:'430 KB', url:'/pdfs/Amphetimines_over_sedatives_1.pdf' },
-  { id:'DOC-022', type:'Longitudinal Study', cat:['autism','neuroscience','cognitive'],
-    title:'Down Syndrome — <em>Longitudinal</em> Extended',
-    plain:'Down Syndrome Processing — Extended Longitudinal Study',
-    desc:'Extended longitudinal investigation into processing modality evolution in Down syndrome individuals across developmental stages. Documents cognitive trajectory shifts in response to targeted interventions over multi-year observation windows.',
-    author:'1142 Research Foundation', tags:[['Down Syndrome','pk'],['Longitudinal','hi'],['Development','gn']],
-    size:'428 KB', url:'/pdfs/Down_Syndrome_Process_Long.pdf' },
-  { id:'DOC-023', type:'Case Study (Final)', cat:['stimulants','cognitive','pharmacology'],
-    title:'Stim Blasting — <em>Final</em> Revision',
-    plain:'Stim Blasting Report — Final Revision',
-    desc:'Final revised edition of the Stim Blasting cognitive enhancement case study. Incorporates follow-up observation period data, refined performance metric analysis, and updated conclusions on long-term neuroadaptive consequences of intensive stimulant cycling.',
-    author:'Cole Everdark', tags:[['Stim Blast','hi'],['Final Rev','gn'],['Neuroadaptive','pk']],
-    size:'430 KB', url:'/pdfs/Stim_Blasting_Report_Cole_Everdark_final.pdf' },
-  { id:'DOC-024', type:'Follow-Up Study', cat:['pharmacology'],
-    title:'<em>Necronemothorax</em> — Resounding Follow-Up',
-    plain:'Carcinogenic Necronemothorax — Resounding Study Follow-Up',
-    desc:'Follow-up documentation extending the original carcinogenic necronemothorax study. Expanded tissue sample analysis, refined mechanistic models, and corroborating evidence strengthening the foundational findings of the original report.',
-    author:'1142 Research Foundation', tags:[['Carcinogens','hi'],['Follow-Up','pp'],['Pathology','']],
-    size:'429 KB', url:'/pdfs/Study_Carcinogenic_Necronemothorax_Resounding.pdf' },
-  { id:'DOC-025', type:'Research Essay', cat:['cognitive'],
-    title:'The Cost of <em>Knowledge</em>',
-    plain:'The Cost of Knowledge — A Philosophical Research Essay',
-    desc:"Philosophical research essay exploring the personal, neurological, and societal costs associated with relentless knowledge amplification. Examines the ethical dimensions of cognitive enhancement research and the 1142 Foundation's broader mission.",
-    author:'1142 Research Foundation', tags:[['Philosophy','hi'],['Ethics','pk'],['Knowledge','gn']],
-    size:'425 KB', url:'/pdfs/The_Cost_of_Knowledge.pdf' }
-];
 
-let activeFilter = 'all';
-
-function renderDocs(list) {
-  const grid = document.getElementById('pdfGrid');
-  const ct = document.getElementById('resultsCount');
-  ct.innerHTML = `Showing <span>${list.length}</span> of ${DOCS.length} documents`;
-  grid.innerHTML = '';
-  if (!list.length) {
-    grid.innerHTML = '<div class="empty-state">⚠ No documents match your search · Try a different query</div>';
-    return;
-  }
-  list.forEach((d, i) => {
-    const el = document.createElement('div');
-    el.className = 'pdf-card';
-    el.style.animationDelay = (i * 0.05) + 's';
-    const tagHTML = d.tags.map(([t,cls]) => `<span class="ctag ${cls}">${t}</span>`).join('');
-    el.innerHTML = `
-      <div class="card-top-line"></div>
-      <div class="card-ghost">${d.id.replace('DOC-','')}</div>
-      <div class="card-header">
-        <span class="card-doc-id">${d.id} · ${d.type}</span>
-        <span class="card-type-tag">${d.cat[0]}</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">${d.title}</div>
-        <div class="card-desc">${escHtml(d.desc)}</div>
-        <div class="card-author-block">
-          <div class="author-cell">
-            <div class="author-lbl">Written by</div>
-            <div class="author-val">${escHtml(d.author)}</div>
-          </div>
-        </div>
-        <div class="card-tags">${tagHTML}</div>
-      </div>
-      <div class="card-footer">
-        <div class="card-meta">⬛ PDF · ${d.size}</div>
-        <button class="card-view-btn" onclick='openModal(${JSON.stringify(d.plain)}, ${JSON.stringify(d.url)})'>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          VIEW PDF
-        </button>
-      </div>`;
-    grid.appendChild(el);
-  });
-}
-
-function go() {
-  const q = document.getElementById('searchInput').value.toLowerCase().trim();
-  let list = DOCS;
-  if (activeFilter !== 'all') list = list.filter(d => d.cat.includes(activeFilter));
-  if (q) list = list.filter(d =>
-    d.plain.toLowerCase().includes(q) ||
-    d.desc.toLowerCase().includes(q) ||
-    d.author.toLowerCase().includes(q) ||
-    d.type.toLowerCase().includes(q) ||
-    d.tags.some(([t]) => t.toLowerCase().includes(q))
-  );
-  renderDocs(list);
-}
-
-document.getElementById('chipWrap').addEventListener('click', e => {
-  const c = e.target.closest('.chip');
-  if (!c) return;
-  document.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
-  c.classList.add('on');
-  activeFilter = c.dataset.filter;
-  go();
-});
-document.getElementById('searchInput').addEventListener('input', go);
-
-function openModal(title, url) {
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalFrame').src = url + '#toolbar=1&navpanes=0';
-  document.getElementById('modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-  document.getElementById('modalFrame').src = '';
-  document.body.style.overflow = '';
-}
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-function escHtml(str) {
-  const d = document.createElement('div');
-  d.textContent = str; return d.innerHTML;
-}
-
-// CURSOR
-(function() {
-  const cur = document.getElementById('cursor'), ring = document.getElementById('cursor-ring');
-  let mx = window.innerWidth/2, my = window.innerHeight/2, rx = mx, ry = my;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx+'px'; cur.style.top = my+'px'; });
-  (function loop() { rx += (mx-rx)*.11; ry += (my-ry)*.11; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(loop); })();
-  document.querySelectorAll('a,button,.pdf-card,.chip').forEach(el => {
-    el.addEventListener('mouseenter', () => ring.classList.add('big'));
-    el.addEventListener('mouseleave', () => ring.classList.remove('big'));
-  });
-})();
-
-// REVEAL
-const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }), {threshold:.08});
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-
-// INIT
-renderDocs(DOCS);
-</script>
 <script src="assets/fx.js"></script>
 
 <script>

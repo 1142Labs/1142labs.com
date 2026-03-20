@@ -2939,3 +2939,506 @@ img[src*="1000110"] {
     .mobile-menu { padding-bottom: env(safe-area-inset-bottom); }
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   NAV + LOGO INTEGRATION OVERHAUL v2.0
+   Unified Broadcast Command Bar · Logo as Station Identity
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── COMMAND BAR BASE ── */
+.hud {
+  height: 60px !important;
+  padding: 0 0 0 0 !important;
+  background: rgba(3,4,14,.97) !important;
+  border-bottom: 1px solid rgba(0,102,255,.3) !important;
+  box-shadow:
+    0 0 0 1px rgba(0,102,255,.08),
+    0 6px 40px rgba(0,0,0,.9),
+    0 0 80px rgba(0,102,255,.04) !important;
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important;
+  align-items: stretch !important;
+}
+
+/* ── LOGO BLOCK — left station ID panel ── */
+.hud-logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+  text-decoration: none !important;
+  position: relative !important;
+  padding: 0 20px 0 20px !important;
+  border-right: 1px solid rgba(0,102,255,.2) !important;
+  background: rgba(0,40,100,.08) !important;
+  transition: background .2s !important;
+  overflow: hidden !important;
+  min-width: 0;
+}
+
+/* Animated scan line inside logo block */
+.hud-logo::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,207,255,.4), transparent);
+  animation: scanLine 4s linear infinite;
+  pointer-events: none;
+}
+
+/* Corner accent on logo block */
+.hud-logo::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 10px 10px 0;
+  border-color: transparent rgba(0,207,255,.3) transparent transparent;
+  pointer-events: none;
+}
+
+.hud-logo:hover {
+  background: rgba(0,60,140,.15) !important;
+}
+
+/* Logo image */
+.hud-logo img {
+  height: 36px !important;
+  width: 36px !important;
+  object-fit: contain !important;
+  filter:
+    drop-shadow(0 0 8px rgba(0,207,255,.6))
+    drop-shadow(0 0 20px rgba(0,102,255,.4)) !important;
+  transition: filter .3s, transform .3s !important;
+  flex-shrink: 0 !important;
+  margin-right: 12px !important;
+}
+
+.hud-logo:hover img {
+  filter:
+    drop-shadow(0 0 14px rgba(0,207,255,.9))
+    drop-shadow(0 0 30px rgba(0,102,255,.6))
+    drop-shadow(0 0 50px rgba(0,207,255,.3)) !important;
+  transform: scale(1.06) !important;
+}
+
+/* Logo text block */
+.hud-logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* Main title */
+.hud-logo span {
+  font-family: 'Road Rage','Orbitron',sans-serif !important;
+  font-weight: 900 !important;
+  font-size: 17px !important;
+  letter-spacing: .12em !important;
+  color: var(--primary) !important;
+  text-shadow:
+    0 0 10px var(--primary),
+    0 0 25px rgba(0,207,255,.4),
+    2px 0 0 rgba(255,0,80,.25),
+    -2px 0 0 rgba(0,207,255,.25) !important;
+  animation: anaglyphShift 6s ease-in-out infinite !important;
+  line-height: 1 !important;
+  display: block !important;
+}
+
+/* Sub-label under title */
+.hud-logo-sub {
+  font-family: 'Share Tech Mono',monospace;
+  font-size: 7px;
+  letter-spacing: .4em;
+  color: rgba(0,207,255,.35);
+  text-transform: uppercase;
+  line-height: 1;
+  display: block;
+  white-space: nowrap;
+}
+
+/* ── NAV PANEL — center ── */
+.nav-panel {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+  padding: 0 8px !important;
+  justify-content: flex-start !important;
+}
+
+.nav-section-toggle {
+  font-family: 'Share Tech Mono',monospace !important;
+  font-size: 10px !important;
+  letter-spacing: .22em !important;
+  color: rgba(160,185,230,.55) !important;
+  padding: 0 14px !important;
+  height: 60px !important;
+  border: none !important;
+  border-right: 1px solid rgba(0,102,255,.1) !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  position: relative !important;
+  transition: color .18s, background .18s !important;
+}
+
+.nav-section-toggle::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important; right: 0 !important;
+  height: 2px !important;
+  background: var(--primary) !important;
+  box-shadow: 0 0 8px var(--primary) !important;
+  transform: scaleX(0) !important;
+  transition: transform .22s !important;
+}
+
+.nav-section-toggle:hover,
+.nav-section-toggle.open {
+  color: var(--primary) !important;
+  background: rgba(0,102,255,.06) !important;
+}
+
+.nav-section-toggle:hover::after,
+.nav-section-toggle.open::after {
+  transform: scaleX(1) !important;
+}
+
+/* ── DROP PANELS — upgraded ── */
+.nav-drop {
+  top: 60px !important;
+  background: rgba(3,5,18,.99) !important;
+  border: 1px solid rgba(0,102,255,.25) !important;
+  border-top: 2px solid var(--primary) !important;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,.95),
+    0 0 40px rgba(0,102,255,.08),
+    inset 0 0 0 1px rgba(255,255,255,.02) !important;
+  min-width: 210px !important;
+}
+
+/* Scan line inside dropdown */
+.nav-drop::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,207,255,.2), transparent);
+  animation: scanLine 3s linear infinite;
+  pointer-events: none;
+}
+
+.nav-drop a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 10px 16px !important;
+  font-family: 'Share Tech Mono',monospace !important;
+  font-size: 10px !important;
+  letter-spacing: .15em !important;
+  color: rgba(160,185,230,.6) !important;
+  text-decoration: none !important;
+  text-transform: uppercase !important;
+  border-bottom: 1px solid rgba(0,102,255,.06) !important;
+  transition: color .15s, background .15s, padding-left .15s !important;
+  position: relative !important;
+}
+
+.nav-drop a::before {
+  content: '›' !important;
+  color: var(--primary) !important;
+  opacity: 0 !important;
+  font-size: 14px !important;
+  transition: opacity .15s !important;
+  flex-shrink: 0 !important;
+}
+
+.nav-drop a:hover {
+  color: var(--white) !important;
+  background: rgba(0,102,255,.08) !important;
+  padding-left: 20px !important;
+}
+
+.nav-drop a:hover::before {
+  opacity: 1 !important;
+}
+
+.nav-drop a em {
+  font-style: normal !important;
+  font-family: 'Share Tech Mono',monospace !important;
+  font-size: 8px !important;
+  letter-spacing: .2em !important;
+  color: rgba(0,207,255,.3) !important;
+  margin-left: auto !important;
+}
+
+.drop-label {
+  font-size: 7px !important;
+  letter-spacing: .5em !important;
+  padding: 8px 16px 4px !important;
+  color: var(--primary) !important;
+  opacity: .5 !important;
+}
+
+/* ── RIGHT SIDE STATUS ── */
+.hud-status {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 0 16px !important;
+  font-family: 'Share Tech Mono',monospace !important;
+  font-size: 8px !important;
+  letter-spacing: .25em !important;
+  color: rgba(0,207,255,.5) !important;
+  border-left: 1px solid rgba(0,102,255,.15) !important;
+  white-space: nowrap !important;
+}
+
+.hud-dot {
+  width: 6px !important; height: 6px !important;
+  background: var(--primary) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 0 8px var(--primary), 0 0 16px rgba(0,207,255,.4) !important;
+  animation: blink 1.5s ease-in-out infinite !important;
+  flex-shrink: 0 !important;
+}
+
+/* Hamburger — right edge */
+.nav-hamburger {
+  border: none !important;
+  border-left: 1px solid rgba(0,102,255,.2) !important;
+  border-radius: 0 !important;
+  height: 60px !important;
+  width: 60px !important;
+  padding: 0 !important;
+  display: none !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  background: rgba(0,40,100,.06) !important;
+  cursor: pointer !important;
+  transition: background .2s !important;
+  flex-shrink: 0 !important;
+}
+
+.nav-hamburger:hover { background: rgba(0,60,140,.15) !important; }
+
+.nav-hamburger span {
+  display: block !important;
+  width: 20px !important; height: 1.5px !important;
+  background: var(--primary) !important;
+  box-shadow: 0 0 6px var(--primary) !important;
+  transition: transform .25s ease, opacity .2s, width .2s !important;
+  transform-origin: center !important;
+}
+
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg) !important; }
+.nav-hamburger.open span:nth-child(2) { opacity: 0 !important; width: 0 !important; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg) !important; }
+
+/* ── MOBILE: show hamburger, hide nav panel ── */
+@media(max-width:768px) {
+  .hud {
+    grid-template-columns: auto 1fr auto !important;
+    height: 52px !important;
+  }
+  .hud-logo { padding: 0 12px !important; }
+  .hud-logo img { height: 30px !important; width: 30px !important; margin-right: 8px !important; }
+  .hud-logo span { font-size: 14px !important; }
+  .hud-logo-sub { display: none !important; }
+  .nav-panel { display: none !important; }
+  .hud-status { display: none !important; }
+  .nav-hamburger {
+    display: flex !important;
+    height: 52px !important;
+    width: 52px !important;
+  }
+  .mobile-menu { top: 52px !important; }
+}
+
+@media(max-width:480px) {
+  .hud { height: 48px !important; }
+  .hud-logo { padding: 0 10px !important; }
+  .hud-logo span { display: none !important; }
+  .hud-logo img { height: 28px !important; width: 28px !important; margin-right: 0 !important; }
+  .nav-hamburger { height: 48px !important; width: 48px !important; }
+  .mobile-menu { top: 48px !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   NAV + LOGO INTEGRATION OVERHAUL v2.0
+   Unified Broadcast Command Bar · Logo as Station Identity
+   ═══════════════════════════════════════════════════════════════════ */
+
+.hud {
+  height: 60px !important;
+  padding: 0 !important;
+  background: rgba(3,4,14,.97) !important;
+  border-bottom: 1px solid rgba(0,102,255,.3) !important;
+  box-shadow: 0 0 0 1px rgba(0,102,255,.08), 0 6px 40px rgba(0,0,0,.9) !important;
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important;
+  align-items: stretch !important;
+}
+
+.hud-logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+  text-decoration: none !important;
+  position: relative !important;
+  padding: 0 20px !important;
+  border-right: 1px solid rgba(0,102,255,.2) !important;
+  background: rgba(0,40,100,.08) !important;
+  transition: background .2s !important;
+  overflow: hidden !important;
+}
+.hud-logo::before {
+  content: '';
+  position: absolute; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg,transparent,rgba(0,207,255,.35),transparent);
+  animation: scanLine 4s linear infinite;
+  pointer-events: none;
+}
+.hud-logo::after {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 0; height: 0; border-style: solid;
+  border-width: 0 10px 10px 0;
+  border-color: transparent rgba(0,207,255,.28) transparent transparent;
+  pointer-events: none;
+}
+.hud-logo:hover { background: rgba(0,60,140,.16) !important; }
+
+.hud-logo img {
+  height: 36px !important; width: 36px !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 0 8px rgba(0,207,255,.6)) drop-shadow(0 0 20px rgba(0,102,255,.4)) !important;
+  transition: filter .3s, transform .3s !important;
+  flex-shrink: 0 !important;
+  margin-right: 12px !important;
+}
+.hud-logo:hover img {
+  filter: drop-shadow(0 0 14px rgba(0,207,255,.95)) drop-shadow(0 0 35px rgba(0,102,255,.7)) drop-shadow(0 0 60px rgba(0,207,255,.3)) !important;
+  transform: scale(1.07) !important;
+}
+
+.hud-logo span {
+  font-family: 'Road Rage','Orbitron',sans-serif !important;
+  font-weight: 900 !important; font-size: 17px !important;
+  letter-spacing: .12em !important;
+  color: var(--primary) !important;
+  text-shadow: 0 0 10px var(--primary), 0 0 25px rgba(0,207,255,.4), 2px 0 0 rgba(255,0,80,.22), -2px 0 0 rgba(0,207,255,.22) !important;
+  animation: anaglyphShift 6s ease-in-out infinite !important;
+  line-height: 1 !important; display: block !important;
+}
+.hud-logo-sub {
+  font-family: 'Share Tech Mono',monospace;
+  font-size: 7px; letter-spacing: .4em;
+  color: rgba(0,207,255,.32); text-transform: uppercase;
+  line-height: 1; display: block; white-space: nowrap;
+}
+
+.nav-panel {
+  display: flex !important; align-items: center !important;
+  gap: 0 !important; padding: 0 4px !important;
+}
+.nav-section-toggle {
+  font-family: 'Share Tech Mono',monospace !important;
+  font-size: 10px !important; letter-spacing: .2em !important;
+  color: rgba(155,180,230,.5) !important;
+  padding: 0 14px !important; height: 60px !important;
+  border: none !important;
+  border-right: 1px solid rgba(0,102,255,.08) !important;
+  background: transparent !important; cursor: pointer !important;
+  display: flex !important; align-items: center !important; gap: 6px !important;
+  text-transform: uppercase !important; white-space: nowrap !important;
+  position: relative !important; transition: color .18s, background .18s !important;
+}
+.nav-section-toggle::after {
+  content: '' !important;
+  position: absolute !important; bottom: 0 !important; left: 0 !important; right: 0 !important;
+  height: 2px !important;
+  background: var(--primary) !important; box-shadow: 0 0 8px var(--primary) !important;
+  transform: scaleX(0) !important; transition: transform .22s !important;
+}
+.nav-section-toggle:hover, .nav-section-toggle.open {
+  color: var(--primary) !important; background: rgba(0,102,255,.06) !important;
+}
+.nav-section-toggle:hover::after, .nav-section-toggle.open::after { transform: scaleX(1) !important; }
+
+.nav-drop {
+  top: 60px !important;
+  background: rgba(3,5,18,.99) !important;
+  border: 1px solid rgba(0,102,255,.25) !important;
+  border-top: 2px solid var(--primary) !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,.96), 0 0 40px rgba(0,102,255,.08), inset 0 0 0 1px rgba(255,255,255,.02) !important;
+  min-width: 210px !important;
+}
+.nav-drop a {
+  display: flex !important; align-items: center !important; gap: 8px !important;
+  padding: 10px 16px !important;
+  font-family: 'Share Tech Mono',monospace !important;
+  font-size: 10px !important; letter-spacing: .15em !important;
+  color: rgba(155,180,230,.58) !important;
+  text-decoration: none !important; text-transform: uppercase !important;
+  border-bottom: 1px solid rgba(0,102,255,.06) !important;
+  transition: color .15s, background .15s, padding-left .15s !important;
+}
+.nav-drop a::before { content: '›' !important; color: var(--primary) !important; opacity: 0 !important; font-size: 14px !important; transition: opacity .15s !important; flex-shrink: 0 !important; }
+.nav-drop a:hover { color: var(--white) !important; background: rgba(0,102,255,.08) !important; padding-left: 22px !important; }
+.nav-drop a:hover::before { opacity: 1 !important; }
+.nav-drop a em { font-style: normal !important; font-size: 8px !important; letter-spacing: .18em !important; color: rgba(0,207,255,.28) !important; margin-left: auto !important; }
+.drop-label { font-size: 7px !important; letter-spacing: .5em !important; padding: 8px 16px 4px !important; color: var(--primary) !important; opacity: .5 !important; }
+
+.hud-status {
+  display: flex !important; align-items: center !important; gap: 8px !important;
+  padding: 0 16px !important;
+  font-family: 'Share Tech Mono',monospace !important;
+  font-size: 8px !important; letter-spacing: .25em !important;
+  color: rgba(0,207,255,.45) !important;
+  border-left: 1px solid rgba(0,102,255,.15) !important;
+  white-space: nowrap !important;
+}
+.hud-dot { width: 6px !important; height: 6px !important; background: var(--primary) !important; border-radius: 50% !important; box-shadow: 0 0 8px var(--primary), 0 0 16px rgba(0,207,255,.4) !important; animation: blink 1.5s ease-in-out infinite !important; flex-shrink: 0 !important; }
+
+.nav-hamburger {
+  border: none !important; border-left: 1px solid rgba(0,102,255,.2) !important;
+  border-radius: 0 !important; height: 60px !important; width: 60px !important;
+  padding: 0 !important; display: none !important;
+  flex-direction: column !important; align-items: center !important; justify-content: center !important;
+  gap: 5px !important; background: rgba(0,40,100,.06) !important;
+  cursor: pointer !important; transition: background .2s !important; flex-shrink: 0 !important;
+}
+.nav-hamburger:hover { background: rgba(0,60,140,.16) !important; }
+.nav-hamburger span { display: block !important; width: 20px !important; height: 1.5px !important; background: var(--primary) !important; box-shadow: 0 0 6px var(--primary) !important; transition: transform .25s ease, opacity .2s, width .2s !important; transform-origin: center !important; }
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg) !important; }
+.nav-hamburger.open span:nth-child(2) { opacity: 0 !important; width: 0 !important; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg) !important; }
+
+@media(max-width:768px){
+  .hud { height: 52px !important; }
+  .hud-logo { padding: 0 12px !important; }
+  .hud-logo img { height: 30px !important; width: 30px !important; margin-right: 8px !important; }
+  .hud-logo span { font-size: 14px !important; letter-spacing: .1em !important; }
+  .hud-logo-sub { display: none !important; }
+  .nav-panel { display: none !important; }
+  .hud-status { display: none !important; }
+  .nav-hamburger { display: flex !important; height: 52px !important; width: 52px !important; }
+  .mobile-menu { top: 52px !important; }
+  .filter-bar { top: 52px !important; }
+}
+@media(max-width:480px){
+  .hud { height: 48px !important; }
+  .hud-logo span { display: none !important; }
+  .hud-logo img { height: 28px !important; width: 28px !important; margin-right: 0 !important; }
+  .nav-hamburger { height: 48px !important; width: 48px !important; }
+  .mobile-menu { top: 48px !important; }
+}

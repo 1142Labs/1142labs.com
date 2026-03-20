@@ -480,7 +480,10 @@ body { background: var(--void, #0A0A0A); padding-top: 72px; }
 <nav class="hud">
   <a href="index.html" class="hud-logo">
     <img src="assets/images/1142_logo.png" alt="1142 Labs">
-    <span>1142 LABS</span>
+    <div class="hud-logo-text">
+      <span>1142 LABS</span>
+      <span class="hud-logo-sub">Cognitive Liberation TV</span>
+    </div>
   </a>
 
   <!-- hamburger (mobile) -->
@@ -513,6 +516,7 @@ body { background: var(--void, #0A0A0A); padding-top: 72px; }
         <span class="drop-label" style="color:var(--green)">Studies</span>
         <a href="breakthroughs.html">Breakthroughs</a>
         <a href="pdf_portal.html">PDF Portal</a>
+        <a href="library.html">PDF Library <em>All 19</em></a>
         <span class="drop-label" style="color:var(--green)">Chemical DB</span>
         <a href="chemlog.html">Chem Log</a>
         <a href="1142_chemicals.html">Chemicals of Study</a>
@@ -1606,7 +1610,7 @@ function openModal(id) {
 
   document.getElementById('modal-body').innerHTML = `
     <div class="modal-canvas-wrap">
-      <canvas class="modal-canvas" id="modal-mol"></canvas>
+      <canvas class="modal-canvas" id="modal-mol-b"></canvas>
     </div>
     <div class="modal-section">
       <div class="modal-section-label">Substance</div>

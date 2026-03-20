@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PDF Library · 1142 Labs</title>
+<link rel="icon" href="assets/images/1142_logo.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/global.css">
+<style>
+body{background:var(--void);}
+.lib-hero{padding:clamp(88px,13vw,120px) clamp(16px,4vw,48px) 48px;position:relative;overflow:hidden;border-bottom:1px solid rgba(0,102,255,.2);}
+.lib-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,102,255,.1),transparent 70%);}
+.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2px;padding:2px;}
+.pdf-card{
+  display:flex;align-items:stretch;
+  background:rgba(4,6,24,.92);
+  border:1px solid rgba(0,102,255,.22);
+  text-decoration:none;
+  transition:border-color .2s,transform .2s,box-shadow .2s;
+  position:relative;overflow:hidden;
+}
+.pdf-card:hover{
+  border-color:rgba(0,207,255,.5);
+  transform:translateY(-3px);
+  box-shadow:0 12px 40px rgba(0,0,0,.8),0 0 30px rgba(0,102,255,.1);
+}
+.pdf-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--blue),var(--primary),var(--purple));
+  transform:scaleX(0);transition:transform .25s;
+}
+.pdf-card:hover::before{transform:scaleX(1);}
+.pdf-num{
+  width:56px;flex-shrink:0;
+  background:rgba(0,102,255,.08);
+  border-right:1px solid rgba(0,102,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;
+  color:rgba(0,102,255,.5);
+  flex-direction:column;gap:4px;
+}
+.pdf-num span{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:.2em;color:rgba(0,102,255,.3);}
+.pdf-body{padding:18px 20px;flex:1;}
+.pdf-series{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.35em;color:rgba(0,207,255,.5);text-transform:uppercase;margin-bottom:6px;}
+.pdf-title{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--white);letter-spacing:.04em;text-transform:uppercase;line-height:1.35;margin-bottom:8px;}
+.pdf-desc{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:300;color:rgba(200,232,255,.5);line-height:1.65;}
+.pdf-action{
+  width:52px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  border-left:1px solid rgba(0,102,255,.12);
+  color:rgba(0,207,255,.35);font-size:18px;
+  transition:color .2s,background .2s;
+}
+.pdf-card:hover .pdf-action{color:var(--primary);background:rgba(0,102,255,.06);}
+
+/* FILTER */
+.lib-filters{
+  display:flex;flex-wrap:wrap;gap:8px;
+  padding:20px clamp(16px,4vw,48px);
+  background:rgba(4,6,20,.97);
+  border-bottom:1px solid rgba(0,102,255,.15);
+  position:sticky;top:52px;z-index:400;
+  backdrop-filter:blur(20px);
+}
+.lf-btn{
+  font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.25em;
+  text-transform:uppercase;padding:7px 14px;
+  border:1px solid rgba(0,102,255,.2);
+  background:transparent;cursor:pointer;color:rgba(160,195,255,.45);
+  transition:all .18s;
+}
+.lf-btn:hover,.lf-btn.on{color:var(--primary);border-color:var(--primary);background:rgba(0,102,255,.07);box-shadow:0 0 10px rgba(0,102,255,.15);}
+.lib-count{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.2em;color:rgba(0,102,255,.4);margin-left:auto;display:flex;align-items:center;}
+
+/* DOWNLOAD ALL BUTTON */
+.dl-all{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.3em;
+  text-transform:uppercase;padding:12px 24px;
+  border:1px solid var(--primary);color:var(--primary);
+  background:rgba(0,102,255,.06);text-decoration:none;
+  transition:all .2s;margin-top:4px;
+}
+.dl-all:hover{background:rgba(0,102,255,.15);box-shadow:0 0 20px rgba(0,102,255,.3);letter-spacing:.35em;}
+
+.hidden{display:none!important;}
+
+@media(max-width:600px){
+  .lib-grid{grid-template-columns:1fr;}
+  .pdf-desc{display:none;}
+  .lib-filters{padding:12px 16px;}
+  .lf-btn{font-size:7px;padding:6px 10px;}
+}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav class="hud">
+    <a href="index.html" class="hud-logo">
+    <img src="assets/images/1142_logo.png" alt="1142 Labs">
+    <div class="hud-logo-text">
+      <span>1142 LABS</span>
+      <span class="hud-logo-sub">Cognitive Liberation TV</span>
+    </div>
+  </a>
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-section">
+      <button class="nav-section-toggle" data-target="drop-f">THE FORTRESS <span class="nav-caret">&#9660;</span></button>
+      <div class="nav-drop" id="drop-f">
+        <a href="index.html">The Void <em>Home</em></a><a href="research.html">The Brain</a><a href="tools.html">The Engine</a><a href="archive.html">The Archive</a><a href="creators.html">The Creator</a>
+      </div>
+    </div>
+    <div class="nav-section">
+      <button class="nav-section-toggle" data-target="drop-r">RESEARCH <span class="nav-caret">&#9660;</span></button>
+      <div class="nav-drop" id="drop-r">
+        <a href="breakthroughs.html">Breakthroughs</a><a href="pdf_portal.html">PDF Portal</a><a href="library.html">PDF Library</a>
+        <a href="chemlog.html">Chem Log</a><a href="1142_chemicals.html">Chemicals</a>
+        <a href="tools.html">Combo Calc</a><a href="withdrawal.html">Withdrawal Calc</a>
+      </div>
+    </div>
+    <div class="nav-section">
+      <button class="nav-section-toggle" data-target="drop-a">ABOUT <span class="nav-caret">&#9660;</span></button>
+      <div class="nav-drop" id="drop-a">
+        <a href="creators.html">Cole EverDark</a><a href="vision.html">The Manifesto</a>
+        <a href="socials.html">Network</a><a href="resources.html">Resources</a>
+      </div>
+    </div>
+  </div>
+  <div class="hud-status"><div class="hud-dot"></div>ONLINE · 1142</div>
+  <button class="nav-hamburger" id="mobileMenuBtn" aria-label="Open Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <div class="mobile-channel"><div class="mobile-ch-num">11·42</div><div class="mobile-ch-info">PDF LIBRARY</div><div class="mobile-onair"><div class="mobile-onair-dot"></div><span>ON AIR</span></div></div>
+    <div class="mobile-section-label">Navigation</div>
+    <a href="index.html">Home</a><a href="library.html">PDF Library</a><a href="breakthroughs.html">Breakthroughs</a>
+    <a href="pdf_portal.html">PDF Portal</a><a href="tools.html">Calculators</a><a href="withdrawal.html">Withdrawal Calc</a>
+    <a href="chemlog.html">Chem Log</a><a href="creators.html">Cole EverDark</a><a href="socials.html">Network</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="lib-hero">
+  <div style="position:absolute;inset:0;pointer-events:none;">
+    <img src="assets/images/1000110218.webp" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.12;filter:saturate(1.2) brightness(.6);">
+    <div style="position:absolute;inset:0;background:linear-gradient(to right,var(--void) 40%,transparent 100%);"></div>
+  </div>
+  <div style="position:relative;z-index:1;max-width:700px;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.5em;color:var(--primary);text-transform:uppercase;margin-bottom:14px;text-shadow:0 0 8px rgba(0,207,255,.4);">19 Papers · Cole EverDark · 1142 Labs · 2020–2025</div>
+    <h1 style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(32px,6vw,72px);color:var(--white);line-height:1;text-transform:uppercase;margin-bottom:16px;">PDF <span style="color:var(--primary);text-shadow:0 0 20px var(--primary);">Library</span></h1>
+    <p style="font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:300;color:rgba(200,232,255,.55);line-height:1.8;margin-bottom:20px;">Every paper published by 1142 Labs. Click any card to open the PDF directly. Filter by series or download individually.</p>
+    <a href="pdfs/Ritlitilin_Method_Methylphenidate.pdf" class="dl-all" target="_blank">📄 OPEN A PAPER →</a>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="lib-filters">
+  <button class="lf-btn on" onclick="filterLib(this,'all')">All (19)</button>
+  <button class="lf-btn" onclick="filterLib(this,'mph')">Methylphenidate</button>
+  <button class="lf-btn" onclick="filterLib(this,'stim')">Stimulants</button>
+  <button class="lf-btn" onclick="filterLib(this,'neuro')">Neurodiversity</button>
+  <button class="lf-btn" onclick="filterLib(this,'consc')">Consciousness</button>
+  <button class="lf-btn" onclick="filterLib(this,'harm')">Harm Reduction</button>
+  <button class="lf-btn" onclick="filterLib(this,'phil')">Philosophy</button>
+  <div class="lib-count" id="lib-count">19 papers</div>
+</div>
+
+<!-- GRID -->
+<div class="lib-grid" id="lib-grid">
+
+  <a class="pdf-card" href="pdfs/Ritlitilin_Method_Methylphenidate.pdf" target="_blank" data-cat="mph stim">
+    <div class="pdf-num">01<span>MPH-001</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(0,207,255,.6);">Methylphenidate Series</div>
+      <div class="pdf-title">The Ritlitilin Method</div>
+      <div class="pdf-desc">A framework for long-term neurocognitive enhancement via methylphenidate — treating it as a cognitive scaffold, not a corrective patch.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Stim_Blasting_Report_Cole_Everdark.pdf" target="_blank" data-cat="mph stim consc">
+    <div class="pdf-num">02<span>MPH-002</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(204,61,255,.6);">Methylphenidate Series</div>
+      <div class="pdf-title">Stim Blasting Report</div>
+      <div class="pdf-desc">Original version. Supra-therapeutic stimulant saturation — the discovery of Ergopathics and Stim Unlocking.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Stim_Blasting_Report_Cole_Everdark_final.pdf" target="_blank" data-cat="mph stim consc">
+    <div class="pdf-num">03<span>MPH-002F</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(204,61,255,.6);">Methylphenidate Series</div>
+      <div class="pdf-title">Stim Blasting Report — Final</div>
+      <div class="pdf-desc">Revised and enhanced final edition with full theoretical framework for neurochemical saturation and Ergopathics.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Infinite_Methylphenidate_Case_Study.pdf" target="_blank" data-cat="mph">
+    <div class="pdf-num">04<span>MPH-003</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(153,85,255,.6);">Methylphenidate Series</div>
+      <div class="pdf-title">Infinite Methylphenidate Case Study</div>
+      <div class="pdf-desc">Year-long longitudinal study of self-directed high-dose methylphenidate after prescription termination. Pharmaceutical sovereignty.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Surging_brain.pdf" target="_blank" data-cat="mph neuro consc">
+    <div class="pdf-num">05<span>MPH-004</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(0,207,255,.6);">Methylphenidate Series</div>
+      <div class="pdf-title">Surging Brain</div>
+      <div class="pdf-desc">Mega-dosing and power surging as active neural remodelling for autism and Down syndrome — neuro-electrical stimulation framework.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Methyl_Nutrient.pdf" target="_blank" data-cat="mph">
+    <div class="pdf-num">06<span>MPH-005</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(0,255,170,.6);">Methylphenidate Series</div>
+      <div class="pdf-title">Methyl Nutrient</div>
+      <div class="pdf-desc">The biochemistry of methylation — folate, B12, choline, betaine, methionine and the one-carbon cycle that powers consciousness.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Amphetimines_over_sedatives.pdf" target="_blank" data-cat="stim harm">
+    <div class="pdf-num">07<span>STIM-001</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(0,207,255,.6);">Stimulant Series</div>
+      <div class="pdf-title">Amphetamines Over Sedatives</div>
+      <div class="pdf-desc">Original version. Challenging chronic pain paradigm — amphetamines as analgesics via functional dissociation vs CNS depression.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Amphetimines_over_sedatives_1.pdf" target="_blank" data-cat="stim harm">
+    <div class="pdf-num">08<span>STIM-001B</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(0,207,255,.6);">Stimulant Series</div>
+      <div class="pdf-title">Amphetamines Over Sedatives — II</div>
+      <div class="pdf-desc">Enhanced version with 12-week comparative clinical observation data and expanded pharmacological rationale.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Therapeutic_Potential_Stimulants.pdf" target="_blank" data-cat="stim neuro harm">
+    <div class="pdf-num">09<span>STIM-002</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(153,85,255,.6);">Stimulant Series</div>
+      <div class="pdf-title">Therapeutic Potential — Neurodysplasia Edema</div>
+      <div class="pdf-desc">CNS stimulants as circulatory regulators — treating peripheral edema caused by neurodysplasia-related autonomic dysfunction.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Fentanyl_Neurovascular_Risk.pdf" target="_blank" data-cat="harm">
+    <div class="pdf-num">10<span>HARM-001</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(204,61,255,.6);">Harm Reduction Series</div>
+      <div class="pdf-title">Fentanyl Neurovascular Risk</div>
+      <div class="pdf-desc">Beyond overdose — cerebral hypoxia, blood-brain barrier disruption, thromboembolism, and long-term neurovascular consequences of fentanyl exposure.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Study_Carcinogenic_Necronemothorax.pdf" target="_blank" data-cat="harm">
+    <div class="pdf-num">11<span>HARM-002</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(204,61,255,.6);">Harm Reduction Series</div>
+      <div class="pdf-title">Carcinogens & Necronemothorax</div>
+      <div class="pdf-desc">Original study. Carcinogenic compound antimicrobial hypothesis — MRSA, pulmonary black mold, necrotising lung tissue.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Study_Carcinogenic_Necronemothorax_Resounding.pdf" target="_blank" data-cat="harm">
+    <div class="pdf-num">12<span>HARM-002R</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(204,61,255,.6);">Harm Reduction Series</div>
+      <div class="pdf-title">Carcinogens & Necronemothorax — Resounding</div>
+      <div class="pdf-desc">Extended comparative analysis with proposed biological mechanisms for antimicrobial carcinogenic compound interactions.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Sleep_Deprivation.pdf" target="_blank" data-cat="consc stim">
+    <div class="pdf-num">13<span>CONSC-001</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(153,85,255,.6);">Consciousness Series</div>
+      <div class="pdf-title">Sleep Deprivation — Case Study</div>
+      <div class="pdf-desc">Original version. 7-day total sleep deprivation sustained by methamphetamine — staged neurological collapse documented.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Sleep_Deprivation_1.pdf" target="_blank" data-cat="consc stim">
+    <div class="pdf-num">14<span>CONSC-001B</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(153,85,255,.6);">Consciousness Series</div>
+      <div class="pdf-title">Sleep Deprivation — Longitudinal</div>
+      <div class="pdf-desc">168-hour comprehensive analysis with phase-by-phase chronology of cognitive and physiological collapse.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Sleep_Deprivation_Abstract.pdf" target="_blank" data-cat="consc stim">
+    <div class="pdf-num">15<span>CONSC-001A</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(153,85,255,.6);">Consciousness Series</div>
+      <div class="pdf-title">Sleep Deprivation — Abstract</div>
+      <div class="pdf-desc">Standalone abstract documenting hallucination onset, neurological shutdown, and stimulant ceiling phenomenon.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Down_Syndrome_Process.pdf" target="_blank" data-cat="neuro">
+    <div class="pdf-num">16<span>NEURO-001</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(0,255,170,.6);">Neurodiversity Series</div>
+      <div class="pdf-title">Down Syndrome Cognitive Process</div>
+      <div class="pdf-desc">Mapping the iterative learning architecture of Down syndrome — repetition, background processing, and the missing puzzle piece phenomenon.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Down_Syndrome_Process_1.pdf" target="_blank" data-cat="neuro">
+    <div class="pdf-num">17<span>NEURO-001B</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(0,255,170,.6);">Neurodiversity Series</div>
+      <div class="pdf-title">Down Syndrome Process — Multi-Faceted</div>
+      <div class="pdf-desc">Extended multi-faceted analysis including developmental milestones and neurobiological factors for educators and peers.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/Down_Syndrome_Process_Long.pdf" target="_blank" data-cat="neuro">
+    <div class="pdf-num">18<span>NEURO-001C</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(0,255,170,.6);">Neurodiversity Series</div>
+      <div class="pdf-title">Down Syndrome — Mechanisms & Enhancement</div>
+      <div class="pdf-desc">Comprehensive long-form paper covering repetition, reinforcement, pharmacological neuro-enhancement via methylphenidate.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+  <a class="pdf-card" href="pdfs/The_Cost_of_Knowledge.pdf" target="_blank" data-cat="phil consc">
+    <div class="pdf-num">19<span>PHIL-001</span></div>
+    <div class="pdf-body">
+      <div class="pdf-series" style="color:rgba(255,184,0,.6);">Philosophy Series</div>
+      <div class="pdf-title">The Cost of Knowledge</div>
+      <div class="pdf-desc">The epistemological toll of awareness — dissolution of delusion, metaphysical resistance, and the unequal distribution of truth's burden.</div>
+    </div>
+    <div class="pdf-action">↗</div>
+  </a>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand"><img src="assets/images/logo-full-tagline.png" alt="1142 Labs"><p>1142 Labs · Independent Research · Est. Dec 22, 2019</p></div>
+    <div class="footer-col"><h4>PDFs</h4><ul><li><a href="library.html">PDF Library (All 19)</a></li><li><a href="pdf_portal.html">PDF Portal</a></li><li><a href="breakthroughs.html">Breakthroughs</a></li></ul></div>
+    <div class="footer-col"><h4>Tools</h4><ul><li><a href="tools.html">Combo Calculator</a></li><li><a href="withdrawal.html">Withdrawal Calc</a></li></ul></div>
+    <div class="footer-col"><h4>Site</h4><ul><li><a href="index.html">Home</a></li><li><a href="research.html">Research</a></li><li><a href="creators.html">Cole EverDark</a></li><li><a href="socials.html">Network</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>1142 established Dec 22nd 2019 · a Cole EverDark company · In loving memory of Katrina Jade Mutch Hasler ♥ Dec 20th, 2021</p><div class="footer-badge"><div class="footer-dot"></div>AN EVERDARK PRODUCTION</div></div>
+</footer>
+
+<script>
+function filterLib(btn, cat){
+  document.querySelectorAll('.lf-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  var n=0;
+  document.querySelectorAll('.pdf-card').forEach(c=>{
+    var show=cat==='all'||(c.dataset.cat||'').includes(cat);
+    c.style.display=show?'':'none';
+    if(show)n++;
+  });
+  document.getElementById('lib-count').textContent=n+' paper'+(n!==1?'s':'');
+}
+(function(){
+  var c=document.getElementById('bg-canvas');if(!c)return;
+  var ctx=c.getContext('2d'),stars=[],W,H;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;stars=[];for(var i=0;i<180;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.2,a:Math.random(),sp:Math.random()*.01+.003,h:[210,230,250,270][Math.floor(Math.random()*4)]});}
+  function draw(){ctx.clearRect(0,0,W,H);stars.forEach(s=>{s.a+=s.sp;var a=.08+.3*Math.abs(Math.sin(s.a));ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`hsla(${s.h},90%,75%,${a})`;ctx.fill();});requestAnimationFrame(draw);}
+  window.addEventListener('resize',resize);resize();draw();
+  var cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+  document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px';});
+  document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('big'));el.addEventListener('mouseleave',()=>ring.classList.remove('big'));});
+  document.querySelectorAll('.nav-section-toggle').forEach(btn=>{btn.addEventListener('click',e=>{e.stopPropagation();var id=btn.dataset.target,drop=document.getElementById(id),open=drop.classList.contains('open');document.querySelectorAll('.nav-drop').forEach(d=>d.classList.remove('open'));document.querySelectorAll('.nav-section-toggle').forEach(b=>b.classList.remove('open'));if(!open){drop.classList.add('open');btn.classList.add('open');}});});
+  document.addEventListener('click',()=>{document.querySelectorAll('.nav-drop').forEach(d=>d.classList.remove('open'));document.querySelectorAll('.nav-section-toggle').forEach(b=>b.classList.remove('open'));});
+})();
+</script>
+<script>
+/* ═══ MOBILE MENU JS ═══ */
+(function(){
+  var btn=document.getElementById('mobileMenuBtn'),menu=document.getElementById('mobileMenu');
+  if(!btn||!menu)return;
+  btn.addEventListener('click',function(){btn.classList.toggle('open');menu.classList.toggle('open');document.body.style.overflow=menu.classList.contains('open')?'hidden':'';});
+  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{btn.classList.remove('open');menu.classList.remove('open');document.body.style.overflow='';}));
+  var sx=0;menu.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
+  menu.addEventListener('touchend',e=>{if(e.changedTouches[0].clientX-sx>60){btn.classList.remove('open');menu.classList.remove('open');document.body.style.overflow='';}},{passive:true});
+})();
+</script>
+</body>
+</html>
