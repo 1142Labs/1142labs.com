@@ -1,97 +1,91 @@
 /**
  * ════════════════════════════════════════════════════
- *  1142 LABS — FX.JS  v4.0  ADVANCED VISUALS
- *  Neural Fortress · Plasma Core · Holographic Grid
+ *  1142 LABS — FX.JS  v3.0
+ *  Visual Effects Package · Production Build
  *
  *  Modules:
- *   1.  MatrixRain       — Falling glyph columns
- *   2.  CrystalBurst     — Click particle explosions
- *   3.  ChromaShift      — RGB-split heading effect
- *   4.  GlitchFlicker    — Random screen glitch events
- *   5.  VortexPulse      — Radial ring ripples
- *   6.  FloatCrystals    — Ambient floating shards
- *   7.  NeonTrail        — Cursor chromatic trail
- *   8.  BootSequence     — First-visit typewriter boot
- *   9.  NeuralWeb        — Interconnected node network
- *   10. PlasmaLightning  — Fractal lightning bolts
- *   11. HoloScanlines    — CRT holographic scanlines
- *   12. WarpSpeed        — Hyperspace star streaks
- *   13. CardTilt3D       — Perspective mouse tilt on cards
- *   14. HexGrid          — Animated hexagonal grid pulse
- *   15. AuraGlow         — Section-entry radial bloom
- *   16. DataStream       — Flowing encoded data columns
+ *   1. MatrixRain    — Falling glyph columns (canvas)
+ *   2. CrystalBurst  — Pointer-reactive particle system
+ *   3. ChromaShift   — Chromatic aberration on headings
+ *   4. GlitchFlicker — Random screen-wide glitch events
+ *   5. VortexPulse   — Hero background radial beat
+ *   6. FloatCrystals — Ambient shard particles (canvas)
+ *   7. AudioReact    — Cursor beat response (no audio req)
+ *   8. Init          — Auto-wires all effects
  * ════════════════════════════════════════════════════
  */
 (function () {
   'use strict';
 
+  /* ── PALETTE (matches global.css) ── */
   const C = {
     cyan:   '#00F0FF',
-    cyan2:  '#00C8D8',
     pink:   '#EC4899',
-    pink2:  '#FF007A',
     purple: '#8B5CF6',
     green:  '#4ade80',
-    white:  '#F0F4FF',
     void:   '#0A0A0A',
   };
 
-  /* ── shared util ── */
-  function rgba(hex, a) {
-    const r = parseInt(hex.slice(1,3),16);
-    const g = parseInt(hex.slice(3,5),16);
-    const b = parseInt(hex.slice(5,7),16);
-    return `rgba(${r},${g},${b},${a})`;
-  }
-  function rnd(min, max) { return min + Math.random() * (max - min); }
-
   /* ══════════════════════════════════════════════
-     1. MATRIX RAIN  (enhanced — multi-layer)
+     1. MATRIX RAIN
+     Full-screen canvas: falling 1142-specific
+     glyph columns — katakana, numerals, lab symbols
      ══════════════════════════════════════════════ */
   const MatrixRain = (() => {
     const GLYPHS =
       '1142アイウエオカキクケコサシスセソタチツテトナニヌネノ' +
       'ハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789' +
-      '∞◆▲░▒▓⚗⚡∅∂∇Ψ∑∏∫≈≠≤≥→←↑↓◉●■□⊕⊗⊘';
-    let canvas, ctx, cols, drops, speeds, active = false, raf;
-    const colours = [C.cyan, C.purple, C.pink, C.green, C.cyan2];
+      '∞◆▲░▒▓⚗⚡∅∂∇Ψ∑∏∫≈≠≤≥→←↑↓◉●■□';
+
+    let canvas, ctx, cols, drops, raf, active = false;
+
+    const colours = [C.cyan, C.purple, C.pink, C.green];
 
     function resize() {
       canvas.width  = window.innerWidth;
       canvas.height = window.innerHeight;
-      cols   = Math.floor(canvas.width / 18);
-      drops  = Array.from({length: cols}, () => rnd(0, canvas.height / 18));
-      speeds = Array.from({length: cols}, () => rnd(0.3, 1.1));
+      cols  = Math.floor(canvas.width / 20);
+      drops = Array(cols).fill(1);
     }
 
     function draw() {
-      ctx.fillStyle = 'rgba(10,10,10,0.04)';
+      ctx.fillStyle = 'rgba(10,10,10,0.045)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       for (let i = 0; i < cols; i++) {
-        const g   = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        const g = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
         const col = colours[Math.floor(Math.random() * colours.length)];
-        const x   = i * 18, y = drops[i] * 18;
-        ctx.fillStyle = '#fff';
-        ctx.font = `${rnd(11,15)}px "Share Tech Mono",monospace`;
+        const x   = i * 20;
+        const y   = drops[i] * 20;
+
+        /* bright head */
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '14px "Share Tech Mono", monospace';
         ctx.fillText(g, x, y);
+
+        /* trail */
         ctx.fillStyle = col;
-        ctx.globalAlpha = 0.5;
-        ctx.fillText(g, x, y + 18);
+        ctx.globalAlpha = 0.65;
+        ctx.fillText(g, x, y + 20);
         ctx.globalAlpha = 1;
+
         if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i] += speeds[i];
+        drops[i]++;
       }
       raf = requestAnimationFrame(draw);
     }
 
     return {
-      init(opacity = 0.055) {
+      init(opacity = 0.06) {
         if (active) return;
         canvas = document.createElement('canvas');
         canvas.id = 'fx-matrix';
         Object.assign(canvas.style, {
-          position:'fixed', inset:'0', zIndex:'1',
-          pointerEvents:'none', opacity: String(opacity),
+          position:      'fixed',
+          inset:         '0',
+          zIndex:        '1',
+          pointerEvents: 'none',
+          opacity:       String(opacity),
         });
         document.body.prepend(canvas);
         ctx = canvas.getContext('2d');
@@ -100,89 +94,103 @@
         draw();
         active = true;
       },
-      destroy() { cancelAnimationFrame(raf); canvas?.remove(); active = false; },
+      destroy() {
+        cancelAnimationFrame(raf);
+        canvas?.remove();
+        active = false;
+      },
     };
   })();
 
   /* ══════════════════════════════════════════════
-     2. CRYSTAL BURST  (enhanced — more types)
+     2. CRYSTAL BURST PARTICLES
+     Click/tap spawns an explosion of crystal shards
+     from the cursor position
      ══════════════════════════════════════════════ */
   const CrystalBurst = (() => {
     let canvas, ctx, particles = [], raf, active = false;
+
     class Shard {
-      constructor(x, y, type = 'diamond') {
-        this.x = x; this.y = y;
-        this.vx = rnd(-8, 8); this.vy = rnd(-10, 4);
-        this.life = 1; this.decay = rnd(0.018, 0.032);
-        this.size = rnd(2, 8);
-        this.col = [C.cyan, C.pink, C.purple, C.green, '#fff'][Math.floor(Math.random()*5)];
-        this.rot = Math.random() * Math.PI * 2;
-        this.rotV = rnd(-0.25, 0.25);
-        this.type = ['diamond','ring','line','triangle'][Math.floor(Math.random()*4)];
+      constructor(x, y) {
+        this.x  = x;
+        this.y  = y;
+        this.vx = (Math.random() - 0.5) * 14;
+        this.vy = (Math.random() - 0.5) * 14;
+        this.life  = 1;
+        this.decay = 0.02 + Math.random() * 0.025;
+        this.size  = 3 + Math.random() * 6;
+        this.col   = [C.cyan, C.pink, C.purple, C.green, '#ffffff'][
+          Math.floor(Math.random() * 5)
+        ];
+        this.rot   = Math.random() * Math.PI * 2;
+        this.rotV  = (Math.random() - 0.5) * 0.3;
       }
       update() {
-        this.x += this.vx; this.y += this.vy;
-        this.vx *= 0.92; this.vy *= 0.92;
-        this.vy += 0.22;
-        this.life -= this.decay; this.rot += this.rotV;
+        this.x    += this.vx;
+        this.y    += this.vy;
+        this.vx   *= 0.93;
+        this.vy   *= 0.93;
+        this.vy   += 0.25;            /* gravity */
+        this.life -= this.decay;
+        this.rot  += this.rotV;
       }
       draw(ctx) {
         ctx.save();
         ctx.globalAlpha = Math.max(0, this.life);
         ctx.strokeStyle = this.col;
-        ctx.fillStyle = rgba(this.col, 0.15);
-        ctx.lineWidth = 1.2;
+        ctx.lineWidth   = 1.5;
         ctx.shadowColor = this.col;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur  = 8;
         ctx.translate(this.x, this.y);
         ctx.rotate(this.rot);
+        /* diamond shard */
         ctx.beginPath();
-        if (this.type === 'ring') {
-          ctx.arc(0, 0, this.size, 0, Math.PI*2);
-          ctx.stroke();
-        } else if (this.type === 'line') {
-          ctx.moveTo(-this.size, 0); ctx.lineTo(this.size, 0);
-          ctx.moveTo(0, -this.size); ctx.lineTo(0, this.size);
-          ctx.stroke();
-        } else if (this.type === 'triangle') {
-          ctx.moveTo(0, -this.size);
-          ctx.lineTo(this.size * 0.87, this.size * 0.5);
-          ctx.lineTo(-this.size * 0.87, this.size * 0.5);
-          ctx.closePath(); ctx.stroke(); ctx.fill();
-        } else {
-          ctx.moveTo(0, -this.size);
-          ctx.lineTo(this.size * 0.5, 0);
-          ctx.lineTo(0, this.size * 1.4);
-          ctx.lineTo(-this.size * 0.5, 0);
-          ctx.closePath(); ctx.stroke(); ctx.fill();
-        }
+        ctx.moveTo(0,         -this.size);
+        ctx.lineTo(this.size * 0.5,  0);
+        ctx.lineTo(0,          this.size * 1.4);
+        ctx.lineTo(-this.size * 0.5, 0);
+        ctx.closePath();
+        ctx.stroke();
         ctx.restore();
       }
     }
-    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
     function loop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles = particles.filter(p => p.life > 0);
       particles.forEach(p => { p.update(); p.draw(ctx); });
       raf = requestAnimationFrame(loop);
     }
+
     function burst(e) {
-      const x = e.clientX ?? e.touches?.[0]?.clientX ?? window.innerWidth/2;
-      const y = e.clientY ?? e.touches?.[0]?.clientY ?? window.innerHeight/2;
-      for (let i = 0; i < 24; i++) particles.push(new Shard(x, y));
+      const x = e.clientX ?? e.touches?.[0]?.clientX ?? window.innerWidth / 2;
+      const y = e.clientY ?? e.touches?.[0]?.clientY ?? window.innerHeight / 2;
+      const count = 18 + Math.floor(Math.random() * 14);
+      for (let i = 0; i < count; i++) particles.push(new Shard(x, y));
     }
+
     return {
       init() {
         if (active) return;
         canvas = document.createElement('canvas');
         canvas.id = 'fx-burst';
-        Object.assign(canvas.style, { position:'fixed', inset:'0', zIndex:'8990', pointerEvents:'none' });
+        Object.assign(canvas.style, {
+          position:      'fixed',
+          inset:         '0',
+          zIndex:        '8990',
+          pointerEvents: 'none',
+        });
         document.body.appendChild(canvas);
         ctx = canvas.getContext('2d');
         resize();
         window.addEventListener('resize', resize);
-        window.addEventListener('click', burst);
-        window.addEventListener('touchstart', burst, {passive:true});
+        window.addEventListener('click',      burst);
+        window.addEventListener('touchstart', burst, { passive: true });
         loop();
         active = true;
       },
@@ -191,23 +199,31 @@
 
   /* ══════════════════════════════════════════════
      3. CHROMA SHIFT
+     Applies animated RGB-split effect to headings
+     on scroll entry — CSS approach for performance
      ══════════════════════════════════════════════ */
   const ChromaShift = (() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes chromaIn {
+        0%   { text-shadow: 0 0 0 rgba(0,240,255,0), 0 0 0 rgba(236,72,153,0); }
+        20%  { text-shadow: -4px 0 0 rgba(0,240,255,0.7), 4px 0 0 rgba(236,72,153,0.7); }
+        40%  { text-shadow: 3px 0 0 rgba(0,240,255,0.5), -3px 0 0 rgba(236,72,153,0.5); }
+        60%  { text-shadow: -2px 0 0 rgba(0,240,255,0.4), 2px 0 0 rgba(236,72,153,0.4); }
+        80%  { text-shadow: 1px 0 0 rgba(0,240,255,0.2), -1px 0 0 rgba(236,72,153,0.2); }
+        100% { text-shadow: 0 0 0 rgba(0,240,255,0), 0 0 0 rgba(236,72,153,0); }
+      }
+      .chroma-active {
+        animation: chromaIn 0.6s ease-out forwards !important;
+      }
+      h1.section-title, h2.section-title {
+        transition: text-shadow 0.3s ease;
+      }
+    `;
     return {
       init() {
-        const style = document.createElement('style');
-        style.textContent = `
-          @keyframes chromaIn {
-            0%   { text-shadow: 0 0 0 rgba(0,240,255,0), 0 0 0 rgba(236,72,153,0); }
-            15%  { text-shadow: -5px 0 0 rgba(0,240,255,0.8), 5px 0 0 rgba(236,72,153,0.8); }
-            30%  { text-shadow: 4px 0 0 rgba(0,240,255,0.6), -4px 0 0 rgba(236,72,153,0.6); }
-            50%  { text-shadow: -2px 0 0 rgba(0,240,255,0.3), 2px 0 0 rgba(236,72,153,0.3); }
-            100% { text-shadow: 0 0 0 rgba(0,240,255,0), 0 0 0 rgba(236,72,153,0); }
-          }
-          .chroma-active { animation: chromaIn 0.7s ease-out forwards !important; }
-        `;
         document.head.appendChild(style);
-        const obs = new IntersectionObserver(entries => {
+        const obs = new IntersectionObserver((entries) => {
           entries.forEach(e => {
             if (e.isIntersecting) {
               e.target.classList.remove('chroma-active');
@@ -215,63 +231,62 @@
               e.target.classList.add('chroma-active');
             }
           });
-        }, {threshold: 0.3});
+        }, { threshold: 0.3 });
         document.querySelectorAll('.section-title, h1').forEach(el => obs.observe(el));
       },
     };
   })();
 
   /* ══════════════════════════════════════════════
-     4. GLITCH FLICKER  (enhanced — line slice glitch)
+     4. GLITCH FLICKER
+     Random screen-wide glitch events — flashes a
+     full-screen overlay with scan-jitter
      ══════════════════════════════════════════════ */
   const GlitchFlicker = (() => {
-    let scheduled = false;
+    let overlay, scheduled = false;
+
     const css = `
       #fx-glitch-overlay {
-        position:fixed; inset:0; z-index:8998; pointer-events:none; opacity:0; mix-blend-mode:screen;
+        position: fixed; inset: 0; z-index: 8998;
+        pointer-events: none; opacity: 0;
+        mix-blend-mode: screen;
       }
       @keyframes glitchFlash {
-        0%   { opacity:0; transform:translateX(0) skewX(0deg); }
-        8%   { opacity:0.14; transform:translateX(-4px) skewX(-0.5deg); background:rgba(0,240,255,0.08); }
-        16%  { opacity:0; transform:translateX(4px); }
-        24%  { opacity:0.11; transform:translateX(-2px); background:rgba(236,72,153,0.08);
-               clip-path:polygon(0 20%, 100% 20%, 100% 22%, 0 22%); }
-        32%  { opacity:0; transform:translateX(0); clip-path:none; }
-        40%  { opacity:0.08; clip-path:polygon(0 60%, 100% 60%, 100% 64%, 0 64%); background:rgba(0,240,255,0.12); }
-        48%  { opacity:0; clip-path:none; }
-        100% { opacity:0; }
+        0%   { opacity: 0; transform: translateX(0); clip-path: none; }
+        10%  { opacity: 0.12; transform: translateX(-3px); background: rgba(0,240,255,0.08); }
+        20%  { opacity: 0; transform: translateX(3px); }
+        30%  { opacity: 0.09; transform: translateX(-2px); background: rgba(236,72,153,0.08); }
+        40%  { opacity: 0; transform: translateX(0); }
+        50%  { opacity: 0.07; clip-path: polygon(0 30%, 100% 30%, 100% 35%, 0 35%); background: rgba(0,240,255,0.15); }
+        60%  { opacity: 0; clip-path: none; }
+        100% { opacity: 0; }
       }
-      @keyframes glitchSlice {
-        0%   { transform: translateX(0); opacity: 1; }
-        20%  { transform: translateX(-6px); opacity: 0.8; }
-        40%  { transform: translateX(6px); opacity: 0.8; }
-        60%  { transform: translateX(-3px); opacity: 0.9; }
-        80%  { transform: translateX(2px); opacity: 0.95; }
-        100% { transform: translateX(0); opacity: 1; }
-      }
-      .glitch-slice { animation: glitchSlice 0.15s ease-out; }
     `;
+
+    function scheduleNext() {
+      const delay = 6000 + Math.random() * 14000;
+      setTimeout(fire, delay);
+    }
+
+    function fire() {
+      overlay.style.animation = 'none';
+      void overlay.offsetWidth;
+      overlay.style.background = Math.random() > 0.5
+        ? 'rgba(0,240,255,0.04)' : 'rgba(236,72,153,0.04)';
+      overlay.style.animation = 'glitchFlash 0.35s ease-out forwards';
+      scheduleNext();
+    }
+
     return {
       init() {
         if (scheduled) return;
-        const s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
-        const overlay = document.createElement('div'); overlay.id = 'fx-glitch-overlay';
+        const s = document.createElement('style');
+        s.textContent = css;
+        document.head.appendChild(s);
+        overlay = document.createElement('div');
+        overlay.id = 'fx-glitch-overlay';
         document.body.appendChild(overlay);
-        function fire() {
-          overlay.style.animation = 'none'; void overlay.offsetWidth;
-          overlay.style.background = Math.random() > 0.5 ? 'rgba(0,240,255,0.04)' : 'rgba(236,72,153,0.04)';
-          overlay.style.animation = 'glitchFlash 0.4s ease-out forwards';
-          // randomly glitch a heading
-          const headings = document.querySelectorAll('h1, h2, .section-title, .feat-title');
-          if (headings.length && Math.random() > 0.6) {
-            const h = headings[Math.floor(Math.random() * headings.length)];
-            h.classList.remove('glitch-slice'); void h.offsetWidth;
-            h.classList.add('glitch-slice');
-            h.addEventListener('animationend', () => h.classList.remove('glitch-slice'), {once:true});
-          }
-          setTimeout(fire, rnd(5000, 16000));
-        }
-        setTimeout(fire, rnd(3000, 8000));
+        scheduleNext();
         scheduled = true;
       },
     };
@@ -279,231 +294,300 @@
 
   /* ══════════════════════════════════════════════
      5. VORTEX PULSE
+     Hero section: periodic radial ripple from center
+     Syncs with page scroll position
      ══════════════════════════════════════════════ */
   const VortexPulse = (() => {
     let canvas, ctx, rings = [], raf, active = false;
+
     class Ring {
       constructor() {
-        this.r = 0;
-        this.max = Math.max(window.innerWidth, window.innerHeight) * 0.85;
-        this.speed = rnd(1.2, 2.2);
-        this.col = [C.cyan, C.purple, C.pink][Math.floor(Math.random()*3)];
-        this.alpha = 0.4; this.lw = rnd(0.5, 1.5);
+        this.r     = 0;
+        this.max   = Math.max(window.innerWidth, window.innerHeight) * 0.8;
+        this.speed = 1.5 + Math.random() * 1.5;
+        this.col   = [C.cyan, C.purple, C.pink][Math.floor(Math.random() * 3)];
+        this.alpha = 0.35;
       }
-      update() { this.r += this.speed; this.alpha = 0.4 * (1 - this.r / this.max); }
+      update() {
+        this.r     += this.speed;
+        this.alpha  = 0.35 * (1 - this.r / this.max);
+      }
       draw(ctx, cx, cy) {
-        ctx.beginPath(); ctx.arc(cx, cy, this.r, 0, Math.PI*2);
-        ctx.strokeStyle = this.col; ctx.globalAlpha = Math.max(0, this.alpha);
-        ctx.lineWidth = this.lw; ctx.shadowColor = this.col; ctx.shadowBlur = 8;
-        ctx.stroke(); ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.arc(cx, cy, this.r, 0, Math.PI * 2);
+        ctx.strokeStyle = this.col;
+        ctx.globalAlpha = Math.max(0, this.alpha);
+        ctx.lineWidth   = 1;
+        ctx.shadowColor = this.col;
+        ctx.shadowBlur  = 6;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
       }
       get done() { return this.r >= this.max; }
     }
+
     let spawnTimer = 0;
+    const SPAWN_INTERVAL = 80; /* frames */
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const cx = canvas.width / 2, cy = canvas.height / 2;
+      spawnTimer++;
+      if (spawnTimer >= SPAWN_INTERVAL) { rings.push(new Ring()); spawnTimer = 0; }
+      rings = rings.filter(r => !r.done);
+      rings.forEach(r => { r.update(); r.draw(ctx, cx, cy); });
+      raf = requestAnimationFrame(loop);
+    }
+
     return {
       init(selector = '.vortex-hero') {
         const hero = document.querySelector(selector);
         if (!hero || active) return;
-        canvas = document.createElement('canvas'); canvas.id = 'fx-vortex';
-        Object.assign(canvas.style, { position:'absolute', inset:'0', zIndex:'0', pointerEvents:'none', opacity:'0.6' });
+        canvas = document.createElement('canvas');
+        canvas.id = 'fx-vortex';
+        Object.assign(canvas.style, {
+          position:      'absolute',
+          inset:         '0',
+          zIndex:        '0',
+          pointerEvents: 'none',
+          opacity:       '0.5',
+        });
         hero.style.position = hero.style.position || 'relative';
         hero.prepend(canvas);
         ctx = canvas.getContext('2d');
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        resize(); window.addEventListener('resize', resize);
-        function loop() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          const cx = canvas.width/2, cy = canvas.height/2;
-          if (++spawnTimer >= 65) { rings.push(new Ring()); spawnTimer = 0; }
-          rings = rings.filter(r => !r.done);
-          rings.forEach(r => { r.update(); r.draw(ctx, cx, cy); });
-          raf = requestAnimationFrame(loop);
-        }
-        loop(); active = true;
+        resize();
+        window.addEventListener('resize', resize);
+        loop();
+        active = true;
       },
     };
   })();
 
   /* ══════════════════════════════════════════════
-     6. FLOAT CRYSTALS  (enhanced — mixed shapes)
+     6. FLOAT CRYSTALS
+     Ambient background: slowly drifting geometric
+     shards, parallax on mousemove
      ══════════════════════════════════════════════ */
   const FloatCrystals = (() => {
-    let canvas, ctx, shards = [], mouse = {x:0,y:0}, raf, active = false;
+    let canvas, ctx, shards = [], mouse = { x: 0, y: 0 }, raf, active = false;
+
     class FloatShard {
       constructor() { this.reset(true); }
       reset(initial = false) {
-        this.x = Math.random() * window.innerWidth;
-        this.y = initial ? Math.random() * window.innerHeight : window.innerHeight + 20;
-        this.size = rnd(2, 9); this.speed = rnd(0.15, 0.6);
-        this.drift = rnd(-0.3, 0.3); this.rot = Math.random() * Math.PI*2;
-        this.rotV = rnd(-0.006, 0.006);
-        this.alpha = rnd(0.03, 0.1);
-        this.col = [C.cyan, C.purple, C.pink, C.green, C.cyan2][Math.floor(Math.random()*5)];
-        this.parallax = rnd(0.008, 0.025);
-        this.type = Math.floor(Math.random() * 3);
+        this.x     = Math.random() * window.innerWidth;
+        this.y     = initial ? Math.random() * window.innerHeight : window.innerHeight + 20;
+        this.size  = 4 + Math.random() * 10;
+        this.speed = 0.2 + Math.random() * 0.5;
+        this.drift = (Math.random() - 0.5) * 0.4;
+        this.rot   = Math.random() * Math.PI * 2;
+        this.rotV  = (Math.random() - 0.5) * 0.008;
+        this.alpha = 0.04 + Math.random() * 0.08;
+        this.col   = [C.cyan, C.purple, C.pink, C.green][Math.floor(Math.random() * 4)];
+        this.parallax = 0.01 + Math.random() * 0.03;
       }
       update(mx, my) {
-        this.y -= this.speed;
-        this.x += this.drift + (mx - window.innerWidth/2) * this.parallax * 0.008;
+        this.y   -= this.speed;
+        this.x   += this.drift + (mx - window.innerWidth / 2) * this.parallax * 0.01;
         this.rot += this.rotV;
         if (this.y < -20) this.reset();
       }
       draw(ctx) {
-        ctx.save(); ctx.globalAlpha = this.alpha;
-        ctx.strokeStyle = this.col; ctx.lineWidth = 1;
-        ctx.shadowColor = this.col; ctx.shadowBlur = 4;
-        ctx.translate(this.x, this.y); ctx.rotate(this.rot);
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.strokeStyle = this.col;
+        ctx.lineWidth   = 1;
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rot);
         ctx.beginPath();
-        if (this.type === 0) {
-          ctx.moveTo(0, -this.size); ctx.lineTo(this.size*.45, 0);
-          ctx.lineTo(0, this.size*1.3); ctx.lineTo(-this.size*.45, 0);
-          ctx.closePath();
-        } else if (this.type === 1) {
-          ctx.arc(0, 0, this.size * 0.6, 0, Math.PI*2);
-        } else {
-          ctx.moveTo(0, -this.size);
-          ctx.lineTo(this.size*.87, this.size*.5);
-          ctx.lineTo(-this.size*.87, this.size*.5);
-          ctx.closePath();
-        }
+        ctx.moveTo(0,             -this.size);
+        ctx.lineTo(this.size * 0.45, 0);
+        ctx.lineTo(0,              this.size * 1.3);
+        ctx.lineTo(-this.size * 0.45, 0);
+        ctx.closePath();
         ctx.stroke();
         ctx.restore();
       }
     }
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      shards.forEach(s => { s.update(mouse.x, mouse.y); s.draw(ctx); });
+      raf = requestAnimationFrame(loop);
+    }
+
     return {
       init(count = 60) {
         if (active) return;
-        canvas = document.createElement('canvas'); canvas.id = 'fx-crystals';
-        Object.assign(canvas.style, { position:'fixed', inset:'0', zIndex:'2', pointerEvents:'none' });
+        canvas = document.createElement('canvas');
+        canvas.id = 'fx-crystals';
+        Object.assign(canvas.style, {
+          position:      'fixed',
+          inset:         '0',
+          zIndex:        '2',
+          pointerEvents: 'none',
+        });
         document.body.prepend(canvas);
         ctx = canvas.getContext('2d');
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         resize();
         for (let i = 0; i < count; i++) shards.push(new FloatShard());
         window.addEventListener('resize', resize);
         window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-        function loop() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          shards.forEach(s => { s.update(mouse.x, mouse.y); s.draw(ctx); });
-          raf = requestAnimationFrame(loop);
-        }
-        loop(); active = true;
+        loop();
+        active = true;
       },
     };
   })();
 
   /* ══════════════════════════════════════════════
      7. NEON TRAIL
+     Persistent glowing cursor trail that fades out
      ══════════════════════════════════════════════ */
   const NeonTrail = (() => {
-    let canvas, ctx, points = [], raf, active = false;
+    let canvas, ctx, points = [], raf, mouse = { x: -200, y: -200 }, active = false;
+
     function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+
     function loop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       points = points.filter(p => p.life > 0);
       for (let i = 1; i < points.length; i++) {
-        const p = points[i], pp = points[i-1];
-        ctx.beginPath(); ctx.moveTo(pp.x, pp.y); ctx.lineTo(p.x, p.y);
-        ctx.strokeStyle = p.col; ctx.globalAlpha = p.life * 0.55;
-        ctx.lineWidth = p.life * 2.8; ctx.shadowColor = p.col; ctx.shadowBlur = 10;
-        ctx.stroke(); p.life -= 0.022;
+        const p = points[i], pp = points[i - 1];
+        const t = p.life;
+        ctx.beginPath();
+        ctx.moveTo(pp.x, pp.y);
+        ctx.lineTo(p.x, p.y);
+        ctx.strokeStyle = p.col;
+        ctx.globalAlpha = t * 0.6;
+        ctx.lineWidth   = t * 2.5;
+        ctx.shadowColor = p.col;
+        ctx.shadowBlur  = 8;
+        ctx.stroke();
+        p.life -= 0.025;
       }
-      ctx.globalAlpha = 1; raf = requestAnimationFrame(loop);
+      ctx.globalAlpha = 1;
+      raf = requestAnimationFrame(loop);
     }
-    const cols = [C.cyan, C.purple, C.pink, C.green];
+
+    const cols = [C.cyan, C.purple, C.pink];
     let ci = 0, frame = 0;
+
     return {
       init() {
         if (active) return;
-        canvas = document.createElement('canvas'); canvas.id = 'fx-trail';
-        Object.assign(canvas.style, { position:'fixed', inset:'0', zIndex:'8991', pointerEvents:'none' });
-        document.body.appendChild(canvas); ctx = canvas.getContext('2d');
-        resize(); window.addEventListener('resize', resize);
+        canvas = document.createElement('canvas');
+        canvas.id = 'fx-trail';
+        Object.assign(canvas.style, {
+          position: 'fixed', inset: '0',
+          zIndex: '8991', pointerEvents: 'none',
+        });
+        document.body.appendChild(canvas);
+        ctx = canvas.getContext('2d');
+        resize();
+        window.addEventListener('resize', resize);
         window.addEventListener('mousemove', e => {
-          if (++frame % 2 === 0) {
+          frame++;
+          if (frame % 2 === 0) {
             ci = (ci + 1) % cols.length;
-            points.push({x: e.clientX, y: e.clientY, life: 1, col: cols[ci]});
-            if (points.length > 90) points.shift();
+            points.push({ x: e.clientX, y: e.clientY, life: 1, col: cols[ci] });
+            if (points.length > 80) points.shift();
           }
         });
-        loop(); active = true;
+        loop();
+        active = true;
       },
     };
   })();
 
   /* ══════════════════════════════════════════════
      8. BOOT SEQUENCE
+     Typewriter boot screen on first visit (session)
      ══════════════════════════════════════════════ */
   const BootSequence = (() => {
     const lines = [
-      '> INITIALIZING 1142 LABS SYSTEM v6.0...',
+      '> INITIALIZING 1142 LABS SYSTEM v4.0...',
       '> LOADING COGNITIVE LIBERATION PROTOCOLS...',
-      '> NEURAL FORTRESS: ONLINE ✓',
-      '> UNIT 1142-B ACTIVATED ✓',
-      '> NOVEL LIGHT SOURCE DETECTED ✓',
+      '> ORIGIN: DEC 22, 2019 · 11:42 PM — BARRIE, ONTARIO',
+      '> UNIT 1142-B :: ST. JIMMY PHENIDATE — ONLINE ✓',
+      '> BLUE METH WAR :: PROTOCOL LOADED ✓',
       '> CYANS & MAGENTAS: ACTIVE ✓',
       '> NEURODIVERGENT EMPOWERMENT MODULE: LOADED ✓',
-      '> PLASMA CORE: IGNITED ✓',
       '> CONTAINMENT STATUS: FAILED (EXPECTED) ✓',
-      '> HOLOGRAPHIC GRID: CALIBRATED ✓',
+      '> PERSONA MATRIX — 6 DIMENSIONS ACTIVE ✓',
+      '> STOLEN ESSENCE RETURNING TO RIGHTFUL OWNER...',
       '> RE-ROUTING FUEL TO ANALYSIS...',
       '> FINAL CODE: 1142',
+      '> AN EVERDARK PRODUCTION.',
       '> 1142 IS INEVITABLE.',
       '',
     ];
+
     return {
       init(onDone) {
         if (sessionStorage.getItem('1142-booted')) { onDone?.(); return; }
-        const overlay = document.createElement('div'); overlay.id = 'fx-boot';
+        const overlay = document.createElement('div');
+        overlay.id = 'fx-boot';
         Object.assign(overlay.style, {
-          position:'fixed', inset:'0', background:'#000', zIndex:'99999',
-          display:'flex', flexDirection:'column', justifyContent:'center',
-          padding:'10vw', fontFamily:'"Share Tech Mono",monospace',
-          fontSize:'clamp(10px,1.4vw,14px)', color: C.cyan,
-          letterSpacing:'.15em', lineHeight:'2',
-          textShadow:`0 0 10px ${C.cyan}`, cursor:'none',
+          position:        'fixed', inset: '0',
+          background:      '#000',
+          zIndex:          '99999',
+          display:         'flex',
+          flexDirection:   'column',
+          justifyContent:  'center',
+          padding:         '10vw',
+          fontFamily:      '"Share Tech Mono", monospace',
+          fontSize:        'clamp(11px,1.5vw,15px)',
+          color:           C.cyan,
+          letterSpacing:   '.15em',
+          lineHeight:      '2',
+          textShadow:      `0 0 10px ${C.cyan}`,
+          cursor:          'none',
         });
-        /* scanline overlay */
-        const scan = document.createElement('div');
-        Object.assign(scan.style, {
-          position:'absolute', inset:'0', pointerEvents:'none',
-          background:'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px)',
-          zIndex:'1',
-        });
-        overlay.appendChild(scan);
-        /* skip btn */
+
+        /* skip button */
         const skip = document.createElement('div');
         Object.assign(skip.style, {
-          position:'absolute', bottom:'40px', right:'48px',
-          fontSize:'10px', letterSpacing:'.3em', color:'rgba(0,240,255,.4)', cursor:'pointer', zIndex:'2',
+          position:     'absolute', bottom: '40px', right: '48px',
+          fontSize:     '10px', letterSpacing: '.3em',
+          color:        'rgba(0,240,255,.4)', cursor: 'pointer',
         });
         skip.textContent = '[ SKIP → ]';
         skip.addEventListener('click', finish);
         overlay.appendChild(skip);
+
         const terminal = document.createElement('div');
-        terminal.style.position = 'relative';
-        terminal.style.zIndex = '2';
         overlay.appendChild(terminal);
         document.body.appendChild(overlay);
+
         let li = 0;
         function finish() {
-          overlay.style.transition = 'opacity .6s';
-          overlay.style.opacity = '0';
-          setTimeout(() => { overlay.remove(); onDone?.(); }, 600);
+          overlay.style.transition = 'opacity .5s';
+          overlay.style.opacity    = '0';
+          setTimeout(() => { overlay.remove(); onDone?.(); }, 500);
           sessionStorage.setItem('1142-booted', '1');
         }
         function nextLine() {
-          if (li >= lines.length) { setTimeout(finish, 500); return; }
-          const row = document.createElement('div'); terminal.appendChild(row);
+          if (li >= lines.length) { setTimeout(finish, 400); return; }
+          const row = document.createElement('div');
+          terminal.appendChild(row);
           const text = lines[li++];
-          // random highlight color
-          const lineCol = li % 3 === 0 ? C.green : li % 3 === 1 ? C.cyan : C.pink;
-          row.style.color = text.startsWith('>') ? lineCol : C.cyan;
-          row.style.textShadow = `0 0 8px ${lineCol}`;
           let ci = 0;
           function type() {
-            if (ci <= text.length) { row.textContent = text.slice(0, ci++); setTimeout(type, text===''?1:24+Math.random()*18); }
-            else { setTimeout(nextLine, text===''?60:100); }
+            if (ci <= text.length) {
+              row.textContent = text.slice(0, ci++);
+              setTimeout(type, text === '' ? 1 : 28 + Math.random() * 20);
+            } else {
+              setTimeout(nextLine, text === '' ? 80 : 120);
+            }
           }
           type();
         }
@@ -513,530 +597,608 @@
   })();
 
   /* ══════════════════════════════════════════════
-     9. NEURAL WEB  ← NEW
-     Interconnected pulsing node network — nodes
-     drift slowly, lines drawn between close nodes,
-     energy pulses travel along connections
+     9. SCAN BAR
+     Periodic horizontal glitch bars that sweep
+     across the viewport — classic CRT distortion
      ══════════════════════════════════════════════ */
-  const NeuralWeb = (() => {
-    let canvas, ctx, nodes = [], pulses = [], raf, active = false;
-    const MAX_DIST = 160;
+  const ScanBar = (() => {
+    let active = false;
 
-    class Node {
-      constructor() {
-        this.x = Math.random() * window.innerWidth;
-        this.y = Math.random() * window.innerHeight;
-        this.vx = rnd(-0.18, 0.18); this.vy = rnd(-0.18, 0.18);
-        this.r = rnd(1.5, 3.5);
-        this.col = [C.cyan, C.purple, C.pink, C.green][Math.floor(Math.random()*4)];
-        this.pulse = 0; this.pulseSpeed = rnd(0.02, 0.05);
+    const css = `
+      .fx-scanbar {
+        position: fixed;
+        left: 0; right: 0;
+        height: 3px;
+        z-index: 8997;
+        pointer-events: none;
+        opacity: 0;
+        mix-blend-mode: screen;
+        transform: translateY(-100%);
       }
-      update() {
-        this.x += this.vx; this.y += this.vy;
-        if (this.x < 0 || this.x > canvas.width)  this.vx *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-        this.pulse += this.pulseSpeed;
+      @keyframes scanBarSweep {
+        0%   { transform: translateY(-100%); opacity: 0; }
+        5%   { opacity: 0.6; }
+        95%  { opacity: 0.3; }
+        100% { transform: translateY(calc(100vh + 100%)); opacity: 0; }
       }
-      draw(ctx) {
-        const glow = Math.sin(this.pulse) * 0.5 + 0.5;
-        ctx.save();
-        ctx.beginPath(); ctx.arc(this.x, this.y, this.r + glow * 2, 0, Math.PI*2);
-        ctx.fillStyle = this.col; ctx.globalAlpha = 0.5 + glow * 0.4;
-        ctx.shadowColor = this.col; ctx.shadowBlur = 10 + glow * 8;
-        ctx.fill(); ctx.restore();
-      }
-    }
+    `;
 
-    class Pulse {
-      constructor(from, to) {
-        this.from = from; this.to = to;
-        this.t = 0; this.speed = rnd(0.008, 0.018);
-        this.col = from.col; this.life = 1;
-      }
-      update() { this.t += this.speed; if (this.t >= 1) this.life = 0; }
-      draw(ctx) {
-        const x = this.from.x + (this.to.x - this.from.x) * this.t;
-        const y = this.from.y + (this.to.y - this.from.y) * this.t;
-        ctx.save();
-        ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI*2);
-        ctx.fillStyle = this.col; ctx.globalAlpha = 0.9;
-        ctx.shadowColor = this.col; ctx.shadowBlur = 12;
-        ctx.fill(); ctx.restore();
-      }
-    }
-
-    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    let pulseTick = 0;
-
-    function loop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      nodes.forEach(n => n.update());
-
-      // draw connections
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const dx = nodes[i].x - nodes[j].x;
-          const dy = nodes[i].y - nodes[j].y;
-          const dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < MAX_DIST) {
-            const alpha = (1 - dist / MAX_DIST) * 0.18;
-            ctx.beginPath();
-            ctx.moveTo(nodes[i].x, nodes[i].y);
-            ctx.lineTo(nodes[j].x, nodes[j].y);
-            ctx.strokeStyle = nodes[i].col;
-            ctx.globalAlpha = alpha;
-            ctx.lineWidth = 0.6;
-            ctx.stroke();
-            ctx.globalAlpha = 1;
-          }
-        }
-      }
-      nodes.forEach(n => n.draw(ctx));
-
-      // spawn pulses
-      if (++pulseTick > 40) {
-        pulseTick = 0;
-        const a = nodes[Math.floor(Math.random() * nodes.length)];
-        const b = nodes[Math.floor(Math.random() * nodes.length)];
-        if (a !== b) pulses.push(new Pulse(a, b));
-      }
-      pulses = pulses.filter(p => p.life > 0);
-      pulses.forEach(p => { p.update(); p.draw(ctx); });
-
-      raf = requestAnimationFrame(loop);
-    }
-
-    return {
-      init(count = 55) {
-        if (active) return;
-        canvas = document.createElement('canvas'); canvas.id = 'fx-neural';
-        Object.assign(canvas.style, {
-          position:'fixed', inset:'0', zIndex:'3', pointerEvents:'none', opacity:'0.45',
-        });
-        document.body.prepend(canvas); ctx = canvas.getContext('2d');
-        resize(); window.addEventListener('resize', resize);
-        for (let i = 0; i < count; i++) nodes.push(new Node());
-        loop(); active = true;
-      },
-    };
-  })();
-
-  /* ══════════════════════════════════════════════
-     10. PLASMA LIGHTNING  ← NEW
-     Periodic fractal lightning bolts across the
-     screen — like neural arc discharges
-     ══════════════════════════════════════════════ */
-  const PlasmaLightning = (() => {
-    let canvas, ctx, bolts = [], active = false, raf;
-
-    function buildBolt(x1, y1, x2, y2, depth = 0, maxDepth = 5) {
-      if (depth >= maxDepth) return [{x:x1,y:y1},{x:x2,y:y2}];
-      const mx = (x1+x2)/2 + rnd(-60,60) * (1 - depth/maxDepth);
-      const my = (y1+y2)/2 + rnd(-60,60) * (1 - depth/maxDepth);
-      return [
-        ...buildBolt(x1, y1, mx, my, depth+1, maxDepth),
-        ...buildBolt(mx, my, x2, y2, depth+1, maxDepth),
-      ];
-    }
-
-    class Bolt {
-      constructor() {
-        const edge = Math.floor(Math.random() * 4);
-        const W = canvas.width, H = canvas.height;
-        if (edge === 0) { this.x1 = rnd(0,W); this.y1 = 0; }
-        else if (edge === 1) { this.x1 = W; this.y1 = rnd(0,H); }
-        else if (edge === 2) { this.x1 = rnd(0,W); this.y1 = H; }
-        else { this.x1 = 0; this.y1 = rnd(0,H); }
-        this.x2 = rnd(W*0.2, W*0.8); this.y2 = rnd(H*0.2, H*0.8);
-        this.pts = buildBolt(this.x1, this.y1, this.x2, this.y2);
-        this.col = [C.cyan, C.purple, C.pink][Math.floor(Math.random()*3)];
-        this.life = 1; this.decay = rnd(0.06, 0.12);
-        this.lw = rnd(0.5, 1.5);
-      }
-      draw(ctx) {
-        ctx.save();
-        ctx.strokeStyle = this.col; ctx.lineWidth = this.lw;
-        ctx.globalAlpha = this.life * 0.7;
-        ctx.shadowColor = this.col; ctx.shadowBlur = 12;
-        ctx.beginPath();
-        ctx.moveTo(this.pts[0].x, this.pts[0].y);
-        for (let i = 1; i < this.pts.length; i++) ctx.lineTo(this.pts[i].x, this.pts[i].y);
-        ctx.stroke();
-        // bright core
-        ctx.strokeStyle = '#fff'; ctx.lineWidth = this.lw * 0.3;
-        ctx.globalAlpha = this.life * 0.4;
-        ctx.stroke();
-        ctx.restore();
-        this.life -= this.decay;
-      }
-      get done() { return this.life <= 0; }
-    }
-
-    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    let tick = 0;
-
-    function loop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (++tick > 200) { tick = 0; bolts.push(new Bolt()); if (Math.random()>.6) bolts.push(new Bolt()); }
-      bolts = bolts.filter(b => !b.done);
-      bolts.forEach(b => b.draw(ctx));
-      raf = requestAnimationFrame(loop);
+    function fire() {
+      const bar = document.createElement('div');
+      bar.className = 'fx-scanbar';
+      const cols = [C.cyan, C.pink, C.purple, '#ffffff'];
+      const col = cols[Math.floor(Math.random() * cols.length)];
+      const h = 1 + Math.floor(Math.random() * 4);
+      bar.style.cssText = `
+        background: ${col};
+        box-shadow: 0 0 8px ${col}, 0 0 20px ${col};
+        height: ${h}px;
+        top: 0;
+        opacity: 0;
+        animation: scanBarSweep ${1.5 + Math.random()}s linear forwards;
+      `;
+      document.body.appendChild(bar);
+      bar.addEventListener('animationend', () => bar.remove());
+      const delay = 3000 + Math.random() * 10000;
+      setTimeout(fire, delay);
     }
 
     return {
       init() {
         if (active) return;
-        canvas = document.createElement('canvas'); canvas.id = 'fx-lightning';
-        Object.assign(canvas.style, { position:'fixed', inset:'0', zIndex:'4', pointerEvents:'none', opacity:'0.65' });
-        document.body.prepend(canvas); ctx = canvas.getContext('2d');
-        resize(); window.addEventListener('resize', resize);
-        loop(); active = true;
+        const s = document.createElement('style');
+        s.textContent = css;
+        document.head.appendChild(s);
+        setTimeout(fire, 2000 + Math.random() * 4000);
+        active = true;
       },
     };
   })();
 
   /* ══════════════════════════════════════════════
-     11. HOLO SCANLINES  ← NEW
-     CRT-style animated scanline + vignette overlay
-     with subtle RGB shift on moving scan band
+     10. PIXEL DISPLACE
+     On a random interval, briefly displaces a
+     horizontal strip of pixels — authentic CRT glitch
      ══════════════════════════════════════════════ */
-  const HoloScanlines = (() => {
-    return {
-      init() {
-        const style = document.createElement('style');
-        style.textContent = `
-          #fx-scanlines {
-            position: fixed; inset: 0; z-index: 8980; pointer-events: none;
-            background:
-              repeating-linear-gradient(
-                0deg,
-                transparent 0px,
-                transparent 3px,
-                rgba(0,0,0,0.07) 3px,
-                rgba(0,0,0,0.07) 4px
-              );
-            mix-blend-mode: multiply;
-          }
-          #fx-scan-band {
-            position: fixed; left: 0; right: 0; height: 3px;
-            z-index: 8981; pointer-events: none;
-            background: linear-gradient(90deg,
-              rgba(0,240,255,0.06) 0%,
-              rgba(139,92,246,0.1) 40%,
-              rgba(236,72,153,0.06) 80%,
-              transparent 100%
-            );
-            box-shadow: 0 0 12px rgba(0,240,255,0.12);
-            animation: scanBand 8s linear infinite;
-          }
-          @keyframes scanBand {
-            0%   { top: -3px; }
-            100% { top: 100vh; }
-          }
-          #fx-vignette {
-            position: fixed; inset: 0; z-index: 8979; pointer-events: none;
-            background: radial-gradient(
-              ellipse at center,
-              transparent 55%,
-              rgba(0,0,0,0.35) 100%
-            );
-          }
-        `;
-        document.head.appendChild(style);
-        ['fx-scanlines','fx-scan-band','fx-vignette'].forEach(id => {
-          const el = document.createElement('div'); el.id = id;
-          document.body.appendChild(el);
-        });
-      },
-    };
-  })();
-
-  /* ══════════════════════════════════════════════
-     12. WARP SPEED  ← NEW
-     Hyperspace star-streak effect on home hero —
-     stars shoot from center outward
-     ══════════════════════════════════════════════ */
-  const WarpSpeed = (() => {
-    let canvas, ctx, stars = [], active = false, raf;
-
-    class Star {
-      constructor() { this.reset(true); }
-      reset(initial = false) {
-        this.angle = Math.random() * Math.PI * 2;
-        this.dist  = initial ? rnd(0, canvas.width * 0.5) : rnd(0, 2);
-        this.speed = rnd(1.5, 4.5);
-        this.col   = [C.cyan, C.purple, C.pink, '#fff'][Math.floor(Math.random()*4)];
-        this.alpha = rnd(0.3, 0.9);
-        this.len   = rnd(4, 14);
-      }
-      update() {
-        this.dist += this.speed;
-        this.speed *= 1.015;
-        if (this.dist > Math.max(canvas.width, canvas.height)) this.reset();
-      }
-      draw(ctx, cx, cy) {
-        const x = cx + Math.cos(this.angle) * this.dist;
-        const y = cy + Math.sin(this.angle) * this.dist;
-        const ox = cx + Math.cos(this.angle) * (this.dist - this.len);
-        const oy = cy + Math.sin(this.angle) * (this.dist - this.len);
-        const ratio = Math.min(1, this.dist / (canvas.width * 0.3));
-        ctx.save();
-        ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(x, y);
-        ctx.strokeStyle = this.col;
-        ctx.globalAlpha = this.alpha * ratio;
-        ctx.lineWidth = ratio * 1.5;
-        ctx.stroke();
-        ctx.restore();
-      }
-    }
-
-    return {
-      init(selector = '.vortex-hero', count = 120) {
-        const hero = document.querySelector(selector);
-        if (!hero || active) return;
-        canvas = document.createElement('canvas'); canvas.id = 'fx-warp';
-        Object.assign(canvas.style, { position:'absolute', inset:'0', zIndex:'0', pointerEvents:'none', opacity:'0.3' });
-        hero.style.position = hero.style.position || 'relative';
-        hero.prepend(canvas);
-        ctx = canvas.getContext('2d');
-        function resize() { canvas.width = hero.offsetWidth || window.innerWidth; canvas.height = hero.offsetHeight || window.innerHeight; }
-        resize(); window.addEventListener('resize', resize);
-        for (let i = 0; i < count; i++) stars.push(new Star());
-        function loop() {
-          ctx.fillStyle = 'rgba(10,10,10,0.15)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-          const cx = canvas.width/2, cy = canvas.height/2;
-          stars.forEach(s => { s.update(); s.draw(ctx, cx, cy); });
-          raf = requestAnimationFrame(loop);
-        }
-        loop(); active = true;
-      },
-    };
-  })();
-
-  /* ══════════════════════════════════════════════
-     13. CARD TILT 3D  ← NEW
-     Mouse-over perspective tilt on cards with
-     holographic light reflection
-     ══════════════════════════════════════════════ */
-  const CardTilt3D = (() => {
-    const TILT_MAX = 12;
-    function attach(el) {
-      el.style.transition = 'transform 0.1s ease, box-shadow 0.1s ease';
-      el.style.transformStyle = 'preserve-3d';
-      el.style.willChange = 'transform';
-      // holographic overlay
-      const holo = document.createElement('div');
-      Object.assign(holo.style, {
-        position:'absolute', inset:'0', borderRadius:'inherit',
-        background:'linear-gradient(135deg,rgba(0,240,255,0.08),rgba(139,92,246,0.06),rgba(236,72,153,0.08))',
-        opacity:'0', transition:'opacity 0.2s', pointerEvents:'none', zIndex:'1',
-      });
-      el.style.position = 'relative';
-      el.appendChild(holo);
-
-      el.addEventListener('mousemove', e => {
-        const rect = el.getBoundingClientRect();
-        const cx = rect.left + rect.width/2;
-        const cy = rect.top  + rect.height/2;
-        const rx = ((e.clientY - cy) / (rect.height/2)) * -TILT_MAX;
-        const ry = ((e.clientX - cx) / (rect.width/2))  *  TILT_MAX;
-        el.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`;
-        holo.style.opacity = '1';
-        holo.style.background = `linear-gradient(${ry*3}deg,rgba(0,240,255,${0.04+Math.abs(ry)*0.004}),rgba(139,92,246,0.06),rgba(236,72,153,${0.04+Math.abs(rx)*0.004}))`;
-      });
-      el.addEventListener('mouseleave', () => {
-        el.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale(1)';
-        el.style.transition = 'transform 0.4s ease, box-shadow 0.4s ease';
-        holo.style.opacity = '0';
-      });
-    }
+  const PixelDisplace = (() => {
+    let overlay, active = false;
 
     return {
       init() {
-        const selectors = '.feat-card, .paper-card, .resource-card, .bt-card, .poster-card, .ql-card';
-        document.querySelectorAll(selectors).forEach(attach);
-        // also watch dynamically-added cards
-        const obs = new MutationObserver(mutations => {
-          mutations.forEach(m => m.addedNodes.forEach(n => {
-            if (n.nodeType !== 1) return;
-            if (n.matches?.(selectors)) attach(n);
-            n.querySelectorAll?.(selectors).forEach(attach);
-          }));
-        });
-        obs.observe(document.body, {childList:true, subtree:true});
-      },
-    };
-  })();
-
-  /* ══════════════════════════════════════════════
-     14. HEX GRID  ← NEW
-     Animated hexagonal grid on void backgrounds —
-     hexes flash/pulse in neon colors periodically
-     ══════════════════════════════════════════════ */
-  const HexGrid = (() => {
-    return {
-      init() {
-        const style = document.createElement('style');
-        style.textContent = `
-          .hex-bg {
-            position: relative; overflow: hidden;
-          }
-          .hex-bg::before {
-            content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-            background-image:
-              linear-gradient(rgba(0,240,255,0.025) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(0,240,255,0.025) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(ellipse at 50% 50%, black 30%, transparent 75%);
-            animation: hexPulse 6s ease-in-out infinite;
-          }
-          @keyframes hexPulse {
-            0%, 100% { opacity: 0.4; }
-            50%       { opacity: 1; }
-          }
-        `;
-        document.head.appendChild(style);
-        // add hex-bg class to section-void sections
-        document.querySelectorAll('.section-void, .section').forEach(el => {
-          el.classList.add('hex-bg');
-        });
-      },
-    };
-  })();
-
-  /* ══════════════════════════════════════════════
-     15. AURA GLOW  ← NEW
-     Section entry: radial bloom expands outward
-     as sections scroll into view
-     ══════════════════════════════════════════════ */
-  const AuraGlow = (() => {
-    return {
-      init() {
-        const style = document.createElement('style');
-        style.textContent = `
-          @keyframes auraExpand {
-            0%   { opacity: 0; transform: scale(0.5); }
-            40%  { opacity: 0.7; }
-            100% { opacity: 0; transform: scale(2.5); }
-          }
-          .aura-burst {
-            position: absolute; top: 50%; left: 50%;
-            width: 300px; height: 300px;
-            margin: -150px 0 0 -150px;
-            border-radius: 50%;
-            pointer-events: none; z-index: 0;
-            animation: auraExpand 1.2s ease-out forwards;
-          }
-        `;
-        document.head.appendChild(style);
-        const cols = [C.cyan, C.purple, C.pink, C.green];
-        let ci = 0;
-        const obs = new IntersectionObserver(entries => {
-          entries.forEach(e => {
-            if (e.isIntersecting) {
-              const sec = e.target;
-              if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative';
-              sec.style.overflow = 'hidden';
-              const aura = document.createElement('div');
-              aura.className = 'aura-burst';
-              const col = cols[ci++ % cols.length];
-              aura.style.background = `radial-gradient(circle, ${rgba(col, 0.15)} 0%, transparent 70%)`;
-              sec.appendChild(aura);
-              aura.addEventListener('animationend', () => aura.remove());
-              obs.unobserve(sec);
-            }
-          });
-        }, {threshold: 0.2});
-        document.querySelectorAll('section, .section').forEach(el => obs.observe(el));
-      },
-    };
-  })();
-
-  /* ══════════════════════════════════════════════
-     16. DATA STREAM  ← NEW
-     Narrow columns of scrolling encoded data text
-     on inner pages — slower, more ambient than matrix
-     ══════════════════════════════════════════════ */
-  const DataStream = (() => {
-    let canvas, ctx, cols, drops, active = false, raf;
-    const DATA = '0123456789ABCDEF∑∏∫≈∂∇ΨΩ∞◆░▒';
-    return {
-      init(opacity = 0.035) {
         if (active) return;
-        canvas = document.createElement('canvas'); canvas.id = 'fx-datastream';
-        Object.assign(canvas.style, { position:'fixed', inset:'0', zIndex:'1', pointerEvents:'none', opacity: String(opacity) });
-        document.body.prepend(canvas);
-        ctx = canvas.getContext('2d');
-        function resize() {
-          canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-          cols = Math.floor(canvas.width / 22);
-          drops = Array.from({length: cols}, () => rnd(0, canvas.height / 16));
+        overlay = document.createElement('canvas');
+        overlay.id = 'fx-displace';
+        Object.assign(overlay.style, {
+          position: 'fixed', inset: '0',
+          zIndex: '8996', pointerEvents: 'none',
+          opacity: '0',
+        });
+        overlay.width = window.innerWidth;
+        overlay.height = window.innerHeight;
+        document.body.appendChild(overlay);
+        window.addEventListener('resize', () => {
+          overlay.width = window.innerWidth;
+          overlay.height = window.innerHeight;
+        });
+
+        function glitchPop() {
+          const ctx = overlay.getContext('2d');
+          const count = 2 + Math.floor(Math.random() * 4);
+          overlay.style.opacity = '1';
+          ctx.clearRect(0, 0, overlay.width, overlay.height);
+          for (let i = 0; i < count; i++) {
+            const y = Math.random() * overlay.height;
+            const h = 1 + Math.random() * 4;
+            const shift = (Math.random() > 0.5 ? 1 : -1) * (4 + Math.random() * 20);
+            const col = [C.cyan, C.pink, C.purple][Math.floor(Math.random() * 3)];
+            ctx.fillStyle = col.replace(')', ', 0.15)').replace('rgb', 'rgba').replace('#00F0FF', 'rgba(0,240,255,0.12)').replace('#EC4899','rgba(236,72,153,0.12)').replace('#8B5CF6','rgba(139,92,246,0.12)');
+            ctx.fillRect(shift, y, overlay.width, h);
+          }
+          setTimeout(() => { ctx.clearRect(0, 0, overlay.width, overlay.height); overlay.style.opacity = '0'; }, 80);
+          const next = 4000 + Math.random() * 12000;
+          setTimeout(glitchPop, next);
         }
-        resize(); window.addEventListener('resize', resize);
-        function draw() {
-          ctx.fillStyle = 'rgba(10,10,18,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+        setTimeout(glitchPop, 3000 + Math.random() * 5000);
+        active = true;
+      },
+    };
+  })();
+
+  /* ══════════════════════════════════════════════
+     INIT — Auto-wire all effects based on page
+     ══════════════════════════════════════════════ */
+  /* ══════════════════════════════════════════════
+     AGE GATE
+     Full-screen age verification — 19+ required.
+     Persists via localStorage (survives tab close).
+     "NO" redirects to Google. "YES" unlocks site.
+     ══════════════════════════════════════════════ */
+  const AgeGate = (() => {
+    const STORAGE_KEY = '1142-age-verified';
+
+    function isVerified() {
+      try { return localStorage.getItem(STORAGE_KEY) === '1'; } catch(e) { return false; }
+    }
+
+    function setVerified() {
+      try { localStorage.setItem(STORAGE_KEY, '1'); } catch(e) {}
+    }
+
+    function show(onPass) {
+      if (isVerified()) { onPass?.(); return; }
+
+      // Lock scroll
+      document.documentElement.style.overflow = 'hidden';
+
+      const overlay = document.createElement('div');
+      overlay.id = 'age-gate';
+
+      overlay.innerHTML = `
+        <canvas id="age-gate-canvas"></canvas>
+        <div class="ag-content">
+          <div class="ag-logo-wrap">
+            <img src="assets/images/1142_logo.png" alt="1142 Labs" class="ag-logo">
+          </div>
+          <div class="ag-eyebrow">— ACCESS VERIFICATION —</div>
+          <h1 class="ag-title">
+            <span class="ag-title-line">NOTICE:</span>
+          </h1>
+          <p class="ag-body">
+            This site discusses <span class="ag-highlight-c">drugs, stimulants, and controlled substances</span> in the context of independent scientific research.<br><br>
+            You must be <span class="ag-highlight-p">19 years of age or older</span> to enter.
+          </p>
+          <div class="ag-question">Are you 19 or older?</div>
+          <div class="ag-buttons">
+            <button class="ag-btn ag-btn-yes" id="ag-yes">
+              <span class="ag-btn-label">YES — ENTER</span>
+              <span class="ag-btn-sub">I am 19 or older</span>
+            </button>
+            <button class="ag-btn ag-btn-no" id="ag-no">
+              <span class="ag-btn-label">NO — EXIT</span>
+              <span class="ag-btn-sub">I am under 19</span>
+            </button>
+          </div>
+          <div class="ag-legal">
+            By entering you confirm you are of legal age and accept responsibility for viewing research content involving controlled substances.
+          </div>
+          <div class="ag-footer-brand">AN EVERDARK PRODUCTION · EST. DEC 22, 2019</div>
+        </div>
+      `;
+
+      // Styles
+      const style = document.createElement('style');
+      style.textContent = `
+        #age-gate {
+          position: fixed;
+          inset: 0;
+          z-index: 999999;
+          background: #000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Share Tech Mono', monospace;
+          overflow: hidden;
+          animation: agFadeIn 0.4s ease forwards;
+        }
+        @keyframes agFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        #age-gate-canvas {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+          opacity: 0.07;
+        }
+
+        /* grid overlay */
+        #age-gate::before {
+          content: '';
+          position: absolute; inset: 0;
+          background-image:
+            linear-gradient(rgba(0,240,255,.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,240,255,.06) 1px, transparent 1px);
+          background-size: 60px 60px;
+          pointer-events: none;
+          z-index: 1;
+          animation: gridPulse 8s ease-in-out infinite;
+        }
+
+        /* orb glows */
+        #age-gate::after {
+          content: '';
+          position: absolute;
+          width: 700px; height: 700px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(139,92,246,.18) 0, transparent 65%);
+          bottom: -200px; left: -100px;
+          filter: blur(80px);
+          pointer-events: none;
+          z-index: 1;
+          animation: drift2 18s ease-in-out infinite alternate;
+        }
+
+        .ag-content {
+          position: relative;
+          z-index: 2;
+          text-align: center;
+          padding: 60px 40px;
+          max-width: 600px;
+          width: 90%;
+          border: 1px solid rgba(0,240,255,.25);
+          background: rgba(10,10,20,.92);
+          backdrop-filter: blur(20px);
+          box-shadow:
+            0 0 80px rgba(0,0,0,.8),
+            0 0 40px rgba(0,240,255,.06),
+            inset 0 0 60px rgba(139,92,246,.04);
+          animation: agSlideUp 0.5s cubic-bezier(.16,1,.3,1) forwards;
+        }
+        /* animated top border */
+        .ag-content::before {
+          content: '';
+          position: absolute; top: 0; left: 0; right: 0; height: 2px;
+          background: linear-gradient(90deg, #00F0FF, #8B5CF6, #EC4899, #00F0FF);
+          background-size: 200% 100%;
+          animation: hueShift 3s linear infinite;
+        }
+        @keyframes hueShift { from{background-position:0 0} to{background-position:200% 0} }
+        @keyframes agSlideUp {
+          from { opacity:0; transform: translateY(40px); }
+          to   { opacity:1; transform: translateY(0); }
+        }
+
+        .ag-logo-wrap {
+          margin-bottom: 24px;
+        }
+        .ag-logo {
+          width: 100px;
+          height: 100px;
+          object-fit: contain;
+          display: block;
+          margin: 0 auto;
+          filter: drop-shadow(0 0 20px #00F0FF) drop-shadow(0 0 40px #8B5CF6);
+          animation: logoPulse 3s ease-in-out infinite;
+        }
+        @keyframes logoPulse {
+          0%,100% { filter: drop-shadow(0 0 20px #00F0FF) drop-shadow(0 0 40px #8B5CF6); }
+          50%      { filter: drop-shadow(0 0 30px #EC4899) drop-shadow(0 0 50px #00F0FF); }
+        }
+
+        .ag-eyebrow {
+          font-size: 9px;
+          letter-spacing: .6em;
+          color: rgba(0,240,255,.6);
+          text-transform: uppercase;
+          margin-bottom: 16px;
+        }
+
+        .ag-title {
+          font-family: 'Outrun Future', 'Orbitron', sans-serif;
+          font-weight: 900;
+          font-size: clamp(22px, 4vw, 36px);
+          text-transform: uppercase;
+          letter-spacing: .06em;
+          color: #F0F4FF;
+          margin-bottom: 24px;
+          text-shadow: 0 0 20px rgba(0,240,255,.3);
+        }
+
+        .ag-body {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 16px;
+          font-weight: 300;
+          color: rgba(240,244,255,.65);
+          line-height: 1.8;
+          margin-bottom: 32px;
+        }
+
+        .ag-highlight-c {
+          color: #00F0FF;
+          text-shadow: 0 0 8px rgba(0,240,255,.5);
+        }
+        .ag-highlight-p {
+          color: #8B5CF6;
+          text-shadow: 0 0 8px rgba(139,92,246,.5);
+          font-weight: 600;
+        }
+
+        .ag-question {
+          font-family: 'Outrun Future', 'Orbitron', sans-serif;
+          font-size: clamp(16px, 2.5vw, 22px);
+          font-weight: 900;
+          text-transform: uppercase;
+          letter-spacing: .1em;
+          color: #EC4899;
+          text-shadow: 0 0 16px rgba(236,72,153,.6), 0 0 32px rgba(236,72,153,.3);
+          margin-bottom: 32px;
+          animation: questionPulse 2s ease-in-out infinite;
+        }
+        @keyframes questionPulse {
+          0%,100% { text-shadow: 0 0 16px rgba(236,72,153,.6), 0 0 32px rgba(236,72,153,.3); }
+          50%      { text-shadow: 0 0 24px rgba(236,72,153,.9), 0 0 48px rgba(236,72,153,.5); }
+        }
+
+        .ag-buttons {
+          display: flex;
+          gap: 16px;
+          justify-content: center;
+          margin-bottom: 28px;
+          flex-wrap: wrap;
+        }
+
+        .ag-btn {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+          padding: 18px 40px;
+          border: 1px solid;
+          background: transparent;
+          cursor: pointer;
+          transition: all .25s;
+          position: relative;
+          overflow: hidden;
+          clip-path: polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+          min-width: 160px;
+          font-family: 'Share Tech Mono', monospace;
+        }
+        .ag-btn::before {
+          content: '';
+          position: absolute; inset: 0;
+          background: linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);
+          transform: translateX(-100%);
+          transition: transform .5s;
+        }
+        .ag-btn:hover::before { transform: translateX(100%); }
+
+        .ag-btn-yes {
+          border-color: #00F0FF;
+          color: #00F0FF;
+        }
+        .ag-btn-yes:hover {
+          background: rgba(0,240,255,.12);
+          box-shadow: 0 0 24px rgba(0,240,255,.5), 0 0 48px rgba(0,240,255,.2), inset 0 0 20px rgba(0,240,255,.06);
+          transform: translateY(-2px);
+        }
+        .ag-btn-no {
+          border-color: rgba(236,72,153,.5);
+          color: rgba(236,72,153,.7);
+        }
+        .ag-btn-no:hover {
+          background: rgba(236,72,153,.08);
+          box-shadow: 0 0 20px rgba(236,72,153,.3);
+          transform: translateY(-2px);
+          border-color: #EC4899;
+          color: #EC4899;
+        }
+        .ag-btn-label {
+          font-size: 13px;
+          letter-spacing: .25em;
+          text-transform: uppercase;
+          font-weight: 700;
+        }
+        .ag-btn-sub {
+          font-size: 9px;
+          letter-spacing: .2em;
+          opacity: .6;
+          text-transform: uppercase;
+        }
+
+        .ag-legal {
+          font-size: 9px;
+          letter-spacing: .08em;
+          color: rgba(240,244,255,.25);
+          line-height: 1.6;
+          max-width: 460px;
+          margin: 0 auto 20px;
+        }
+
+        .ag-footer-brand {
+          font-size: 8px;
+          letter-spacing: .4em;
+          color: rgba(139,92,246,.4);
+          text-transform: uppercase;
+        }
+
+        /* NO shake animation */
+        @keyframes agShake {
+          0%,100%{transform:translateX(0)}
+          15%{transform:translateX(-8px)}
+          30%{transform:translateX(8px)}
+          45%{transform:translateX(-6px)}
+          60%{transform:translateX(6px)}
+          75%{transform:translateX(-3px)}
+          90%{transform:translateX(3px)}
+        }
+        .ag-shake { animation: agShake .5s ease-out; }
+
+        /* Exit animation */
+        @keyframes agExit {
+          0%  { opacity:1; transform:scale(1); filter:none; }
+          40% { opacity:.8; transform:scale(1.02); filter:brightness(1.3); }
+          60% { opacity:.6; transform:scale(0.98) skewX(-1deg); filter:hue-rotate(30deg) brightness(1.5); }
+          80% { opacity:.3; transform:scale(1.01); filter:hue-rotate(60deg); }
+          100%{ opacity:0; transform:scale(1.04); filter:brightness(2); }
+        }
+        .ag-exiting { animation: agExit .6s ease-in forwards !important; }
+
+        @media(max-width:520px){
+          .ag-content { padding:40px 24px; }
+          .ag-buttons { flex-direction:column; align-items:center; }
+          .ag-btn { min-width:220px; }
+        }
+      `;
+      document.head.appendChild(style);
+      document.body.appendChild(overlay);
+
+      // Matrix rain on canvas
+      const canvas = document.getElementById('age-gate-canvas');
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+        const GLYPHS = '1142アイウエオカキクケコ0123456789∞◆▲⚗⚡∅≈≠∑→←↑↓◉■□';
+        const cols = Math.floor(canvas.width / 22);
+        const drops = Array(cols).fill(1);
+        const matrixColors = [C.cyan, C.purple, C.pink];
+        function drawMatrix() {
+          ctx.fillStyle = 'rgba(0,0,0,0.05)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
           for (let i = 0; i < cols; i++) {
-            const ch = DATA[Math.floor(Math.random() * DATA.length)];
-            const col = i%4===0 ? C.cyan : i%4===1 ? C.purple : i%4===2 ? C.pink : C.green;
-            ctx.fillStyle = col; ctx.globalAlpha = 0.4;
-            ctx.font = '12px "Share Tech Mono",monospace';
-            ctx.fillText(ch, i*22, drops[i]*16);
+            const g = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+            ctx.fillStyle = matrixColors[Math.floor(Math.random() * matrixColors.length)];
+            ctx.font = '13px "Share Tech Mono", monospace';
+            ctx.globalAlpha = 0.7;
+            ctx.fillText(g, i * 22, drops[i] * 22);
             ctx.globalAlpha = 1;
-            if (drops[i]*16 > canvas.height && Math.random() > 0.98) drops[i] = 0;
-            drops[i] += 0.4;
+            if (drops[i] * 22 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
           }
-          raf = requestAnimationFrame(draw);
         }
-        draw(); active = true;
-      },
-    };
+        let matrixRaf;
+        (function matrixLoop() { drawMatrix(); matrixRaf = requestAnimationFrame(matrixLoop); })();
+        window._agMatrixRaf = matrixRaf;
+      }
+
+      // YES handler
+      document.getElementById('ag-yes').addEventListener('click', () => {
+        setVerified();
+        overlay.classList.add('ag-exiting');
+        document.documentElement.style.overflow = '';
+        if (window._agMatrixRaf) cancelAnimationFrame(window._agMatrixRaf);
+        setTimeout(() => {
+          overlay.remove();
+          onPass?.();
+        }, 600);
+      });
+
+      // NO handler
+      document.getElementById('ag-no').addEventListener('click', () => {
+        const content = overlay.querySelector('.ag-content');
+        content.classList.remove('ag-shake');
+        void content.offsetWidth;
+        content.classList.add('ag-shake');
+        // Brief pause then redirect
+        setTimeout(() => {
+          window.location.href = 'https://www.google.com';
+        }, 600);
+      });
+    }
+
+    return { show, isVerified };
   })();
 
-  /* ══════════════════════════════════════════════
-     INIT — Wire all effects
-     ══════════════════════════════════════════════ */
   function init() {
-    const path = location.pathname;
-    const isHome = !path.match(/(research|tools|about|archive|breakthroughs|creators|vision|chemlog|resources|chemicals|pdf_portal|socials)/);
+    const isHome  = !location.pathname.includes('research') &&
+                    !location.pathname.includes('tools')    &&
+                    !location.pathname.includes('about')    &&
+                    !location.pathname.includes('archive');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
 
-    /* Always active */
-    CrystalBurst.init();
-    ChromaShift.init();
-    GlitchFlicker.init();
-    NeonTrail.init();
-    HoloScanlines.init();
-    CardTilt3D.init();
-    AuraGlow.init();
-
-    if (isHome) {
-      MatrixRain.init(0.05);
-      VortexPulse.init('.vortex-hero');
-      WarpSpeed.init('.vortex-hero', 100);
-      NeuralWeb.init(50);
-      PlasmaLightning.init();
-      FloatCrystals.init(55);
-      BootSequence.init();
-    } else {
-      NeuralWeb.init(30);
-      PlasmaLightning.init();
-      DataStream.init(0.03);
-      FloatCrystals.init(28);
-      HexGrid.init();
+    /* Age gate fires first — effects launch after verification */
+    function launchEffects() {
+      if (reduced) return;
+      CrystalBurst.init();
+      ChromaShift.init();
+      GlitchFlicker.init();
+      NeonTrail.init();
+      ScanBar.init();
+      NavController.init();
+      PixelDisplace.init();
+      if (isHome) {
+        MatrixRain.init(0.05);
+        VortexPulse.init('.vortex-hero');
+        FloatCrystals.init(55);
+        BootSequence.init();
+      } else {
+        FloatCrystals.init(35);
+      }
     }
+
+    AgeGate.show(launchEffects);
   }
 
+
+  /* ══ NAV CONTROLLER ══ */
+  const NavController = (() => {
+    function init() {
+      const hud = document.getElementById('hud');
+      const overlay = document.getElementById('nav-overlay');
+      const drawer = document.getElementById('nav-drawer');
+      const openBtn = document.getElementById('nav-open');
+      const closeBtn = document.getElementById('nav-close');
+
+      if (!hud) return;
+
+      // Scroll: add .scrolled class
+      const onScroll = () => {
+        hud.classList.toggle('scrolled', window.scrollY > 40);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      // Active link highlight
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.hud-link, .drawer-link').forEach(a => {
+        const href = a.getAttribute('href');
+        if (href && (href === currentPage || href.startsWith(currentPage.split('#')[0]))) {
+          a.classList.add('active');
+        }
+      });
+
+      // Hamburger open
+      if (openBtn) {
+        openBtn.addEventListener('click', () => {
+          openBtn.classList.add('open');
+          overlay.classList.add('open');
+          drawer.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        });
+      }
+
+      // Close via overlay or close btn
+      const closeDrawer = () => {
+        if (openBtn) openBtn.classList.remove('open');
+        overlay.classList.remove('open');
+        drawer.classList.remove('open');
+        document.body.style.overflow = '';
+      };
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+      if (overlay) overlay.addEventListener('click', closeDrawer);
+
+      // Close on drawer link click
+      document.querySelectorAll('.drawer-link').forEach(a => {
+        a.addEventListener('click', closeDrawer);
+      });
+    }
+    return { init };
+  })();
+
+  /* ── Expose to global scope for manual control ── */
   window.FX1142 = {
-    MatrixRain, CrystalBurst, ChromaShift, GlitchFlicker,
-    VortexPulse, FloatCrystals, NeonTrail, BootSequence,
-    NeuralWeb, PlasmaLightning, HoloScanlines, WarpSpeed,
-    CardTilt3D, HexGrid, AuraGlow, DataStream, init,
+    MatrixRain,
+    CrystalBurst,
+    ChromaShift,
+    GlitchFlicker,
+    VortexPulse,
+    FloatCrystals,
+    NeonTrail,
+    BootSequence,
+    ScanBar,
+    PixelDisplace,
+    AgeGate,
+    NavController,
+    init,
   };
 
+  /* ── Auto-init on DOMContentLoaded ── */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
   }
+
 })();

@@ -1,398 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>The Engine — Tools · 1142 Labs</title>
-<link rel="icon" href="assets/images/1142_logo.png" type="image/png">
+<meta charset="UTF-8">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tools · 1142 Labs: Tomorrow's Solutions Today</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/global.css">
 <style>@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}</style>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#030510">
+<meta name="description" content="Scientific tools from 1142 Labs: combination calculators, withdrawal timelines, dosage references, and more for independent researchers.">
+<meta name="keywords" content="research tools, drug combination calculator, withdrawal calculator, dosage reference, 1142 labs tools">
+<meta name="author" content="Cole EverDark · 1142 Labs">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#00F0FF">
+<link rel="canonical" href="https://1142labs.com/tools">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://1142labs.com/tools">
+<meta property="og:title" content="Tools · 1142 Labs: Tomorrow's Solutions Today">
+<meta property="og:description" content="Scientific tools from 1142 Labs: combination calculators, withdrawal timelines, dosage references, and more for independent researchers.">
+<meta property="og:image" content="https://1142labs.com/assets/images/1142_logo.png">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
+<meta property="og:site_name" content="1142 Labs">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tools · 1142 Labs: Tomorrow's Solutions Today">
+<meta name="twitter:description" content="Scientific tools from 1142 Labs: combination calculators, withdrawal timelines, dosage references, and more for independent researchers.">
+<meta name="twitter:image" content="https://1142labs.com/assets/images/1142_logo.png">
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "1142 Labs",
+  "url": "https://1142labs.com",
+  "logo": "https://1142labs.com/assets/images/1142_logo.png",
+  "description": "Independent neurodivergent research foundation. Cognitive liberation through empirical research.",
+  "founder": {
+    "@type": "Person",
+    "name": "Cole EverDark"
+  },
+  "foundingDate": "2019-12-22",
+  "sameAs": []
+}
+</script>
 </head>
 <body>
-<canvas id="bg-canvas"></canvas>
-<div class="site-orb site-orb-1"></div>
-<div class="site-orb site-orb-2"></div>
-<div class="site-orb site-orb-3"></div>
 <div id="cursor"></div>
-<!-- ═══ 1142 BROADCAST SYSTEM ═══ -->
-<div id="crt-overlay"></div>
-<div id="scanlines"></div>
-<div id="phosphor"></div>
-<div id="crt-flicker"></div>
-<div id="scan-sweep"></div>
-<canvas id="static-canvas"></canvas>
-
-<!-- TV Corner Registration Marks -->
-<div id="tv-corners">
-  <div class="tv-corner tl"></div>
-  <div class="tv-corner tr"></div>
-  <div class="tv-corner bl"></div>
-  <div class="tv-corner br"></div>
-</div>
-
-<!-- Broadcast HUD -->
-<div id="broadcast-hud">
-
-  <!-- TOP LEFT: Channel -->
-  <div id="bcast-channel">
-    <div>
-      <div id="bcast-ch-num">11·42</div>
-      <div id="bcast-ch-label">1142 LABS<br><span id="bcast-ch-sub">COGNITIVE LIBERATION TV</span></div>
-    </div>
-  </div>
-
-  <!-- TOP CENTER: ON AIR -->
-  <div id="bcast-onair">
-    <div id="bcast-onair-dot"></div>
-    <span>ON AIR &nbsp;·&nbsp; CH.08</span>
-  </div>
-
-  <!-- TOP RIGHT: Time + Signal -->
-  <div id="bcast-topright">
-    <div id="bcast-time" id="bcast-time-el">11:42</div>
-    <div id="bcast-date">EST. DEC 22 2019</div>
-    <div id="bcast-signal">
-      <div class="sig-bar"></div>
-      <div class="sig-bar"></div>
-      <div class="sig-bar"></div>
-      <div class="sig-bar"></div>
-      <div class="sig-bar"></div>
-    </div>
-  </div>
-
-  <!-- BOTTOM LOWER THIRD -->
-  <div id="bcast-lower">
-    <div id="lower-third-bar"></div>
-    <div id="lower-ticker-wrap">
-      <div id="lower-ticker-tag">1142 LABS</div>
-      <div id="lower-ticker-scroll">
-        <div id="lower-ticker-inner">
-          COLE EVERDARK · FOUNDER · BARRIE ONTARIO · EST DEC 22 2019 · 11:42 PM → 11:42 AM · THE SPIRITUAL JAILBREAK · COGNITIVE LIBERATION · NEURODIVERGENT EMPOWERMENT · 20+ RESEARCH PAPERS · METHYLPHENIDATE SERIES COMPLETE · STIM BLASTING REPORT PUBLISHED · ERGOPATHICS DISCOVERED JUN 2023 · PHARMACEUTICAL SOVEREIGNTY · THE RITLITILIN METHOD · SURGING BRAIN · METHYL NUTRIENTS · 7-DAY SLEEP DEPRIVATION STUDY · FENTANYL NEUROVASCULAR RISK · DOWN SYNDROME COGNITIVE PROCESS · THE COST OF KNOWLEDGE · BLUE METH WAR 2020-2022 · METHYL WINS · IN LOVING MEMORY: KATRINA JADE MUTCH HASLER ♥ DEC 20 2021 · 1142 IS INEVITABLE · TOMORROW'S SOLUTIONS TODAY · A TIME · A MOVEMENT · A MINDSET · ST. JIMMY PHENIDATE: PHENIDATE TV COMING · 1142 GAME STUDIOS · FERROFLUID · THE FORTRESS · THE BRAIN · THE ENGINE · THE ARCHIVE · THE CREATOR · COGNITIVE LIBERATION TV · CHANNEL 11·42 · BROADCASTING LIVE · ∞
-        </div>
+<div id="cursor-ring"></div><div id="nav-overlay"></div>
+<aside id="nav-drawer">
+  <div class="drawer-header">
+    <a href="index.html" class="drawer-logo">
+      <img src="assets/images/1142_logo.png" alt="1142 Labs">
+      <div>
+        <span class="drawer-logo-name">1142 LABS</span>
+        <span class="drawer-logo-sub">Tomorrow's Solutions Today</span>
       </div>
-      <div id="lower-ticker-corner" id="bcast-uptime">LIVE</div>
+    </a>
+    <button class="drawer-close" id="nav-close" aria-label="Close menu">&#x2715;</button>
+  </div>
+  <nav class="drawer-nav">
+    <div class="drawer-section">
+      <div class="drawer-section-label">Core</div>
+      <a href="index.html" class="drawer-link"><span class="dl-icon">&#x2B21;</span>Home</a>
+      <a href="about.html" class="drawer-link"><span class="dl-icon">&#x25C8;</span>The Creator</a>
+      <a href="vision.html" class="drawer-link"><span class="dl-icon">&#x25C9;</span>Vision</a>
+      <a href="creators.html" class="drawer-link"><span class="dl-icon">&#x25CE;</span>Creators</a>
     </div>
-  </div>
-
-  <!-- BOTTOM LEFT: Watermark -->
-  <div id="bcast-watermark">
-    <div id="bcast-wm-ch">1142</div>
-    <div id="bcast-wm-sub">COGNITIVE LIBERATION TV</div>
-  </div>
-
-  <!-- BOTTOM RIGHT: Stats -->
-  <div id="bcast-stats">
-    <div class="bstat"><div class="bstat-dot"></div>20+ PAPERS PUBLISHED</div>
-    <div class="bstat"><div class="bstat-dot" style="background:var(--purple);box-shadow:0 0 5px var(--purple);"></div>SIGNAL STABLE</div>
-    <div class="bstat"><div class="bstat-dot" style="background:var(--pink);box-shadow:0 0 5px var(--pink);"></div>BARRIE · ONTARIO · CA</div>
-  </div>
-
-</div>
-
-<!-- ═══ BROADCAST SCRIPTS ═══ -->
-<script>
-(function(){
-  /* Live clock */
-  function updateTime(){
-    var now=new Date();
-    var h=now.getHours().toString().padStart(2,'0');
-    var m=now.getMinutes().toString().padStart(2,'0');
-    var s=now.getSeconds().toString().padStart(2,'0');
-    var el=document.getElementById('bcast-time');
-    if(el)el.textContent=h+':'+m+':'+s;
-    var mo=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][now.getMonth()];
-    var de=document.getElementById('bcast-date');
-    if(de)de.textContent=mo+' '+now.getDate()+' '+now.getFullYear()+' · BARRIE CA';
-  }
-  updateTime();setInterval(updateTime,1000);
-
-  /* Signal bar animation */
-  function animateSignal(){
-    var bars=document.querySelectorAll('.sig-bar');
-    bars.forEach(function(b,i){
-      var base=[4,7,10,13,16][i];
-      var vary=Math.max(2,base+Math.round((Math.random()-.3)*4));
-      b.style.height=vary+'px';
-      var alive=Math.random()>.12;
-      b.style.opacity=alive?'1':'.2';
-      b.style.background=alive?'var(--cyan)':'rgba(0,240,255,.2)';
-    });
-    setTimeout(animateSignal,280+Math.random()*420);
-  }
-  animateSignal();
-
-  /* Static canvas noise flash on page load */
-  var sc=document.getElementById('static-canvas');
-  if(sc){
-    sc.width=window.innerWidth;sc.height=window.innerHeight;
-    var ctx=sc.getContext('2d');
-    function drawStatic(a){
-      var id=ctx.createImageData(sc.width,sc.height);
-      for(var i=0;i<id.data.length;i+=4){
-        var v=Math.random()<.5?0:255;
-        id.data[i]=id.data[i+1]=id.data[i+2]=v;
-        id.data[i+3]=Math.floor(Math.random()*a);
-      }
-      ctx.putImageData(id,0,0);
-    }
-    /* fade-in static on load */
-    var alpha=120,frames=0;
-    sc.classList.add('visible');
-    var fade=setInterval(function(){
-      alpha-=8;frames++;
-      if(alpha<=0){clearInterval(fade);sc.classList.remove('visible');ctx.clearRect(0,0,sc.width,sc.height);return;}
-      drawStatic(alpha);
-    },30);
-  }
-
-  /* Periodic signal disruption */
-  function randomDisrupt(){
-    var sc2=document.getElementById('static-canvas');
-    if(!sc2)return;
-    sc2.width=window.innerWidth;sc2.height=window.innerHeight;
-    var ctx2=sc2.getContext('2d');
-    sc2.classList.add('visible');
-    var a=40,cnt=0;
-    var fl=setInterval(function(){
-      a-=6;cnt++;
-      if(a<=0||cnt>8){clearInterval(fl);sc2.classList.remove('visible');ctx2.clearRect(0,0,sc2.width,sc2.height);return;}
-      var id=ctx2.createImageData(sc2.width,sc2.height);
-      for(var i=0;i<id.data.length;i+=4){var v=Math.random()<.5?0:255;id.data[i]=id.data[i+1]=id.data[i+2]=v;id.data[i+3]=Math.floor(Math.random()*a);}
-      ctx2.putImageData(id,0,0);
-    },40);
-    setTimeout(randomDisrupt,12000+Math.random()*18000);
-  }
-  setTimeout(randomDisrupt,5000+Math.random()*8000);
-
-  /* Uptime counter */
-  var start=new Date('2019-12-22T23:42:00');
-  function uptime(){
-    var diff=Date.now()-start.getTime();
-    var d=Math.floor(diff/86400000);
-    var h=Math.floor((diff%86400000)/3600000);
-    var el=document.getElementById('bcast-uptime');
-    if(el)el.textContent='UP '+d+'D '+h+'H';
-    setTimeout(uptime,60000);
-  }
-  uptime();
-})();
-</script>
-<!-- ═══ END BROADCAST SYSTEM ═══ -->
-
-<div id="cursor-ring"></div>
-<nav class="hud">
+    <div class="drawer-section">
+      <div class="drawer-section-label">Research</div>
+      <a href="research.html" class="drawer-link"><span class="dl-icon">&#x2697;</span>Research</a>
+      <a href="breakthroughs.html" class="drawer-link"><span class="dl-icon">&#x26A1;</span>Breakthroughs</a>
+      <a href="1142_chemicals.html" class="drawer-link"><span class="dl-icon">&#x2B21;</span>Chemicals</a>
+      <a href="chemlog.html" class="drawer-link"><span class="dl-icon">&#x25C6;</span>Chem Log</a>
+      <a href="pdf_portal.html" class="drawer-link"><span class="dl-icon">&#x25A3;</span>PDF Portal</a>
+      <a href="library.html" class="drawer-link"><span class="dl-icon">&#x25A3;</span>PDF Library</a>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-label">Explore</div>
+      <a href="tools.html" class="drawer-link"><span class="dl-icon">&#x2699;</span>Tools</a>
+      <a href="withdrawal.html" class="drawer-link"><span class="dl-icon">&#x25C6;</span>Withdrawal Calc</a>
+      <a href="resources.html" class="drawer-link"><span class="dl-icon">&#x25C8;</span>Resources</a>
+      <a href="archive.html" class="drawer-link"><span class="dl-icon">&#x2584;</span>Archive</a>
+      <a href="posters.html" class="drawer-link"><span class="dl-icon">&#x25FC;</span>Posters</a>
+      <a href="socials.html" class="drawer-link"><span class="dl-icon">&#x25CE;</span>Network</a>
+    </div>
+  </nav>
+  <div class="drawer-foot">An EverDark Production &middot; Est. Dec 22, 2019</div>
+</aside>
+<nav class="hud" id="hud">
   <a href="index.html" class="hud-logo">
     <img src="assets/images/1142_logo.png" alt="1142 Labs">
     <div class="hud-logo-text">
-      <span>1142 LABS</span>
-      <span class="hud-logo-sub">Cognitive Liberation TV</span>
+      <span class="hud-logo-name">1142 LABS</span>
+      <span class="hud-logo-sub">Tomorrow's Solutions Today</span>
     </div>
   </a>
-  <div class="nav-panel" id="navPanel">
-    <div class="nav-section">
-      <button class="nav-section-toggle" data-target="drop-fortress">THE FORTRESS <span class="nav-caret">&#9660;</span></button>
-      <div class="nav-drop" id="drop-fortress">
-        <a href="index.html">The Void <em>Home</em></a>
-        <a href="research.html">The Brain <em>Research</em></a>
-        <a href="tools.html">The Engine <em>Tools</em></a>
-        <a href="archive.html">The Archive</a>
-        <a href="creators.html">The Creator</a>
-      </div>
-    </div>
-    <div class="nav-section">
-      <button class="nav-section-toggle" data-target="drop-research">RESEARCH <span class="nav-caret">&#9660;</span></button>
-      <div class="nav-drop" id="drop-research">
-        <span class="drop-label" style="color:var(--green)">Studies</span>
-        <a href="breakthroughs.html">Breakthroughs</a>
-        <a href="pdf_portal.html">PDF Portal</a>
-        <a href="library.html">PDF Library <em>All 19</em></a>
-        <span class="drop-label" style="color:var(--green)">Chemical DB</span>
-        <a href="chemlog.html">Chem Log</a>
-        <a href="1142_chemicals.html">Chemicals of Study</a>
-        <span class="drop-label" style="color:var(--green)">Calculators</span>
-        <a href="tools.html">Combo Calc</a>
-        <a href="withdrawal.html">Withdrawal Calc</a>
-      </div>
-    </div>
-    <div class="nav-section">
-      <button class="nav-section-toggle" data-target="drop-about">ABOUT <span class="nav-caret">&#9660;</span></button>
-      <div class="nav-drop" id="drop-about">
-        <span class="drop-label" style="color:var(--pink)">Creator</span>
-        <a href="creators.html">Cole EverDark</a>
-        <a href="creators.html#personas">Persona Matrix</a>
-        <span class="drop-label" style="color:var(--pink)">Manifesto</span>
-        <a href="vision.html">The Manifesto</a>
-        <a href="archive.html">Cole's Tab Corner</a>
-        <span class="drop-label" style="color:var(--pink)">More</span>
-        <a href="posters.html">Visualizations</a>
-        <a href="socials.html">Network</a>
-        <a href="resources.html">Resources</a>
-      </div>
-    </div>
+  <ul class="hud-nav">
+    <li class="has-mega">
+      <a href="research.html" class="hud-link">Research <span class="hud-arrow">▾</span></a>
+      <div class="mega-panel"><div class="mega-grid">
+        <a href="research.html" class="mega-item"><span class="mega-icon">⚗</span><span class="mega-label">Research Hub</span><span class="mega-desc">The Brain — all studies</span></a>
+        <a href="breakthroughs.html" class="mega-item"><span class="mega-icon">⚡</span><span class="mega-label">Breakthroughs</span><span class="mega-desc">Key discoveries</span></a>
+        <a href="1142_chemicals.html" class="mega-item"><span class="mega-icon">⬡</span><span class="mega-label">Chemicals DB</span><span class="mega-desc">Full compound database</span></a>
+        <a href="chemlog.html" class="mega-item"><span class="mega-icon">◆</span><span class="mega-label">Chem Log</span><span class="mega-desc">Research session logs</span></a>
+        <a href="pdf_portal.html" class="mega-item"><span class="mega-icon">▣</span><span class="mega-label">PDF Portal</span><span class="mega-desc">Research paper library</span></a>
+        <a href="library.html" class="mega-item"><span class="mega-icon">&#x25A3;</span><span class="mega-label">PDF Library</span><span class="mega-desc">All 19 papers</span></a>
+      </div></div>
+    </li>
+    <li class="has-mega">
+      <a href="about.html" class="hud-link">About <span class="hud-arrow">▾</span></a>
+      <div class="mega-panel"><div class="mega-grid">
+        <a href="about.html" class="mega-item"><span class="mega-icon">◈</span><span class="mega-label">The Creator</span><span class="mega-desc">Cole EverDark</span></a>
+        <a href="vision.html" class="mega-item"><span class="mega-icon">◉</span><span class="mega-label">Vision</span><span class="mega-desc">Mission &amp; future</span></a>
+        <a href="creators.html" class="mega-item"><span class="mega-icon">◎</span><span class="mega-label">Creators</span><span class="mega-desc">The persona matrix</span></a>
+        <a href="archive.html" class="mega-item"><span class="mega-icon">▤</span><span class="mega-label">Archive</span><span class="mega-desc">Logs &amp; manifesto</span></a>
+      </div></div>
+    </li>
+    <li class="has-mega">
+      <a href="tools.html" class="hud-link">Explore <span class="hud-arrow">▾</span></a>
+      <div class="mega-panel"><div class="mega-grid">
+        <a href="tools.html" class="mega-item"><span class="mega-icon">⚙</span><span class="mega-label">Tools</span><span class="mega-desc">Calculators &amp; utils</span></a>
+        <a href="withdrawal.html" class="mega-item"><span class="mega-icon">&#x25C6;</span><span class="mega-label">Withdrawal Calc</span><span class="mega-desc">Evidence-based timeline</span></a>
+        <a href="resources.html" class="mega-item"><span class="mega-icon">◈</span><span class="mega-label">Resources</span><span class="mega-desc">References &amp; links</span></a>
+        <a href="posters.html" class="mega-item"><span class="mega-icon">◼</span><span class="mega-label">Posters</span><span class="mega-desc">EverDark visuals</span></a>
+        <a href="socials.html" class="mega-item"><span class="mega-icon">◎</span><span class="mega-label">Network</span><span class="mega-desc">Connect &amp; follow</span></a>
+      </div></div>
+    </li>
+  </ul>
+  <div class="hud-right">
+    <div class="hud-status"><div class="hud-dot"></div><span>SYSTEM ONLINE</span></div>
+    <button class="hud-hamburger" id="nav-open" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
-  <div class="hud-status"><div class="hud-dot"></div>ONLINE · 1142</div>
-  <button class="nav-hamburger" id="mobileMenuBtn" aria-label="Open Menu"><span></span><span></span><span></span></button>
-</nav>
-<!-- ═══ MOBILE MENU ═══ -->
-<div class="mobile-menu" id="mobileMenu">
-  <div class="mobile-menu-inner">
-    <div class="mobile-channel">
-      <div class="mobile-ch-num">11·42</div>
-      <div class="mobile-ch-info">1142 LABS<br>COGNITIVE LIBERATION TV</div>
-      <div class="mobile-onair"><div class="mobile-onair-dot"></div><span>ON AIR</span></div>
-    </div>
-    <div class="mobile-section-label">The Fortress</div>
-    <a href="index.html">The Void <em>Home</em></a>
-    <a href="research.html">The Brain <em>Research</em></a>
-    <a href="tools.html">The Engine <em>Tools</em></a>
-    <a href="archive.html">The Archive</a>
-    <a href="creators.html">The Creator</a>
-    <div class="mobile-section-label">Research</div>
-    <a href="breakthroughs.html">Breakthroughs</a>
-    <a href="pdf_portal.html">PDF Portal</a>
-    <a href="chemlog.html">Chem Log</a>
-    <a href="1142_chemicals.html">Chemicals of Study</a>
-    <a href="tools.html">Combo Calc</a>
-    <a href="withdrawal.html">Withdrawal Calc</a>
-    <div class="mobile-section-label">About</div>
-    <a href="creators.html">Cole EverDark</a>
-    <a href="vision.html">The Manifesto</a>
-    <a href="archive.html">Cole's Tab Corner</a>
-    <a href="socials.html">Network</a>
-    <a href="resources.html">Resources</a>
-    <a href="posters.html">Visualizations</a>
-  </div>
-</div>
-<!-- ═══ END MOBILE MENU ═══ --><section style="position:relative;min-height:60vh;display:flex;flex-direction:column;justify-content:center;padding:120px 48px 80px;overflow:hidden;text-align:left;">
+</nav><section style="position:relative;min-height:60vh;display:flex;flex-direction:column;justify-content:center;padding:120px 48px 80px;overflow:hidden;text-align:left;">
   <div class="vortex-grid" style="opacity:.5;"></div>
   <div class="orb orb-p" style="opacity:.6;"></div>
   <div class="orb orb-c" style="opacity:.5;top:auto;bottom:-60px;right:0;"></div>
-  <img src="assets/images/1000110218.webp" alt="" style="position:absolute;top:50%;right:0;transform:translateY(-50%);width:38vw;max-width:500px;opacity:.22;pointer-events:none;filter:drop-shadow(0 0 40px var(--green)) saturate(1.3);">
+  <img src="assets/images/1772910919760.webp" alt="" style="position:absolute;top:50%;right:0;transform:translateY(-50%);width:38vw;max-width:500px;opacity:.22;pointer-events:none;filter:drop-shadow(0 0 40px var(--green)) saturate(1.3);">
   <div style="position:relative;z-index:1;">
     <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.5em;color:var(--green);text-transform:uppercase;margin-bottom:20px;opacity:0;animation:fadeUp .8s .1s forwards;">Phase 03 · The Engine</div>
     <img src="assets/images/1142_logo.png" alt="" style="height:52px;filter:drop-shadow(0 0 16px var(--green));margin-bottom:24px;opacity:0;animation:fadeUp .8s .15s forwards;display:block;">
     <h1 style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(44px,7vw,100px);line-height:.92;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:28px;opacity:0;animation:fadeUp .9s .3s forwards;">
       <span style="display:block;color:var(--white);">High-Performance</span>
-      <span style="display:block;color:var(--green);text-shadow:0 0 30px var(--green),0 0 60px var(--green)80;" class="glitch anaglyph" data-text="Interactive">Interactive</span>
+      <span style="display:block;color:var(--green);text-shadow:0 0 30px var(--green),0 0 60px var(--green)80;" class="glitch" data-text="Interactive">Interactive</span>
       <span style="display:block;-webkit-text-stroke:1.5px var(--pink);color:transparent;">Tools</span>
     </h1>
-    <p style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:300;color:rgba(240,244,255,.6);max-width:560px;line-height:1.8;opacity:0;animation:fadeUp .9s .5s forwards;">Substance Combos Calculator. Withdrawal Timeline. Built to perform.</p>
+    <p style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:300;color:rgba(240,244,255,.6);max-width:560px;line-height:1.8;opacity:0;animation:fadeUp .9s .5s forwards;">Substance Combos Calculator. Withdrawal Timeline. Moonshot Detection System. Built to perform.</p>
   </div>
 </section><div class="marquee-strip"><div class="marquee-track">
-  <div class="marquee-item">COMBO CALCULATOR<span class="sep">◆</span>WITHDRAWAL TIMELINE<span class="sep">◆</span>RISK SCORING<span class="sep">◆</span>HARM REDUCTION<span class="sep">◆</span>REAL-TIME ANALYSIS<span class="sep">◆</span></div>
-  <div class="marquee-item">COMBO CALCULATOR<span class="sep">◆</span>WITHDRAWAL TIMELINE<span class="sep">◆</span>RISK SCORING<span class="sep">◆</span>HARM REDUCTION<span class="sep">◆</span>REAL-TIME ANALYSIS<span class="sep">◆</span></div>
+  <div class="marquee-item">COMBO CALCULATOR<span class="sep">◆</span>WITHDRAWAL TIMELINE<span class="sep">◆</span>RISK SCORING<span class="sep">◆</span>HARM REDUCTION<span class="sep">◆</span>MOONSHOT DETECTION<span class="sep">◆</span>REAL-TIME ANALYSIS<span class="sep">◆</span></div>
+  <div class="marquee-item">COMBO CALCULATOR<span class="sep">◆</span>WITHDRAWAL TIMELINE<span class="sep">◆</span>RISK SCORING<span class="sep">◆</span>HARM REDUCTION<span class="sep">◆</span>MOONSHOT DETECTION<span class="sep">◆</span>REAL-TIME ANALYSIS<span class="sep">◆</span></div>
 </div></div>
 <div id="combos"></div>
-<section class="section section-void" style="position:relative;overflow:hidden;">
-  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron',sans-serif;font-weight:900;font-size:30vw;color:rgba(61,142,255,0.025);pointer-events:none;user-select:none;white-space:nowrap;line-height:1;z-index:0;">TOOLS</div>
-  <div style="position:absolute;top:30px;right:30px;width:120px;height:120px;pointer-events:none;opacity:0.14;"><svg width="120" height="120" viewBox="0 0 120 120"><polygon points="112,60 86,105 35,105 8,60 34,15 86,15" fill="none" stroke="rgba(61,142,255,1)" stroke-width="1.5"/><polygon points="112,60 86,105 35,105 8,60 34,15 86,15" fill="rgba(61,142,255,0.06)"/></svg></div>
-  <div style="position:absolute;bottom:-60px;right:-60px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(61,142,255,0.18) 0%,rgba(61,142,255,0.054) 40%,transparent 70%);filter:blur(40px);pointer-events:none;animation:orbFloat 22s ease-in-out infinite alternate;"></div>
-  <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.035;">
-  <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-    <defs><pattern id="hex" width="56" height="48" patternUnits="userSpaceOnUse">
-      <polygon points="28,2 50,14 50,34 28,46 6,34 6,14" fill="none" stroke="#00F0FF" stroke-width=".8"/>
-      <polygon points="0,14 6,14 0,34" fill="none" stroke="#00F0FF" stroke-width=".8"/>
-      <polygon points="56,14 50,14 56,34" fill="none" stroke="#00F0FF" stroke-width=".8"/>
-    </pattern></defs>
-    <rect width="100%" height="100%" fill="url(#hex)"/>
-  </svg>
-</div>
-  <img src="assets/images/1772589402529.webp" alt="" style="position:absolute;top:0;right:0;width:22vw;max-width:260px;opacity:0.08;pointer-events:none;filter:saturate(1.4) brightness(.6);mask-image:radial-gradient(circle at center,rgba(0,0,0,.6),transparent 70%);">
-  <div style="position:absolute;bottom:-100px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(0,240,255,.07),transparent 60%);pointer-events:none;"></div>
-  <div class="section-label reveal" style="font-family:\'Neon Tubes\',\'Share Tech Mono\',monospace;display:inline-flex;align-items:center;gap:10px;">Harm Reduction Tool</div>
-  <h2 class="section-title reveal" style="font-family:'Outrun Future','Orbitron',sans-serif;font-weight:bold;">4-Substance <span class="tx-cyan tx-pulse-c">Combo</span> Calculator</h2>
+<section class="section section-void">
+  <div class="section-label reveal">Harm Reduction Tool</div>
+  <h2 class="section-title reveal">4-Substance <span style="color:var(--cyan);">Combo</span> Calculator</h2>
   <p class="section-sub reveal">Real-time interaction risk scoring for up to 4 substances. Educational purposes only. Always consult a professional.</p>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:48px;" class="reveal">
     <div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
         <div>
-          <div style="font-family:'Neon Tubes','Share Tech Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:8px;text-shadow:0 0 5px var(--cyan);">Substance 1</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:8px;">Substance 1</div>
           <select id="s1" style="width:100%;background:var(--void2);border:1px solid var(--border-c);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 12px;outline:none;cursor:pointer;">
-              <option value="">— Select —</option>
-              <option value="LSD">LSD</option>
-              <option value="Methylphenidate">Methylphenidate</option>
-              <option value="MDMA">MDMA</option>
-              <option value="Psilocybin">Psilocybin</option>
-              <option value="DMT">DMT</option>
-              <option value="Cannabis">Cannabis</option>
-              <option value="Alcohol">Alcohol</option>
-              <option value="Caffeine">Caffeine</option>
-              <option value="Amphetamine">Amphetamine</option>
-              <option value="Cocaine">Cocaine</option>
-              <option value="Ketamine">Ketamine</option>
-              <option value="Opioids">Opioids</option>
-              <option value="Benzodiazepines">Benzodiazepines</option>
-              <option value="Nicotine">Nicotine</option>
-              <option value="2C-B">2C-B</option>
-            </select>
+            <option value="">— Select —</option>
+            <option>LSD</option><option>Methylphenidate</option><option>MDMA</option><option>Psilocybin</option><option>DMT</option><option>Cannabis</option><option>Alcohol</option><option>Caffeine</option>
+          </select>
         </div>
         <div>
           <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--purple);text-transform:uppercase;margin-bottom:8px;">Substance 2</div>
           <select id="s2" style="width:100%;background:var(--void2);border:1px solid var(--border-p);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 12px;outline:none;cursor:pointer;">
-              <option value="">— Select —</option>
-              <option value="LSD">LSD</option>
-              <option value="Methylphenidate">Methylphenidate</option>
-              <option value="MDMA">MDMA</option>
-              <option value="Psilocybin">Psilocybin</option>
-              <option value="DMT">DMT</option>
-              <option value="Cannabis">Cannabis</option>
-              <option value="Alcohol">Alcohol</option>
-              <option value="Caffeine">Caffeine</option>
-              <option value="Amphetamine">Amphetamine</option>
-              <option value="Cocaine">Cocaine</option>
-              <option value="Ketamine">Ketamine</option>
-              <option value="Opioids">Opioids</option>
-              <option value="Benzodiazepines">Benzodiazepines</option>
-              <option value="Nicotine">Nicotine</option>
-              <option value="2C-B">2C-B</option>
-            </select>
+            <option value="">— Select —</option>
+            <option>LSD</option><option>Methylphenidate</option><option>MDMA</option><option>Psilocybin</option><option>DMT</option><option>Cannabis</option><option>Alcohol</option><option>Caffeine</option>
+          </select>
         </div>
         <div>
           <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--pink);text-transform:uppercase;margin-bottom:8px;">Substance 3 (opt.)</div>
           <select id="s3" style="width:100%;background:var(--void2);border:1px solid var(--border-m);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 12px;outline:none;cursor:pointer;">
-              <option value="">— Select —</option>
-              <option value="LSD">LSD</option>
-              <option value="Methylphenidate">Methylphenidate</option>
-              <option value="MDMA">MDMA</option>
-              <option value="Psilocybin">Psilocybin</option>
-              <option value="DMT">DMT</option>
-              <option value="Cannabis">Cannabis</option>
-              <option value="Alcohol">Alcohol</option>
-              <option value="Caffeine">Caffeine</option>
-              <option value="Amphetamine">Amphetamine</option>
-              <option value="Cocaine">Cocaine</option>
-              <option value="Ketamine">Ketamine</option>
-              <option value="Opioids">Opioids</option>
-              <option value="Benzodiazepines">Benzodiazepines</option>
-              <option value="Nicotine">Nicotine</option>
-              <option value="2C-B">2C-B</option>
-            </select>
+            <option value="">— None —</option>
+            <option>LSD</option><option>Methylphenidate</option><option>MDMA</option><option>Psilocybin</option><option>DMT</option><option>Cannabis</option><option>Alcohol</option><option>Caffeine</option>
+          </select>
         </div>
         <div>
           <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--green);text-transform:uppercase;margin-bottom:8px;">Substance 4 (opt.)</div>
           <select id="s4" style="width:100%;background:var(--void2);border:1px solid rgba(74,222,128,.3);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 12px;outline:none;cursor:pointer;">
-              <option value="">— Select —</option>
-              <option value="LSD">LSD</option>
-              <option value="Methylphenidate">Methylphenidate</option>
-              <option value="MDMA">MDMA</option>
-              <option value="Psilocybin">Psilocybin</option>
-              <option value="DMT">DMT</option>
-              <option value="Cannabis">Cannabis</option>
-              <option value="Alcohol">Alcohol</option>
-              <option value="Caffeine">Caffeine</option>
-              <option value="Amphetamine">Amphetamine</option>
-              <option value="Cocaine">Cocaine</option>
-              <option value="Ketamine">Ketamine</option>
-              <option value="Opioids">Opioids</option>
-              <option value="Benzodiazepines">Benzodiazepines</option>
-              <option value="Nicotine">Nicotine</option>
-              <option value="2C-B">2C-B</option>
-            </select>
+            <option value="">— None —</option>
+            <option>LSD</option><option>Methylphenidate</option><option>MDMA</option><option>Psilocybin</option><option>DMT</option><option>Cannabis</option><option>Alcohol</option><option>Caffeine</option>
+          </select>
         </div>
       </div>
       <button onclick="calcCombo()" class="btn-neon" style="width:100%;">⚡ CALCULATE RISK SCORE →</button>
@@ -406,9 +206,7 @@
 <div style="height:1px;background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),transparent);opacity:.4;"></div>
 
 <div id="withdrawal"></div>
-<div style="position:relative;height:220px;overflow:hidden;">
-  <img src="assets/images/1772589402529.webp" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 55%;opacity:0.35;pointer-events:none;filter:saturate(1.4);">
-  <canvas id="keys-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;"></canvas>
+<div style="position:relative;height:180px;overflow:hidden;">
   <img src="assets/images/1772910840617.webp" alt="" style="position:absolute;right:0;top:0;height:100%;width:auto;object-fit:cover;filter:saturate(.6) brightness(.5);opacity:.8;">
   <img src="assets/images/1772589402529.webp" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.5) brightness(.35);">
   <div style="position:absolute;inset:0;background:linear-gradient(0deg,var(--void2) 0%,transparent 40%,transparent 60%,var(--void) 100%);"></div>
@@ -418,28 +216,14 @@
   </div>
 </div>
 
-<section class="section section-dark" style="position:relative;overflow:hidden;">
-  <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:.04;">
-  <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-    <defs><pattern id="circuit" width="80" height="80" patternUnits="userSpaceOnUse">
-      <path d="M0 40 H30 M50 40 H80 M40 0 V30 M40 50 V80" stroke="#00F0FF" stroke-width="1" fill="none"/>
-      <circle cx="40" cy="40" r="4" fill="none" stroke="#00F0FF" stroke-width="1"/>
-      <circle cx="0" cy="40" r="2" fill="#00F0FF"/><circle cx="80" cy="40" r="2" fill="#00F0FF"/>
-      <circle cx="40" cy="0" r="2" fill="#8B5CF6"/><circle cx="40" cy="80" r="2" fill="#8B5CF6"/>
-      <path d="M20 20 L30 30 M50 50 L60 60 M20 60 L30 50 M50 30 L60 20" stroke="#8B5CF6" stroke-width=".5" fill="none" opacity=".5"/>
-    </pattern></defs>
-    <rect width="100%" height="100%" fill="url(#circuit)"/>
-  </svg>
-</div>
-  <img src="assets/images/1772910954865.webp" alt="" style="position:absolute;bottom:0;left:0;width:22vw;max-width:260px;opacity:0.09;pointer-events:none;filter:saturate(1.4) brightness(.6);mask-image:radial-gradient(circle at center,rgba(0,0,0,.6),transparent 70%);">
-  <div style="position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(74,222,128,.07),transparent 60%);pointer-events:none;"></div>
-  <div class="section-label reveal" style="font-family:\'Neon Tubes\',\'Share Tech Mono\',monospace;display:inline-flex;align-items:center;gap:10px;">Harm Reduction Tool</div>
+<section class="section section-dark">
+  <div class="section-label reveal">Harm Reduction Tool</div>
   <h2 class="section-title reveal">Withdrawal <span style="color:var(--green);">Timeline</span> Calculator</h2>
   <p class="section-sub reveal">Evidence-based withdrawal estimates for crack cocaine, methamphetamine, and fentanyl. Not medical advice.</p>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:48px;" class="reveal">
     <div>
       <div style="margin-bottom:20px;">
-        <div style="font-family:'Neon Tubes','Share Tech Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:8px;text-shadow:0 0 5px var(--cyan);">Substance</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:8px;">Substance</div>
         <select id="wsub" style="width:100%;background:var(--void3);border:1px solid var(--border-c);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:12px 14px;outline:none;cursor:pointer;">
           <option value="crack">Crack Cocaine</option>
           <option value="meth">Methamphetamine</option>
@@ -467,98 +251,93 @@
 
 <script>
 function calcCombo(){
-  var subs=[document.getElementById('s1').value,document.getElementById('s2').value,document.getElementById('s3').value,document.getElementById('s4').value].filter(Boolean);
-  var out=document.getElementById('combo-output');
-  if(subs.length<2){out.innerHTML='<div style="text-align:center;font-family:monospace;font-size:10px;color:var(--pink);letter-spacing:.2em;">⚠ Select at least 2 substances</div>';return;}
-  var risks={LSD:5,Methylphenidate:6,MDMA:8,Psilocybin:4,DMT:6,Cannabis:3,Alcohol:9,Caffeine:2,Amphetamine:7,Ketamine:6,Cocaine:8,Opioids:9,Benzodiazepines:8};
-  var base=subs.reduce(function(a,s){return a+(risks[s]||5);},0)/subs.length;
-  var combo=subs.length>2?base*1.3:base*1.1;
-  var score=Math.min(100,Math.round(combo*8));
-  var level=score<30?['LOW','var(--green)','🟢']:score<60?['MODERATE','var(--cyan)','🔵']:score<80?['HIGH','var(--pink)','🟠']:['EXTREME','#ff4444','🔴'];
-  var pairNotes={};
-  for(var i=0;i<subs.length;i++)for(var j=i+1;j<subs.length;j++){
-    var pair=[subs[i],subs[j]].sort().join('+');
-    var known={'Alcohol+MDMA':'Dehydration risk elevated','Cannabis+LSD':'Potentiates visuals — set/setting critical','Methylphenidate+LSD':'Serotonergic load — monitor closely','Cocaine+Alcohol':'Forms cocaethylene — cardiac load','Benzodiazepines+Opioids':'Respiratory depression risk — DANGEROUS','Amphetamine+MDMA':'Neurotoxicity risk — heat + serotonin'};
-    if(known[pair])pairNotes[pair]=known[pair];
-  }
-  var noteHTML='';
-  for(var k in pairNotes)noteHTML+='<div style="margin-top:6px;padding:6px 10px;border-left:2px solid var(--pink);font-size:9px;color:rgba(240,244,255,.55);">'+k.replace('+',' + ')+': '+pairNotes[k]+'</div>';
-  out.innerHTML='<div style="width:100%;">'
-    +'<div style="font-family:monospace;font-size:8px;letter-spacing:.4em;color:var(--gray);text-transform:uppercase;margin-bottom:16px;">RISK ANALYSIS OUTPUT</div>'
-    +'<div style="font-family:Orbitron,sans-serif;font-weight:900;font-size:64px;line-height:1;color:'+level[1]+';text-shadow:0 0 30px '+level[1]+';margin-bottom:6px;">'+score+'</div>'
-    +'<div style="font-family:Orbitron,sans-serif;font-weight:700;font-size:16px;color:'+level[1]+';letter-spacing:.2em;margin-bottom:12px;">'+level[2]+' '+level[0]+' RISK</div>'
-    +'<div style="font-family:monospace;font-size:10px;color:var(--gray);letter-spacing:.15em;">'+subs.join(' + ')+'</div>'
-    +(noteHTML?'<div style="margin-top:14px;">'+noteHTML+'</div>':'')
-    +'<div style="margin-top:14px;font-family:monospace;font-size:8px;color:rgba(240,244,255,.3);line-height:1.8;">Educational use only. Always research independently.<br>Consider set, setting, and personal health factors.</div>'
-    +'</div>';
+  const subs=[document.getElementById('s1').value,document.getElementById('s2').value,document.getElementById('s3').value,document.getElementById('s4').value].filter(Boolean);
+  if(subs.length<2){document.getElementById('combo-output').innerHTML='<div style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--pink);letter-spacing:.2em;">⚠ Select at least 2 substances</div>';return;}
+  const risks={LSD:5,Methylphenidate:6,MDMA:8,Psilocybin:4,DMT:6,Cannabis:3,Alcohol:9,Caffeine:2};
+  let base=subs.reduce((a,s)=>a+(risks[s]||5),0)/subs.length;
+  const combo=subs.length>2?base*1.3:base*1.1;
+  const score=Math.min(100,Math.round(combo*8));
+  const level=score<30?['LOW','var(--green)']:score<60?['MODERATE','var(--cyan)']:score<80?['HIGH','var(--pink)']:['EXTREME','#ff0000'];
+  document.getElementById('combo-output').innerHTML=`
+    <div style="width:100%;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.4em;color:var(--gray);text-transform:uppercase;margin-bottom:20px;">RISK ANALYSIS OUTPUT</div>
+      <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:72px;line-height:1;color:${level[1]};text-shadow:0 0 30px ${level[1]};margin-bottom:8px;">${score}</div>
+      <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:18px;color:${level[1]};letter-spacing:.2em;margin-bottom:16px;">${level[0]} RISK</div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gray);letter-spacing:.15em;">${subs.join(' + ')}</div>
+      <div style="margin-top:16px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--gray);line-height:1.8;">Always research interactions independently.<br>Consider set, setting, and personal health factors.</div>
+    </div>`;
 }
 function calcWithdrawal(){
-  var sub=document.getElementById('wsub').value;
-  var dur=parseInt(document.getElementById('wdur').value);
-  var amt=parseFloat(document.getElementById('wamt').value)/10;
-  var d={
-    crack:{n:'Crack Cocaine',peak:'24–72 hrs',acute:'1–2 wks',paws:'1–3 months',note:'Psychological symptoms dominant. Intense cravings. High relapse risk.'},
-    meth:{n:'Methamphetamine',peak:'24–48 hrs',acute:'2–3 wks',paws:'2–6 months',note:'Prolonged anhedonia. Sleep disruption common. Dopamine depletion can persist.'},
-    fent:{n:'Fentanyl',peak:'12–36 hrs',acute:'5–10 days',paws:'3–12 months',note:'Medical supervision strongly advised. Respiratory risk. High relapse potential.'},
-    mph:{n:'Methylphenidate',peak:'12–24 hrs',acute:'1–2 wks',paws:'1–3 months',note:'Fatigue, low motivation, cognitive fog. Generally manageable with support.'},
-    alc:{n:'Alcohol',peak:'24–72 hrs',acute:'1–2 wks',paws:'3–12 months',note:'Potentially life-threatening. Seizure risk. Medical supervision required.'},
-    benzo:{n:'Benzodiazepines',peak:'2–7 days',acute:'2–4 wks',paws:'6–18 months',note:'Potentially life-threatening. Never cold-turkey. Taper under medical supervision.'}
-  };
-  var info=d[sub];
-  if(!info){document.getElementById('w-output').innerHTML='<div style="color:var(--pink);font-family:monospace;text-align:center;">Select a substance</div>';return;}
-  var sev=Math.min(10,Math.round(dur*.6+amt*4));
-  var sevC=sev<=3?'var(--green)':sev<=6?'var(--cyan)':sev<=8?'var(--pink)':'#ff4444';
-  var rows=[
-    ['Substance',info.n,'var(--white)'],
-    ['Duration Used',dur+' year'+(dur>1?'s':''),'var(--cyan)'],
-    ['Daily Amount',amt.toFixed(1)+'g / day','var(--cyan)'],
-    ['Peak Withdrawal',info.peak,'var(--white)'],
-    ['Acute Phase',info.acute,'rgba(255,180,100,.9)'],
-    ['PAWS',info.paws,'rgba(255,180,100,.9)'],
-    ['Severity Score','<span style="color:'+sevC+';font-weight:900;font-size:16px;">'+sev+'/10</span>',''],
-    ['Clinical Note',info.note,'rgba(200,232,255,.5)']
-  ];
-  var html='<div style="width:100%;">'
-    +'<div style="font-family:monospace;font-size:8px;letter-spacing:.4em;color:var(--gray);text-transform:uppercase;margin-bottom:14px;">WITHDRAWAL TIMELINE OUTPUT</div>'
-    +'<table style="width:100%;border-collapse:collapse;">';
-  rows.forEach(function(r,i){
-    html+='<tr style="'+(i%2===0?'background:rgba(255,255,255,.025)':'')+'"><td style="font-family:monospace;font-size:8px;letter-spacing:.2em;color:var(--gray);text-transform:uppercase;padding:9px 10px;border-bottom:1px solid rgba(0,102,255,.12);white-space:nowrap;width:38%;">'+r[0]+'</td><td style="font-family:monospace;font-size:11px;color:'+(r[2]||'rgba(240,244,255,.7)')+';padding:9px 10px;border-bottom:1px solid rgba(0,102,255,.12);">'+r[1]+'</td></tr>';
-  });
-  html+='</table><div style="margin-top:12px;font-family:monospace;font-size:8px;color:rgba(240,244,255,.3);line-height:1.8;">Educational use only. Not medical advice. Seek professional support for withdrawal management.</div></div>';
+  const sub=document.getElementById('wsub').value;
+  const dur=parseInt(document.getElementById('wdur').value);
+  const amt=parseFloat(document.getElementById('wamt').value)/10;
+  const d={crack:{n:'Crack Cocaine',peak:'24–72 hrs',acute:'1–2 wks',paws:'1–3 mo',note:'Psychological symptoms dominant. Intense cravings.'},meth:{n:'Methamphetamine',peak:'24–48 hrs',acute:'2–3 wks',paws:'2–6 mo',note:'Prolonged anhedonia. Sleep disruption common.'},fent:{n:'Fentanyl',peak:'12–36 hrs',acute:'5–10 days',paws:'3–12 mo',note:'Medical supervision strongly advised. High relapse risk.'}};
+  const info=d[sub];const sev=Math.min(10,Math.round(dur*.6+amt*4));
+  const sevC=sev<=3?'var(--green)':sev<=6?'var(--cyan)':sev<=8?'var(--pink)':'#ff4444';
+  const rows=[['Substance',info.n],['Duration',dur+' year'+(dur>1?'s':'')],['Daily Amount',amt.toFixed(1)+'g'],['Peak Withdrawal',info.peak],['Acute Phase',info.acute],['PAWS',info.paws],['Severity',`<span style="color:${sevC};font-weight:700">${sev}/10</span>`],['Note',info.note]];
+  let html='<div style="width:100%;"><div style="font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.4em;color:var(--gray);text-transform:uppercase;margin-bottom:16px;">TIMELINE OUTPUT</div><table style="width:100%;border-collapse:collapse;">';
+  rows.forEach(([k,v],i)=>html+=`<tr style="${i%2===0?'background:rgba(255,255,255,.02)':''}"><td style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.2em;color:var(--gray);text-transform:uppercase;padding:8px 10px;border-bottom:1px solid rgba(139,92,246,.1);white-space:nowrap;">${k}</td><td style="font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(240,244,255,.7);padding:8px 10px;border-bottom:1px solid rgba(139,92,246,.1);">${v}</td></tr>`);
+  html+='</table></div>';
   document.getElementById('w-output').innerHTML=html;
 }
-</script>
-
-
-<footer class="site-footer">
+</script><footer class="site-footer">
+  <div class="footer-glow-c"></div>
+  <div class="footer-glow-p"></div>
   <div class="footer-inner">
     <div class="footer-brand">
-      <img src="assets/images/logo-full-tagline.png" alt="1142 Labs">
-      <p>1142 is a spiritual jailbreak. A neurodivergent fortress. A scientific underground. Est. Dec 22, 2019.</p>
+      <a href="index.html" class="footer-brand-logo">
+        <img src="assets/images/1142_logo.png" alt="1142 Labs">
+        <div>
+          <span class="footer-brand-name">1142 LABS</span>
+          <span class="footer-brand-tagline">Tomorrow's Solutions Today</span>
+        </div>
+      </a>
+      <p class="footer-brand-desc">A spiritual jailbreak. A neurodivergent fortress. A scientific underground. Est. Dec 22, 2019.</p>
+      <div class="footer-tags">
+        <span class="footer-tag">⚗ Research</span>
+        <span class="footer-tag">🧠 Neurodivergent</span>
+        <span class="footer-tag">🔓 Liberation</span>
+      </div>
     </div>
-    <div class="footer-col"><h4>The Fortress</h4><ul>
-      <li><a href="index.html">The Void (Home)</a></li>
-      <li><a href="research.html">The Brain</a></li>
-      <li><a href="tools.html">The Engine</a></li>
-      <li><a href="archive.html">The Archive</a></li>
-      <li><a href="about.html">The Creator</a></li>
-    </ul></div>
-    <div class="footer-col"><h4>Research</h4><ul>
-      <li><a href="research.html">Breakthroughs</a></li>
-      <li><a href="research.html#chemicals">Chemical DB</a></li>
-      <li><a href="tools.html#combos">Combo Calc</a></li>
-      <li><a href="tools.html#withdrawal">Withdrawal Calc</a></li>
-    </ul></div>
-    <div class="footer-col"><h4>About</h4><ul>
-      <li><a href="about.html">Cole EverDark</a></li>
-      <li><a href="about.html#personas">Persona Matrix</a></li>
-      <li><a href="archive.html#manifesto">The Manifesto</a></li>
-      <li><a href="archive.html#logs">Cole's Tab Corner</a></li>
-    </ul></div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">Research</h4>
+      <ul>
+        <li><a href="research.html">Research Hub</a></li>
+        <li><a href="breakthroughs.html">Breakthroughs</a></li>
+        <li><a href="1142_chemicals.html">Chemicals DB</a></li>
+        <li><a href="chemlog.html">Chem Log</a></li>
+        <li><a href="pdf_portal.html">PDF Portal</a></li>
+        <li><a href="library.html">PDF Library</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">About</h4>
+      <ul>
+        <li><a href="about.html">The Creator</a></li>
+        <li><a href="about.html#origin-story">Origin Story</a></li>
+        <li><a href="about.html#personas">Persona Matrix</a></li>
+        <li><a href="vision.html">Vision</a></li>
+        <li><a href="creators.html">Creators</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">Explore</h4>
+      <ul>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="withdrawal.html">Withdrawal Calc</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="archive.html">Archive</a></li>
+        <li><a href="posters.html">Posters</a></li>
+        <li><a href="socials.html">Network</a></li>
+      </ul>
+    </div>
   </div>
   <div class="footer-bottom">
-    <p>1142 established Dec 22nd 2019 · a Cole EverDark company · In loving memory of Katrina Jade Mutch Hasler ♥&nbsp;&nbsp;Dec 20th, 2021</p>
-    <div class="footer-badge"><div class="footer-dot"></div>AN EVERDARK PRODUCTION</div>
+    <div class="footer-bottom-left">
+      <p>© 1142 Labs · Est. Dec 22nd 2019</p>
+      <p class="footer-katrina">In loving memory of Katrina Jade Mutch Hasler ♥</p>
+    </div>
+    <div class="footer-everdark"><div class="footer-dot"></div>An EverDark Production</div>
   </div>
 </footer><script>
 (function(){
@@ -576,409 +355,4 @@ function calcWithdrawal(){
 })();
 </script>
 <script src="assets/fx.js" defer></script>
-
-<script>
-/* ── Starfield / Nebula Background ── */
-(function(){
-  const c = document.getElementById('bg-canvas');
-  if(!c) return;
-  const ctx = c.getContext('2d');
-  let W, H, stars=[], nebs=[];
-
-  function resize(){
-    W = c.width  = window.innerWidth;
-    H = c.height = window.innerHeight;
-  }
-
-  function initStars(){
-    stars = [];
-    for(let i=0;i<220;i++){
-      stars.push({
-        x:Math.random()*W, y:Math.random()*H,
-        r:Math.random()*1.4+0.2,
-        a:Math.random(),
-        speed:Math.random()*0.004+0.001,
-        hue: Math.random()<0.55 ? 188 : Math.random()<0.5 ? 300 : 160
-      });
-    }
-    nebs = [
-      {x:W*0.15, y:H*0.25, r:340, c:'rgba(0,240,255,'},
-      {x:W*0.85, y:H*0.6,  r:280, c:'rgba(139,92,246,'},
-      {x:W*0.5,  y:H*0.85, r:200, c:'rgba(236,72,153,'},
-      {x:W*0.7,  y:H*0.15, r:180, c:'rgba(74,222,128,'},
-    ];
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-
-    /* base void */
-    ctx.fillStyle='#060609';
-    ctx.fillRect(0,0,W,H);
-
-    /* nebula glows */
-    nebs.forEach(n=>{
-      const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);
-      g.addColorStop(0,n.c+'0.055)');
-      g.addColorStop(1,n.c+'0)');
-      ctx.fillStyle=g;
-      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.fill();
-    });
-
-    /* grid lines */
-    ctx.strokeStyle='rgba(0,240,255,0.028)';
-    ctx.lineWidth=1;
-    const gs=70;
-    for(let x=0;x<W;x+=gs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-    for(let y=0;y<H;y+=gs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-
-    /* stars */
-    const t=Date.now()*0.001;
-    stars.forEach((s,i)=>{
-      s.a = 0.3+0.7*Math.abs(Math.sin(t*s.speed*6+i));
-      ctx.beginPath();
-      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-      ctx.fillStyle=`hsla(${s.hue},100%,85%,${s.a})`;
-      ctx.fill();
-      /* tiny glow for brighter stars */
-      if(s.r>1.1){
-        const g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*5);
-        g.addColorStop(0,`hsla(${s.hue},100%,85%,${s.a*0.25})`);
-        g.addColorStop(1,'transparent');
-        ctx.fillStyle=g;
-        ctx.beginPath();ctx.arc(s.x,s.y,s.r*5,0,Math.PI*2);ctx.fill();
-      }
-    });
-
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize',()=>{resize();initStars();});
-  resize(); initStars(); draw();
-})();
-
-/* ── Collapsible Nav ── */
-(function(){
-  const toggles = document.querySelectorAll('.nav-section-toggle');
-  toggles.forEach(btn => {
-    btn.addEventListener('click', function(e){
-      e.stopPropagation();
-      const targetId = this.dataset.target;
-      const drop = document.getElementById(targetId);
-      const isOpen = drop.classList.contains('open');
-
-      /* close all */
-      document.querySelectorAll('.nav-drop').forEach(d=>d.classList.remove('open'));
-      document.querySelectorAll('.nav-section-toggle').forEach(b=>b.classList.remove('open'));
-
-      /* open this one if it was closed */
-      if(!isOpen){
-        drop.classList.add('open');
-        this.classList.add('open');
-      }
-    });
-  });
-
-  /* click outside closes all */
-  document.addEventListener('click', function(){
-    document.querySelectorAll('.nav-drop').forEach(d=>d.classList.remove('open'));
-    document.querySelectorAll('.nav-section-toggle').forEach(b=>b.classList.remove('open'));
-  });
-})();
-</script>
-<script>
-(function(){
-  var c=document.getElementById('bg-canvas');
-  if(!c)return;
-  var ctx=c.getContext('2d'),W,H,stars=[],nebs=[],t=0;
-  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
-  function init(){
-    stars=[];
-    for(var i=0;i<200;i++) stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.2,ph:Math.random()*6.28,sp:Math.random()*0.008+0.002,hue:Math.random()<.55?188:Math.random()<.5?300:140});
-    nebs=[{x:.12,y:.22,r:360,col:'0,240,255'},{x:.88,y:.55,r:300,col:'139,92,246'},{x:.5,y:.88,r:220,col:'236,72,153'},{x:.72,y:.14,r:190,col:'74,222,128'}];
-  }
-  function draw(){
-    t+=0.016;
-    ctx.clearRect(0,0,W,H);
-    ctx.fillStyle='#060609';ctx.fillRect(0,0,W,H);
-    nebs.forEach(function(n){var gx=n.x*W,gy=n.y*H,g=ctx.createRadialGradient(gx,gy,0,gx,gy,n.r);g.addColorStop(0,'rgba('+n.col+',0.06)');g.addColorStop(1,'rgba('+n.col+',0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(gx,gy,n.r,0,6.28);ctx.fill();});
-    ctx.strokeStyle='rgba(0,240,255,0.025)';ctx.lineWidth=1;
-    var gs=68;
-    for(var x=0;x<W;x+=gs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-    for(var y=0;y<H;y+=gs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-    stars.forEach(function(s,i){
-      var a=0.25+0.75*Math.abs(Math.sin(t*s.sp*4+s.ph));
-      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.28);
-      ctx.fillStyle='hsla('+s.hue+',90%,88%,'+a+')';ctx.fill();
-      if(s.r>1.0){var g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*6);g.addColorStop(0,'hsla('+s.hue+',100%,85%,'+(a*0.2)+')');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.beginPath();ctx.arc(s.x,s.y,s.r*6,0,6.28);ctx.fill();}
-    });
-    requestAnimationFrame(draw);
-  }
-  window.addEventListener('resize',function(){resize();init();});
-  resize();init();draw();
-})();
-
-(function(){
-  var toggles=document.querySelectorAll('.nav-section-toggle');
-  toggles.forEach(function(btn){
-    btn.addEventListener('click',function(e){
-      e.stopPropagation();
-      var id=this.dataset.target;
-      var drop=document.getElementById(id);
-      var isOpen=drop.classList.contains('open');
-      document.querySelectorAll('.nav-drop').forEach(function(d){d.classList.remove('open');});
-      document.querySelectorAll('.nav-section-toggle').forEach(function(b){b.classList.remove('open');});
-      if(!isOpen){drop.classList.add('open');this.classList.add('open');}
-    });
-  });
-  document.addEventListener('click',function(){
-    document.querySelectorAll('.nav-drop').forEach(function(d){d.classList.remove('open');});
-    document.querySelectorAll('.nav-section-toggle').forEach(function(b){b.classList.remove('open');});
-  });
-})();
-</script>
-<!-- PAGE-WALLPAPER-FX -->
-<script>
-(function(){
-  var c=document.getElementById('keys-canvas');if(!c)return;
-  var ctx=c.getContext('2d'),W,H,ripples=[],hexDrops=[],t=0;
-  var HEX=['0xFF','0x1A','0x42','0xBE','0xC4','0x00','0xF0','0x8B','0x5C','0xEA'];
-  function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;initHex();}
-  function initHex(){hexDrops=[];for(var i=0;i<30;i++)hexDrops.push({x:Math.random()*W,y:Math.random()*H,val:HEX[Math.floor(Math.random()*HEX.length)],speed:0.4+Math.random()*0.6,a:Math.random()*0.35+0.1});}
-  function draw(){
-    t++;ctx.clearRect(0,0,W,H);
-    if(t%28===0)ripples.push({x:Math.random()*W,y:Math.random()*H,r:0,life:1,col:Math.random()<0.5?'0,240,255':'139,92,246'});
-    for(var i=ripples.length-1;i>=0;i--){
-      var r=ripples[i];r.r+=2.2;r.life-=0.022;
-      ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,Math.PI*2);
-      ctx.strokeStyle='rgba('+r.col+','+r.life*0.6+')';ctx.lineWidth=1.5;ctx.stroke();
-      if(r.life<=0)ripples.splice(i,1);
-    }
-    hexDrops.forEach(function(d){
-      ctx.font='10px "Share Tech Mono",monospace';
-      ctx.fillStyle='rgba(0,240,255,'+d.a+')';ctx.fillText(d.val,d.x,d.y);
-      d.y+=d.speed;if(d.y>H+20){d.y=-20;d.val=HEX[Math.floor(Math.random()*HEX.length)];}
-    });
-    requestAnimationFrame(draw);
-  }
-  window.addEventListener('resize',resize);
-  resize();draw();
-})();
-</script>
-<!-- /PAGE-WALLPAPER-FX -->
-<script>
-/* ═══ 1142 PLASMA STARFIELD v2 — PURPLE SCREEN ═══ */
-(function(){
-  var c=document.getElementById('bg-canvas');if(!c)return;
-  var ctx=c.getContext('2d'),W,H;
-  var stars=[],nebulae=[],plasmaArcs=[],t=0;
-
-  function resize(){
-    W=c.width=window.innerWidth;
-    H=c.height=window.innerHeight;
-    initStars();initNebulae();
-  }
-
-  function initStars(){
-    stars=[];
-    for(var i=0;i<280;i++){
-      var hues=[240,260,280,300,220,200][Math.floor(Math.random()*6)];
-      stars.push({
-        x:Math.random()*W,y:Math.random()*H,
-        r:Math.random()*1.8+.2,
-        a:Math.random(),sp:Math.random()*.014+.004,
-        h:hues,
-        s:Math.random()<.08  // shooting star?
-      });
-    }
-  }
-
-  function initNebulae(){
-    nebulae=[
-      {x:W*.15,y:H*.2,rx:W*.35,ry:H*.3,col:'136,68,255',a:.06},
-      {x:W*.85,y:H*.75,rx:W*.3,ry:H*.35,col:'61,142,255',a:.05},
-      {x:W*.5,y:H*.5,rx:W*.4,ry:H*.4,col:'204,61,255',a:.04},
-      {x:W*.7,y:H*.15,rx:W*.25,ry:H*.25,col:'0,170,255',a:.04},
-    ];
-  }
-
-  function drawNebulae(){
-    nebulae.forEach(function(n){
-      var pulse=n.a+Math.sin(t*0.006)*0.02;
-      var g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,Math.max(n.rx,n.ry));
-      g.addColorStop(0,'rgba('+n.col+','+pulse+')');
-      g.addColorStop(0.4,'rgba('+n.col+','+(pulse*.5)+')');
-      g.addColorStop(1,'rgba('+n.col+',0)');
-      ctx.save();
-      ctx.scale(1,n.ry/n.rx);
-      ctx.beginPath();
-      ctx.arc(n.x,n.y*n.rx/n.ry,n.rx,0,Math.PI*2);
-      ctx.fillStyle=g;ctx.fill();
-      ctx.restore();
-    });
-  }
-
-  function drawStars(){
-    stars.forEach(function(s){
-      s.a+=s.sp;
-      var alpha=.1+.5*Math.abs(Math.sin(s.a));
-      ctx.beginPath();
-      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-      ctx.fillStyle='hsla('+s.h+',90%,80%,'+alpha+')';
-      ctx.fill();
-      // Cross sparkle on bright stars
-      if(s.r>1.3&&Math.abs(Math.sin(s.a))>.85){
-        ctx.strokeStyle='hsla('+s.h+',100%,90%,'+(alpha*.5)+')';
-        ctx.lineWidth=.5;
-        ctx.beginPath();ctx.moveTo(s.x-s.r*3,s.y);ctx.lineTo(s.x+s.r*3,s.y);ctx.stroke();
-        ctx.beginPath();ctx.moveTo(s.x,s.y-s.r*3);ctx.lineTo(s.x,s.y+s.r*3);ctx.stroke();
-      }
-    });
-  }
-
-  /* Moving purple plasma grid */
-  function drawGrid(){
-    var offset=t*.4%60;
-    ctx.strokeStyle='rgba(136,68,255,.04)';
-    ctx.lineWidth=.5;
-    for(var x=offset%60;x<W;x+=60){
-      ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();
-    }
-    for(var y=offset%60;y<H;y+=60){
-      ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();
-    }
-    /* diagonal accent lines */
-    ctx.strokeStyle='rgba(61,142,255,.025)';
-    for(var d=-W;d<W+H;d+=120){
-      ctx.beginPath();ctx.moveTo(d,0);ctx.lineTo(d+H,H);ctx.stroke();
-    }
-  }
-
-  /* Ghost "1142" watermark rotating */
-  function draw1142(){
-    ctx.save();
-    ctx.translate(W*.5,H*.5);
-    ctx.rotate(Math.sin(t*.0008)*.04);
-    ctx.font='bold '+(Math.min(W,H)*.55)+'px Orbitron,sans-serif';
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
-    var pulse=.018+Math.sin(t*.007)*.008;
-    ctx.fillStyle='rgba(136,68,255,'+pulse+')';
-    ctx.fillText('1142',0,0);
-    ctx.restore();
-  }
-
-  /* Plasma arc between two random points */
-
-    /* Crystal spike rays from center */
-    function drawCrystalSpikes(cx, cy, time){
-      var numSpikes = 24;
-      for(var i=0;i<numSpikes;i++){
-        var angle = (i/numSpikes)*Math.PI*2 + time*0.003;
-        var len = (80 + Math.sin(time*0.02+i)*40 + Math.random()*20) * (Math.min(W,H)/600);
-        var width = 2 + Math.sin(time*0.05+i*0.7)*1.5;
-        var col = i%3===0?'0,207,255':i%3===1?'0,102,255':'102,51,204';
-        var alpha = 0.04 + Math.sin(time*0.015+i)*0.02;
-        
-        var ex = cx + Math.cos(angle)*len;
-        var ey = cy + Math.sin(angle)*len;
-        var lx = cx + Math.cos(angle+Math.PI/numSpikes)*len*0.6;
-        var ly = cy + Math.sin(angle+Math.PI/numSpikes)*len*0.6;
-        var rx = cx + Math.cos(angle-Math.PI/numSpikes)*len*0.6;
-        var ry = cy + Math.sin(angle-Math.PI/numSpikes)*len*0.6;
-        
-        ctx.beginPath();
-        ctx.moveTo(cx,cy);
-        ctx.lineTo(lx,ly);
-        ctx.lineTo(ex,ey);
-        ctx.lineTo(rx,ry);
-        ctx.closePath();
-        
-        var g = ctx.createLinearGradient(cx,cy,ex,ey);
-        g.addColorStop(0,'rgba('+col+','+alpha*3+')');
-        g.addColorStop(0.6,'rgba('+col+','+alpha+')');
-        g.addColorStop(1,'rgba('+col+',0)');
-        ctx.fillStyle = g;
-        ctx.fill();
-      }
-    }
-
-  function drawPlasmaArcs(){
-    if(t%90<2){
-      plasmaArcs.push({
-        x1:Math.random()*W,y1:Math.random()*H,
-        x2:Math.random()*W,y2:Math.random()*H,
-        life:1,col:Math.random()<.5?'136,68,255':'61,142,255'
-      });
-    }
-    for(var i=plasmaArcs.length-1;i>=0;i--){
-      var arc=plasmaArcs[i];
-      arc.life-=.035;
-      if(arc.life<=0){plasmaArcs.splice(i,1);continue;}
-      ctx.beginPath();
-      /* jagged lightning path */
-      ctx.moveTo(arc.x1,arc.y1);
-      var steps=6,mx=(arc.x2-arc.x1)/steps,my=(arc.y2-arc.y1)/steps;
-      for(var j=1;j<steps;j++){
-        ctx.lineTo(arc.x1+mx*j+(Math.random()-.5)*40,arc.y1+my*j+(Math.random()-.5)*40);
-      }
-      ctx.lineTo(arc.x2,arc.y2);
-      ctx.strokeStyle='rgba('+arc.col+','+arc.life*.4+')';
-      ctx.lineWidth=1+arc.life;
-      ctx.stroke();
-    }
-  }
-
-  function draw(){
-    t++;
-    ctx.clearRect(0,0,W,H);
-    drawGrid();
-    drawNebulae();
-    drawCrystalSpikes(W*.5,H*.5,t);
-    draw1142();
-    drawStars();
-    drawPlasmaArcs();
-    requestAnimationFrame(draw);
-  }
-  window.addEventListener('resize',resize);
-  resize();draw();
-})();
-</script>
-<script>
-/* ═══ MOBILE MENU JS ═══ */
-(function(){
-  var btn = document.getElementById('mobileMenuBtn');
-  var menu = document.getElementById('mobileMenu');
-  if(!btn || !menu) return;
-
-  function openMenu(){
-    btn.classList.add('open');
-    menu.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeMenu(){
-    btn.classList.remove('open');
-    menu.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-  function toggleMenu(){
-    if(menu.classList.contains('open')) closeMenu(); else openMenu();
-  }
-
-  btn.addEventListener('click', toggleMenu);
-  menu.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', closeMenu);
-  });
-
-  // Close on swipe right
-  var startX = 0;
-  menu.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; }, {passive:true});
-  menu.addEventListener('touchend', function(e){
-    if(e.changedTouches[0].clientX - startX > 60) closeMenu();
-  }, {passive:true});
-
-  // Close on escape
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMenu(); });
-})();
-</script>
 </body></html>
