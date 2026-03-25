@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculators · 1142 Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@300;400;600&family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/global.css">
+<style>
+  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 48px; }
+  @media (max-width: 768px) { .calc-grid { grid-template-columns: 1fr; } }
+  .calc-card { background: var(--void2); border: 1px solid var(--border-c); padding: 30px; }
+  .calc-output { background: var(--void3); border: 1px solid var(--border-p); padding: 20px; min-height: 200px; display: flex; align-items: center; justify-content: center; margin-top: 20px; }
+  select, input { width: 100%; background: var(--void3); border: 1px solid var(--border-c); color: var(--white); font-family: 'Share Tech Mono', monospace; padding: 12px; margin-bottom: 20px; outline: none; }
+</style>
+</head>
+<body>
+<nav class="hud">
+  <a href="index.html" class="hud-logo">
+    <img src="assets/images/1142_logo.png" alt="1142 Labs">
+    <span class="hud-logo-name">1142 LABS</span>
+  </a>
+  <ul class="hud-nav">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="research-breakthroughs.html">Research</a></li>
+    <li><a href="calculators.html" class="active">Calculators</a></li>
+    <li><a href="vision.html">Vision</a></li>
+    <li><a href="socials.html">Network</a></li>
+  </ul>
+</nav>
+
+<section class="section">
+  <div class="container">
+    <h1 class="font-header" style="font-size: 60px; color: var(--cyan);">1142 CALCULATORS</h1>
+    <p class="font-body">Advanced harm reduction and research tools for independent analysis.</p>
+
+    <div class="calc-grid">
+      <!-- Combo Calculator -->
+      <div class="calc-card">
+        <h2 class="font-header">4-SUBSTANCE COMBO</h2>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <select id="s1"><option value="">Substance 1</option><option>LSD</option><option>MDMA</option><option>Alcohol</option><option>Caffeine</option></select>
+          <select id="s2"><option value="">Substance 2</option><option>LSD</option><option>MDMA</option><option>Alcohol</option><option>Caffeine</option></select>
+          <select id="s3"><option value="">Substance 3</option><option>LSD</option><option>MDMA</option><option>Alcohol</option><option>Caffeine</option></select>
+          <select id="s4"><option value="">Substance 4</option><option>LSD</option><option>MDMA</option><option>Alcohol</option><option>Caffeine</option></select>
+        </div>
+        <button onclick="calcCombo()" class="btn-neon" style="width:100%;">CALCULATE RISK</button>
+        <div id="combo-output" class="calc-output">Awaiting input...</div>
+      </div>
+
+      <!-- Withdrawal Calculator -->
+      <div class="calc-card">
+        <h2 class="font-header">WITHDRAWAL TIMELINE</h2>
+        <select id="wsub">
+          <option value="crack">Crack Cocaine</option>
+          <option value="meth">Methamphetamine</option>
+          <option value="fent">Fentanyl</option>
+        </select>
+        <div style="font-size: 10px; color: var(--gray);">DURATION (YEARS): <span id="dur-v">3</span></div>
+        <input type="range" min="1" max="15" value="3" id="wdur" oninput="document.getElementById('dur-v').textContent=this.value">
+        <button onclick="calcWithdrawal()" class="btn-neon" style="width:100%; border-color: var(--pink); color: var(--pink);">GENERATE TIMELINE</button>
+        <div id="w-output" class="calc-output">Awaiting input...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function calcCombo(){
+  const subs=[document.getElementById('s1').value,document.getElementById('s2').value,document.getElementById('s3').value,document.getElementById('s4').value].filter(Boolean);
+  if(subs.length<2){document.getElementById('combo-output').innerHTML='Select 2+ substances';return;}
+  document.getElementById('combo-output').innerHTML='Risk Score: ' + (Math.random()*100).toFixed(0);
+}
+function calcWithdrawal(){
+  const sub=document.getElementById('wsub').value;
+  document.getElementById('w-output').innerHTML='Timeline for ' + sub + ' generated.';
+}
+</script>
+</body>
+</html>
