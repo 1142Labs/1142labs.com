@@ -3,56 +3,1067 @@
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="viewport" content="width=device-width, initial-scale=1.0">
-<title>1142 Labs · Scientific Fate</title>
-<link rel="stylesheet" href="assets/global.css">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1142 Labs: Tomorrow's Solutions Today</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-  .hero-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle at center, var(--void2) 0%, var(--void) 100%); padding: 100px 20px; }
-  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: 80px; color: var(--cyan); letter-spacing: 4px; margin-bottom: 20px; }
-  .hero-text { font-family: 'IBM Plex Sans', sans-serif; font-size: 18px; color: var(--gray); max-width: 800px; margin: 0 auto 40px; line-height: 1.8; font-style: italic; }
-  .hero-event { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--pink); letter-spacing: 4px; text-transform: uppercase; }
-  .hero-logo { height: 120px; margin-bottom: 40px; filter: drop-shadow(0 0 20px var(--cyan)); }
+/* ════════════════════════════════════════════
+   1142 LABS V3 — THE VOID
+   Manifesto-driven · Crystal Burst · Glitch
+   ════════════════════════════════════════════ */
+:root {
+  --void:     #0A0A0A;
+  --void2:    #0D0D18;
+  --void3:    #12102A;
+  --cyan:     #00F0FF;
+  --cyan2:    #00C8D8;
+  --pink:     #EC4899;
+  --pink2:    #FF007A;
+  --purple:   #8B5CF6;
+  --purple2:  #5A1FCC;
+  --green:    #4ade80;
+  --blue:     #3B82F6;
+  --white:    #F0F4FF;
+  --gray:     #6B7280;
+  --border-c: rgba(0,240,255,0.35);
+  --border-p: rgba(139,92,246,0.35);
+  --border-m: rgba(236,72,153,0.35);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);
+  color:var(--white);
+  font-family:'Rajdhani',sans-serif;
+  font-size:16px;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cursor{position:fixed;width:8px;height:8px;background:var(--cyan);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 12px var(--cyan),0 0 24px var(--cyan),0 0 48px rgba(0,240,255,0.4);}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1px solid var(--cyan);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s;opacity:.6;}
+#cursor-ring.big{width:60px;height:60px;border-color:var(--pink);opacity:.8;}
+
+/* ── SCANLINES ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,240,255,0.012) 3px,rgba(0,240,255,0.012) 4px);
+  pointer-events:none;z-index:9000;
+}
+
+/* ── GRAIN ── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:8999;opacity:.35;
+}
+
+/* ── GLOWING BORDER BOX (CONIC GRADIENT ANIMATION) ── */
+.glow-box{
+  position:relative;
+  border:1px solid transparent;
+  background-clip:padding-box;
+}
+.glow-box::before{
+  content:'';position:absolute;inset:-1px;border-radius:inherit;
+  background:conic-gradient(from var(--angle,0deg),var(--cyan),var(--purple),var(--pink),var(--cyan));
+  animation:rotateBorder 4s linear infinite;
+  z-index:-1;
+  opacity:.7;
+}
+.glow-box::after{content:'';position:absolute;inset:0;background:var(--void2);z-index:-1;}
+@property --angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes rotateBorder{to{--angle:360deg}}
+
+/* ── HUD NAVIGATION ── */
+.hud{
+  position:fixed;top:0;left:0;right:0;z-index:800;
+  height:68px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;
+  background:rgba(10,10,10,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border-c);
+  box-shadow:0 1px 40px rgba(0,240,255,0.08);
+}
+/* animated rainbow bottom border on HUD */
+.hud::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple),var(--pink),var(--green),var(--cyan));
+  background-size:200% 100%;
+  animation:hueShift 4s linear infinite;
+  opacity:.8;
+}
+@keyframes hueShift{from{background-position:0 0}to{background-position:200% 0}}
+
+.hud-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.hud-logo img{height:38px;filter:drop-shadow(0 0 10px var(--cyan)) drop-shadow(0 0 20px var(--purple));transition:filter .3s;}
+.hud-logo:hover img{filter:drop-shadow(0 0 16px var(--pink)) drop-shadow(0 0 32px var(--cyan));}
+.hud-logo span{
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;
+  letter-spacing:.15em;color:var(--pink2);
+  text-shadow:0 0 10px var(--pink2),0 0 20px rgba(255,0,122,.4);
+}
+
+.hud-nav{display:flex;gap:0;list-style:none;}
+.hud-nav a{
+  font-family:'Share Tech Mono',monospace;font-size:10.5px;
+  letter-spacing:.25em;color:var(--gray);
+  text-decoration:none;text-transform:uppercase;
+  padding:6px 14px;
+  transition:color .2s,text-shadow .2s;
+  position:relative;
+}
+.hud-nav a::after{
+  content:'';position:absolute;bottom:-1px;left:14px;right:14px;height:1px;
+  background:var(--cyan);box-shadow:0 0 8px var(--cyan);
+  transform:scaleX(0);transition:transform .25s;
+}
+.hud-nav a:hover{color:var(--cyan);text-shadow:0 0 8px rgba(0,240,255,.6);}
+.hud-nav a:hover::after,.hud-nav a.active::after{transform:scaleX(1);}
+.hud-nav a.active{color:var(--cyan);}
+
+.hud-status{display:flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--cyan);}
+.hud-dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;box-shadow:0 0 8px var(--cyan);animation:blink 1.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ── VORTEX HERO ── */
+.vortex-hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;
+  padding:100px 48px 80px;
+  overflow:hidden;
+}
+
+/* The infinite rotating grid */
+.vortex-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,240,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,240,255,.04) 1px,transparent 1px);
+  background-size:60px 60px;
+  animation:gridPulse 8s ease-in-out infinite;
+  transform-origin:center;
+}
+@keyframes gridPulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.02)}}
+
+/* Vortex swirl rings */
+.vortex-ring{
+  position:absolute;border-radius:50%;border:1px solid;
+  animation:vortexSpin linear infinite;
+  pointer-events:none;
+}
+.vr-1{width:200px;height:200px;border-color:rgba(0,240,255,.25);animation-duration:8s;}
+.vr-2{width:380px;height:380px;border-color:rgba(139,92,246,.2);animation-duration:12s;animation-direction:reverse;}
+.vr-3{width:560px;height:560px;border-color:rgba(236,72,153,.15);animation-duration:18s;}
+.vr-4{width:760px;height:760px;border-color:rgba(0,240,255,.08);animation-duration:25s;animation-direction:reverse;}
+.vr-5{width:980px;height:980px;border-color:rgba(139,92,246,.05);animation-duration:35s;}
+@keyframes vortexSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* Color orbs */
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;}
+.orb-c{width:500px;height:500px;background:radial-gradient(circle,rgba(0,240,255,.12) 0,transparent 65%);top:-100px;right:-100px;animation:drift 14s ease-in-out infinite alternate;}
+.orb-p{width:600px;height:600px;background:radial-gradient(circle,rgba(139,92,246,.18) 0,transparent 65%);bottom:-100px;left:-100px;animation:drift2 18s ease-in-out infinite alternate;}
+.orb-m{width:400px;height:400px;background:radial-gradient(circle,rgba(236,72,153,.12) 0,transparent 65%);top:30%;left:30%;animation:drift3 11s ease-in-out infinite alternate;}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(80px,60px)}}
+@keyframes drift2{from{transform:translate(0,0)}to{transform:translate(-60px,-80px)}}
+@keyframes drift3{from{transform:translate(0,0)}to{transform:translate(40px,-50px)}}
+
+/* Hero content */
+.hero-content{position:relative;z-index:1;}
+.hero-eyebrow{
+  font-family:'Share Tech Mono',monospace;font-size:10px;
+  letter-spacing:.5em;color:var(--cyan);
+  text-transform:uppercase;margin-bottom:24px;
+  opacity:0;animation:fadeUp .8s .1s forwards;
+}
+.hero-logo-wrap{
+  margin-bottom:32px;
+  opacity:0;animation:fadeUp .9s .2s forwards;
+  position:relative;
+}
+.hero-logo-wrap img{
+  width:280px;height:280px;object-fit:contain;
+  display:block; margin:0 auto;
+  filter:drop-shadow(0 0 30px var(--cyan)) drop-shadow(0 0 60px var(--purple)) drop-shadow(0 0 100px rgba(0,240,255,.2));
+  animation:logoPulse 3s ease-in-out infinite, logoGlitch 9s infinite;
+}
+@keyframes logoPulse{
+  0%,100%{filter:drop-shadow(0 0 30px var(--cyan)) drop-shadow(0 0 60px var(--purple)) drop-shadow(0 0 100px rgba(0,240,255,.2));}
+  50%{filter:drop-shadow(0 0 50px var(--pink)) drop-shadow(0 0 80px var(--cyan)) drop-shadow(0 0 120px rgba(139,92,246,.4));}
+}
+@keyframes logoGlitch{
+  0%,88%,100%{transform:none;filter:drop-shadow(0 0 30px var(--cyan)) drop-shadow(0 0 60px var(--purple));}
+  90%{transform:translateX(-4px) skewX(-1.5deg);filter:drop-shadow(-6px 0 var(--cyan)) drop-shadow(6px 0 var(--pink)) brightness(1.5);}
+  91%{transform:translateX(4px);filter:drop-shadow(6px 0 var(--cyan)) drop-shadow(-6px 0 var(--pink));}
+  92%{transform:translateX(0);filter:drop-shadow(0 0 40px var(--cyan)) drop-shadow(0 0 60px var(--purple));}
+  94%{transform:translateX(-3px);filter:drop-shadow(-4px 0 var(--pink)) drop-shadow(4px 0 var(--cyan)) brightness(1.3);}
+  95%{transform:translateX(0);filter:drop-shadow(0 0 30px var(--cyan)) drop-shadow(0 0 60px var(--purple));}
+}
+
+.hero-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(48px,9vw,130px);
+  line-height:.9;letter-spacing:-.01em;text-transform:uppercase;
+  margin-bottom:24px;
+  opacity:0;animation:fadeUp .9s .35s forwards;
+}
+.ht-line1{display:block;color:var(--white);}
+.ht-line2{
+  display:block;
+  color:var(--cyan);
+  text-shadow:0 0 30px var(--cyan),0 0 60px rgba(0,240,255,.5),0 0 100px rgba(0,240,255,.2);
+  animation:cyanglow 3s ease-in-out infinite;
+}
+.ht-line3{
+  display:block;
+  -webkit-text-stroke:1.5px var(--pink);
+  color:transparent;
+}
+@keyframes cyanglow{
+  0%,100%{text-shadow:0 0 30px var(--cyan),0 0 60px rgba(0,240,255,.5);}
+  50%{text-shadow:0 0 50px var(--cyan),0 0 100px rgba(0,240,255,.6),0 0 150px rgba(0,240,255,.2);}
+}
+
+.hero-tagline{
+  font-family:'Share Tech Mono',monospace;font-size:13px;
+  letter-spacing:.3em;color:var(--gray);
+  text-transform:uppercase;margin-bottom:16px;
+  opacity:0;animation:fadeUp .9s .5s forwards;
+}
+.hero-mission{
+  font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:300;
+  color:rgba(240,244,255,.7);max-width:640px;margin:0 auto 40px;
+  line-height:1.7;
+  opacity:0;animation:fadeUp .9s .6s forwards;
+}
+.hero-ctas{
+  display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+  opacity:0;animation:fadeUp .9s .75s forwards;
+}
+
+/* GLOWING NEON BUTTON */
+.btn-neon{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Share Tech Mono',monospace;font-size:10px;
+  letter-spacing:.25em;text-transform:uppercase;
+  text-decoration:none;
+  padding:14px 28px;
+  border:1px solid var(--cyan);
+  color:var(--cyan);
+  background:rgba(0,240,255,.06);
+  transition:all .3s;
+  position:relative;overflow:hidden;
+  clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);
+}
+.btn-neon::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(0,240,255,.15),transparent);
+  transform:translateX(-100%);transition:transform .5s;
+}
+.btn-neon:hover::before{transform:translateX(100%);}
+.btn-neon:hover{
+  background:rgba(0,240,255,.14);
+  box-shadow:0 0 20px rgba(0,240,255,.4),0 0 40px rgba(0,240,255,.15),inset 0 0 20px rgba(0,240,255,.05);
+}
+.btn-neon.pink{border-color:var(--pink);color:var(--pink);background:rgba(236,72,153,.06);}
+.btn-neon.pink:hover{background:rgba(236,72,153,.14);box-shadow:0 0 20px rgba(236,72,153,.4);}
+.btn-neon.purple{border-color:var(--purple);color:var(--purple);background:rgba(139,92,246,.06);}
+.btn-neon.purple:hover{background:rgba(139,92,246,.14);box-shadow:0 0 20px rgba(139,92,246,.4);}
+
+/* ── TIME SCROLL: 11:42 PM → 11:42 AM ── */
+.time-scroll{
+  padding:120px 48px;
+  position:relative;
+  background:var(--void2);
+  border-top:1px solid var(--border-p);
+  border-bottom:1px solid var(--border-p);
+}
+.ts-label{
+  text-align:center;
+  font-family:'Share Tech Mono',monospace;font-size:9px;
+  letter-spacing:.5em;color:var(--purple);
+  text-transform:uppercase;margin-bottom:60px;
+}
+.ts-track{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--border-p);border:1px solid var(--border-p);
+  max-width:1200px;margin:0 auto;
+}
+.ts-cell{
+  background:var(--void);padding:48px 32px;text-align:center;
+  transition:background .3s;position:relative;overflow:hidden;
+}
+.ts-cell::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  transform:scaleX(0);transition:transform .4s;
+}
+.ts-cell:hover{background:rgba(0,240,255,.025);}
+.ts-cell:hover::before{transform:scaleX(1);}
+.ts-time{
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:36px;
+  color:var(--cyan);
+  text-shadow:0 0 20px var(--cyan),0 0 40px rgba(0,240,255,.4);
+  margin-bottom:10px;display:block;
+}
+.ts-label2{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--gray);text-transform:uppercase;margin-bottom:14px;}
+.ts-desc{font-size:14px;font-weight:300;color:rgba(240,244,255,.6);line-height:1.6;}
+
+/* ── MARQUEE ── */
+.marquee-strip{
+  overflow:hidden;
+  border-top:1px solid var(--border-c);border-bottom:1px solid var(--border-c);
+  padding:12px 0;
+  background:rgba(0,240,255,.02);
+  position:relative;
+}
+.marquee-strip::before,.marquee-strip::after{
+  content:'';position:absolute;top:0;bottom:0;width:100px;z-index:2;pointer-events:none;
+}
+.marquee-strip::before{left:0;background:linear-gradient(to right,var(--void),transparent);}
+.marquee-strip::after{right:0;background:linear-gradient(to left,var(--void),transparent);}
+.marquee-track{display:flex;width:max-content;animation:marquee 25s linear infinite;}
+.marquee-track:hover{animation-play-state:paused;}
+.marquee-item{
+  font-family:'Share Tech Mono',monospace;font-size:9px;
+  letter-spacing:.4em;color:var(--gray);
+  text-transform:uppercase;padding:0 24px;
+  display:flex;align-items:center;gap:24px;white-space:nowrap;
+}
+.marquee-item .sep{color:var(--cyan);}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTION DEFAULTS ── */
+.section{padding:100px 48px;position:relative;}
+.section-void{background:var(--void);}
+.section-dark{background:var(--void2);}
+.section-darker{background:var(--void3);}
+.section-label{
+  font-family:'Share Tech Mono',monospace;font-size:9px;
+  letter-spacing:.5em;color:var(--cyan);
+  text-transform:uppercase;margin-bottom:20px;
+  display:flex;align-items:center;gap:16px;
+}
+.section-label::before{
+  content:'';width:32px;height:1px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  box-shadow:0 0 8px var(--cyan);
+}
+.section-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(28px,4vw,56px);
+  text-transform:uppercase;letter-spacing:.04em;
+  line-height:1;margin-bottom:20px;
+}
+.section-sub{
+  font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:300;
+  color:rgba(240,244,255,.6);max-width:560px;
+  line-height:1.8;margin-bottom:64px;
+}
+
+/* ── FEATURE GRID CARDS ── */
+.feature-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:10px;margin-top:56px;
+}
+.feat-card{
+  background:var(--void2);
+  border:1px solid var(--border-p);
+  padding:40px 32px;
+  position:relative;overflow:hidden;
+  transition:border-color .3s,transform .3s,box-shadow .3s;
+  cursor:none;
+}
+.feat-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 0% 0%,rgba(139,92,246,.08) 0%,transparent 60%);
+  pointer-events:none;
+}
+.feat-card:hover{
+  border-color:var(--cyan);
+  transform:translateY(-4px);
+  box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(0,240,255,.08);
+}
+.feat-card:hover .feat-top-line{transform:scaleX(1);}
+.feat-top-line{
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--purple),var(--cyan),var(--pink));
+  transform:scaleX(0);transition:transform .4s;
+}
+.feat-num{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--purple);margin-bottom:20px;}
+.feat-icon{font-size:36px;margin-bottom:20px;line-height:1;display:block;}
+.feat-title{
+  font-family:'Orbitron',sans-serif;font-weight:700;font-size:14px;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--white);margin-bottom:12px;
+}
+.feat-body{font-size:14px;font-weight:300;color:rgba(240,244,255,.6);line-height:1.7;margin-bottom:24px;}
+.feat-link{
+  font-family:'Share Tech Mono',monospace;font-size:9.5px;
+  letter-spacing:.2em;color:var(--cyan);
+  text-decoration:none;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:gap .2s,color .2s;
+}
+.feat-link:hover{gap:14px;color:var(--white);}
+
+/* ── STATS BAR ── */
+.stats-bar{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--border-c);
+  border:1px solid var(--border-c);margin-top:80px;
+}
+.stat-box{
+  background:var(--void);padding:48px 32px;text-align:center;
+  transition:background .3s;
+}
+.stat-box:hover{background:rgba(0,240,255,.025);}
+.stat-n{
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:56px;
+  line-height:1;letter-spacing:-.02em;
+  background:linear-gradient(135deg,var(--cyan) 0%,var(--purple) 60%,var(--pink) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;display:block;margin-bottom:8px;
+}
+.stat-l{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.35em;color:var(--gray);text-transform:uppercase;}
+
+/* ── GLITCH TEXT ── */
+.glitch{position:relative;display:inline-block;}
+.glitch::before,.glitch::after{
+  content:attr(data-text);position:absolute;top:0;left:0;
+  width:100%;height:100%;background:transparent;
+}
+.glitch::before{color:var(--cyan);animation:g1 4s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%);transform:translateX(-2px);}
+.glitch::after{color:var(--pink);animation:g2 4s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%);transform:translateX(2px);}
+@keyframes g1{0%,88%,100%{transform:translateX(0);opacity:0}90%{transform:translateX(-4px);opacity:.8}93%{transform:translateX(4px);opacity:.8}96%{transform:translateX(0);opacity:0}}
+@keyframes g2{0%,86%,100%{transform:translateX(0);opacity:0}88%{transform:translateX(4px);opacity:.7}91%{transform:translateX(-4px);opacity:.7}94%{transform:translateX(0);opacity:0}}
+
+/* glitch-intense */
+.glitch-intense{position:relative;display:inline-block;animation:glitchIntense 6s infinite;}
+.glitch-intense::before,.glitch-intense::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;}
+.glitch-intense::before{color:var(--cyan);animation:gi1 6s infinite;clip-path:polygon(0 20%,100% 20%,100% 40%,0 40%);}
+.glitch-intense::after{color:var(--pink);animation:gi2 6s infinite;clip-path:polygon(0 60%,100% 60%,100% 80%,0 80%);}
+@keyframes glitchIntense{0%,78%,100%{transform:none;filter:none}80%{transform:skewX(-2deg);filter:brightness(1.2)}82%{transform:skewX(1.5deg) translateX(-3px)}84%{transform:none}86%{transform:translateX(4px) skewX(-1deg)}88%{transform:none}}
+@keyframes gi1{0%,78%,100%{transform:translateX(0);opacity:0}80%{transform:translateX(-8px);opacity:1}83%{transform:translateX(4px);opacity:.8}86%{transform:translateX(-2px);opacity:.4}88%{transform:translateX(0);opacity:0}}
+@keyframes gi2{0%,79%,100%{transform:translateX(0);opacity:0}81%{transform:translateX(8px);opacity:1}84%{transform:translateX(-4px);opacity:.7}87%{transform:translateX(2px);opacity:.3}89%{transform:translateX(0);opacity:0}}
+
+/* ── MANIFESTO QUOTE ── */
+.manifesto-hero{
+  padding:120px 48px;text-align:center;
+  background:var(--void3);
+  border-top:1px solid var(--border-c);
+  border-bottom:1px solid var(--border-m);
+  position:relative;overflow:hidden;
+}
+.manifesto-hero::before{
+  content:'1142';
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(120px,25vw,320px);
+  color:transparent;
+  -webkit-text-stroke:1px rgba(139,92,246,.07);
+  pointer-events:none;z-index:0;
+  letter-spacing:.1em;
+}
+.mh-quote{
+  position:relative;z-index:1;
+  font-family:'Orbitron',sans-serif;font-weight:700;
+  font-size:clamp(18px,3vw,36px);
+  letter-spacing:.04em;text-transform:uppercase;
+  line-height:1.3;
+  background:linear-gradient(120deg,var(--white) 30%,var(--cyan) 60%,var(--pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:28px;
+}
+.mh-sub{
+  position:relative;z-index:1;
+  font-family:'Share Tech Mono',monospace;font-size:11px;
+  letter-spacing:.3em;color:var(--gray);
+  text-transform:uppercase;margin-bottom:40px;
+}
+
+/* ── ASSET SHOWCASE: TYPEWRITER ── */
+.asset-showcase{
+  display:grid;grid-template-columns:1fr 1fr;gap:40px;
+  align-items:center;margin-top:60px;
+}
+.asset-img{
+  border:1px solid var(--border-p);
+  overflow:hidden;
+  position:relative;
+}
+.asset-img img{width:100%;display:block;transition:transform .5s,filter .5s;}
+.asset-img:hover img{transform:scale(1.03);filter:saturate(1.2) brightness(1.05);}
+/* cyan scan on hover */
+.asset-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(0deg,transparent 60%,rgba(0,240,255,.06) 100%);
+  pointer-events:none;
+}
+
+/* ── QUICK LINKS GRID ── */
+.quicklinks{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  margin-top:64px;
+}
+.ql-card{
+  background:var(--void2);border:1px solid var(--border-p);
+  padding:32px 28px;
+  transition:border-color .3s,background .3s,transform .3s;
+  cursor:none;text-decoration:none;color:inherit;
+  position:relative;overflow:hidden;display:block;
+}
+.ql-card::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(139,92,246,.04) 0%,transparent 50%);
+  pointer-events:none;}
+.ql-card:hover{border-color:var(--pink);background:rgba(236,72,153,.04);transform:translateY(-3px);}
+.ql-card:hover .ql-arrow{color:var(--pink);transform:translateX(6px);}
+.ql-icon{font-size:28px;margin-bottom:16px;display:block;}
+.ql-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--white);margin-bottom:8px;}
+.ql-desc{font-size:13px;font-weight:300;color:rgba(240,244,255,.5);line-height:1.6;margin-bottom:16px;}
+.ql-arrow{font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:.2em;color:var(--cyan);transition:color .2s,transform .2s;display:inline-block;}
+
+/* ── FOOTER ── */
+.site-footer{
+  background:#000;
+  border-top:1px solid var(--border-c);
+}
+.site-footer::before{
+  content:'';display:block;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),var(--pink),transparent);
+  opacity:.5;
+}
+.footer-inner{
+  display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:60px;
+  padding:80px 48px;
+}
+.footer-brand img{height:52px;filter:drop-shadow(0 0 10px var(--cyan)) drop-shadow(0 0 20px var(--purple));margin-bottom:16px;display:block;}
+.footer-brand p{font-family:'Share Tech Mono',monospace;font-size:10px;line-height:1.9;color:var(--gray);max-width:220px;letter-spacing:.05em;}
+.footer-col h4{
+  font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.5em;
+  color:var(--cyan);text-transform:uppercase;margin-bottom:20px;
+  padding-bottom:10px;border-bottom:1px solid var(--border-c);
+}
+.footer-col ul{list-style:none;}
+.footer-col li{margin-bottom:10px;}
+.footer-col a{
+  font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:400;
+  color:rgba(240,244,255,.5);text-decoration:none;
+  transition:color .2s,padding-left .2s;display:inline-block;
+}
+.footer-col a:hover{color:var(--cyan);padding-left:6px;}
+.footer-bottom{
+  border-top:1px solid var(--border-p);padding:20px 48px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-bottom p{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--gray);text-transform:uppercase;}
+.footer-badge{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.22em;color:var(--purple);text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+.footer-dot{width:5px;height:5px;background:var(--cyan);border-radius:50%;box-shadow:0 0 6px var(--cyan);animation:blink 2s infinite;}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .hud{padding:0 24px;}
+  .feature-grid{grid-template-columns:1fr 1fr;}
+  .quicklinks{grid-template-columns:1fr 1fr;}
+  .footer-inner{grid-template-columns:1fr 1fr;gap:40px;padding:60px 24px;}
+  .ts-track{grid-template-columns:1fr 1fr;}
+  .stats-bar{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:768px){
+  .hud .hud-nav{display:none !important;}
+  .hud .hud-status{display:none;}
+  .hud-hamburger{display:flex !important;}
+  .mega-panel{display:none !important;}
+  .section{padding:80px 24px;}
+  .feature-grid,.quicklinks{grid-template-columns:1fr;}
+  .asset-showcase{grid-template-columns:1fr;}
+  .ts-track{grid-template-columns:1fr;}
+  .stats-bar{grid-template-columns:1fr 1fr;}
+  .footer-inner{grid-template-columns:1fr;}
+  .hud-logo-name{white-space:nowrap;font-size:12px;}
+  .hud-logo-sub{display:none;}
+}
 </style>
+<link rel="stylesheet" href="assets/global.css">
+<meta name="description" content="1142 Labs is an independent neurodivergent research foundation. Cognitive liberation through empirical research in neuroscience, pharmacology, and consciousness. Est. Dec 22, 2019.">
+<meta name="keywords" content="1142 labs, neurodivergent research, methylphenidate, pharmacology, cognitive liberation, Cole EverDark, independent research, neuroscience">
+<meta name="author" content="Cole EverDark · 1142 Labs">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#00F0FF">
+<link rel="canonical" href="https://1142labs.com/">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://1142labs.com/">
+<meta property="og:title" content="1142 Labs: Tomorrow's Solutions Today">
+<meta property="og:description" content="1142 Labs is an independent neurodivergent research foundation. Cognitive liberation through empirical research in neuroscience, pharmacology, and consciousness. Est. Dec 22, 2019.">
+<meta property="og:image" content="https://1142labs.com/assets/images/1142_logo.png">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
+<meta property="og:site_name" content="1142 Labs">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="1142 Labs: Tomorrow's Solutions Today">
+<meta name="twitter:description" content="1142 Labs is an independent neurodivergent research foundation. Cognitive liberation through empirical research in neuroscience, pharmacology, and consciousness. Est. Dec 22, 2019.">
+<meta name="twitter:image" content="https://1142labs.com/assets/images/1142_logo.png">
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "1142 Labs",
+  "url": "https://1142labs.com",
+  "logo": "https://1142labs.com/assets/images/1142_logo.png",
+  "description": "Independent neurodivergent research foundation. Cognitive liberation through empirical research.",
+  "founder": {
+    "@type": "Person",
+    "name": "Cole EverDark"
+  },
+  "foundingDate": "2019-12-22",
+  "sameAs": []
+}
+</script>
 </head>
 <body>
-<nav class="hud">
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ══ HUD NAVIGATION ══ -->
+<div id="nav-overlay"></div>
+<aside id="nav-drawer">
+  <div class="drawer-header">
+    <a href="index.html" class="drawer-logo">
+      <img src="assets/images/1142_logo.png" alt="1142 Labs">
+      <div>
+        <span class="drawer-logo-name">1142 LABS</span>
+        <span class="drawer-logo-sub">Tomorrow's Solutions Today</span>
+      </div>
+    </a>
+    <button class="drawer-close" id="nav-close" aria-label="Close menu">&#x2715;</button>
+  </div>
+  <nav class="drawer-nav">
+    <div class="drawer-section">
+      <div class="drawer-section-label">Core</div>
+      <a href="index.html" class="drawer-link"><span class="dl-icon">&#x2B21;</span>Home</a>
+      <a href="about.html" class="drawer-link"><span class="dl-icon">&#x25C8;</span>The Creator</a>
+      <a href="vision.html" class="drawer-link"><span class="dl-icon">&#x25C9;</span>Vision</a>
+      <a href="creators.html" class="drawer-link"><span class="dl-icon">&#x25CE;</span>Creators</a>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-label">Research</div>
+      <a href="research_breakthroughs.html" class="drawer-link"><span class="dl-icon">&#x2697;</span>Research &amp; Breakthroughs</a>
+      <a href="1142_chemicals.html" class="drawer-link"><span class="dl-icon">&#x2B21;</span>Chemicals</a>
+      <a href="chemlog.html" class="drawer-link"><span class="dl-icon">&#x25C6;</span>Chem Log</a>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-label">Explore</div>
+      <a href="tools.html" class="drawer-link"><span class="dl-icon">&#x2699;</span>Tools</a>
+      <a href="withdrawal.html" class="drawer-link"><span class="dl-icon">&#x25C6;</span>Withdrawal Calc</a>
+      <a href="resources.html" class="drawer-link"><span class="dl-icon">&#x25C8;</span>Resources</a>
+      <a href="archive.html" class="drawer-link"><span class="dl-icon">&#x2584;</span>Archive</a>
+      <a href="posters.html" class="drawer-link"><span class="dl-icon">&#x25FC;</span>Posters</a>
+      <a href="socials.html" class="drawer-link"><span class="dl-icon">&#x25CE;</span>Network</a>
+    </div>
+  </nav>
+  <div class="drawer-foot">An EverDark Production &middot; Est. Dec 22, 2019</div>
+</aside>
+<nav class="hud" id="hud">
   <a href="index.html" class="hud-logo">
     <img src="assets/images/1142_logo.png" alt="1142 Labs">
-    <span class="hud-logo-name">1142 LABS</span>
+    <div class="hud-logo-text">
+      <span class="hud-logo-name">1142 LABS</span>
+      <span class="hud-logo-sub">Tomorrow's Solutions Today</span>
+    </div>
   </a>
   <ul class="hud-nav">
-    <li><a href="index.html" class="active">Home</a></li>
-    <li><a href="research-breakthroughs.html">Research</a></li>
-    <li><a href="calculators.html">Calculators</a></li>
-    <li><a href="toke_times.html">Toke Times</a></li>
-    <li><a href="vision.html">Vision</a></li>
-    <li><a href="socials.html">Network</a></li>
+    <li class="has-mega">
+      <a href="research_breakthroughs.html" class="hud-link">Research <span class="hud-arrow">▾</span></a>
+      <div class="mega-panel"><div class="mega-grid">
+        <a href="research_breakthroughs.html" class="mega-item"><span class="mega-icon">⚗</span><span class="mega-label">Research Hub</span><span class="mega-desc">Studies &amp; breakthroughs</span></a>
+        <a href="1142_chemicals.html" class="mega-item"><span class="mega-icon">⬡</span><span class="mega-label">Chemicals DB</span><span class="mega-desc">Full compound database</span></a>
+        <a href="chemlog.html" class="mega-item"><span class="mega-icon">◆</span><span class="mega-label">Chem Log</span><span class="mega-desc">Research session logs</span></a>
+      </div></div>
+    </li>
+    <li class="has-mega">
+      <a href="about.html" class="hud-link">About <span class="hud-arrow">▾</span></a>
+      <div class="mega-panel"><div class="mega-grid">
+        <a href="about.html" class="mega-item"><span class="mega-icon">◈</span><span class="mega-label">The Creator</span><span class="mega-desc">Cole EverDark</span></a>
+        <a href="vision.html" class="mega-item"><span class="mega-icon">◉</span><span class="mega-label">Vision</span><span class="mega-desc">Mission &amp; future</span></a>
+        <a href="creators.html" class="mega-item"><span class="mega-icon">◎</span><span class="mega-label">Creators</span><span class="mega-desc">The persona matrix</span></a>
+        <a href="archive.html" class="mega-item"><span class="mega-icon">▤</span><span class="mega-label">Archive</span><span class="mega-desc">Logs &amp; manifesto</span></a>
+      </div></div>
+    </li>
+    <li class="has-mega">
+      <a href="tools.html" class="hud-link">Explore <span class="hud-arrow">▾</span></a>
+      <div class="mega-panel"><div class="mega-grid">
+        <a href="tools.html" class="mega-item"><span class="mega-icon">⚙</span><span class="mega-label">Tools</span><span class="mega-desc">Calculators &amp; utils</span></a>
+        <a href="withdrawal.html" class="mega-item"><span class="mega-icon">&#x25C6;</span><span class="mega-label">Withdrawal Calc</span><span class="mega-desc">Evidence-based timeline</span></a>
+        <a href="resources.html" class="mega-item"><span class="mega-icon">◈</span><span class="mega-label">Resources</span><span class="mega-desc">References &amp; links</span></a>
+        <a href="posters.html" class="mega-item"><span class="mega-icon">◼</span><span class="mega-label">Posters</span><span class="mega-desc">EverDark visuals</span></a>
+        <a href="socials.html" class="mega-item"><span class="mega-icon">◎</span><span class="mega-label">Network</span><span class="mega-desc">Connect &amp; follow</span></a>
+      </div></div>
+    </li>
   </ul>
+  <div class="hud-right">
+    <div class="hud-status"><div class="hud-dot"></div><span>SYSTEM ONLINE</span></div>
+    <button class="hud-hamburger" id="nav-open" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
-<section class="hero-section">
-  <div class="container">
-    <img src="assets/images/1142_logo.png" alt="1142 Labs" class="hero-logo">
-    <h1 class="hero-title">SCIENTIFIC FATE</h1>
-    <p class="hero-text">
-      "People call it 'luck,' we call it 'Karma guiding fate.' The 1142 Ritual proved that if you stay good to the process, the process reveals never-before-thought-of knowledge. Our lab is just a monument to that one night in December when fate finally shook hands with chemistry."
+<!-- ══ THE VORTEX ══ -->
+<section class="vortex-hero">
+  <div class="vortex-grid"></div>
+  <div class="vortex-ring vr-1"></div>
+  <div class="vortex-ring vr-2"></div>
+  <div class="vortex-ring vr-3"></div>
+  <div class="vortex-ring vr-4"></div>
+  <div class="vortex-ring vr-5"></div>
+  <img src="assets/images/1772910840617.webp" alt="" style="position:absolute;bottom:-20px;left:60px;height:45%;opacity:.07;pointer-events:none;filter:drop-shadow(0 0 40px var(--cyan));">
+  <div class="orb orb-c"></div>
+  <div class="orb orb-p"></div>
+  <div class="orb orb-m"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">∞ A 12-HOUR TRANSFORMATIVE EXPERIENCE ∞ DEC 22 · 11:42 PM → 11:42 AM ∞</div>
+    <div class="hero-logo-wrap">
+      <img src="assets/images/1142_logo.png" alt="1142 Labs Crystal Burst">
+    </div>
+    <h1 class="hero-title">
+      <span class="ht-line1">Tomorrow's</span>
+      <span class="ht-line2 glitch-intense" data-text="Solutions">Solutions</span>
+      <span class="ht-line3">Today</span>
+    </h1>
+    <div class="hero-tagline">// EST. DEC 22, 2019 · AN EVERDARK PRODUCTION //</div>
+    <p class="hero-mission">1142 is a spiritual jailbreak. A neurodivergent fortress. A scientific underground. Cognitive Liberation through rigorous empirical research.</p>
+    <div class="hero-ctas">
+      <a href="research_breakthroughs.html" class="btn-neon">⚗ Enter The Brain →</a>
+      <a href="tools.html" class="btn-neon pink">⚙ The Engine →</a>
+      <a href="archive.html" class="btn-neon purple">📂 The Archive →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MARQUEE ══ -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <div class="marquee-item">NEURODIVERGENT EMPOWERMENT<span class="sep">◆</span>COGNITIVE LIBERATION<span class="sep">◆</span>1142 IS INEVITABLE<span class="sep">◆</span>COLE EVERDARK<span class="sep">◆</span>TOMORROW'S SOLUTIONS TODAY<span class="sep">◆</span>THE VOID<span class="sep">◆</span>THE BRAIN<span class="sep">◆</span>THE ENGINE<span class="sep">◆</span>THE ARCHIVE<span class="sep">◆</span></div>
+    <div class="marquee-item">NEURODIVERGENT EMPOWERMENT<span class="sep">◆</span>COGNITIVE LIBERATION<span class="sep">◆</span>1142 IS INEVITABLE<span class="sep">◆</span>COLE EVERDARK<span class="sep">◆</span>TOMORROW'S SOLUTIONS TODAY<span class="sep">◆</span>THE VOID<span class="sep">◆</span>THE BRAIN<span class="sep">◆</span>THE ENGINE<span class="sep">◆</span>THE ARCHIVE<span class="sep">◆</span></div>
+  </div>
+</div>
+
+<!-- ══ 11:42 TIME NARRATIVE ══ -->
+<section class="time-scroll">
+  <div class="ts-label">◆◆◆ THE ONTOLOGICAL FOUNDATION · A 12-HOUR ARC ◆◆◆</div>
+  <div class="ts-track">
+    <div class="ts-cell reveal">
+      <span class="ts-time">11:42<small style="font-size:.4em;color:var(--pink)">PM</small></span>
+      <div class="ts-label2">Hour Zero · The Darkness</div>
+      <p class="ts-desc">The experiment begins. Dec 22, 2019. The void opens and containment fails. Re-routing fuel. Final Code: 1142.</p>
+    </div>
+    <div class="ts-cell reveal d1">
+      <span class="ts-time" style="color:var(--purple);text-shadow:0 0 20px var(--purple);">03:42<small style="font-size:.4em;color:var(--pink)">AM</small></span>
+      <div class="ts-label2">Phase Shift · The Descent</div>
+      <p class="ts-desc">Novel light source detected. Geometric emission pattern: Cyans & Magentas. Sub-system resonance noted.</p>
+    </div>
+    <div class="ts-cell reveal d2">
+      <span class="ts-time" style="color:var(--pink);text-shadow:0 0 20px var(--pink);">07:42<small style="font-size:.4em;color:var(--cyan)">AM</small></span>
+      <div class="ts-label2">Midpoint · The Revelation</div>
+      <p class="ts-desc">Breakthrough achieved. The Persona Matrix crystallizes. Knowledge structures rewrite. 1142 becomes inevitable.</p>
+    </div>
+    <div class="ts-cell reveal d3">
+      <span class="ts-time" style="color:var(--green);text-shadow:0 0 20px var(--green);">11:42<small style="font-size:.4em;color:var(--cyan)">AM</small></span>
+      <div class="ts-label2">Hour Twelve · The Light</div>
+      <p class="ts-desc">Complete. From darkness to light. The laboratory opens. Cognitive Liberation achieved. Tomorrow begins today.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CORE PILLARS ══ -->
+<section class="section section-void">
+  <div class="section-label reveal">Phase Architecture</div>
+  <h2 class="section-title reveal">The <span style="color:var(--cyan);">Fortress</span><br>Architecture</h2>
+  <p class="section-sub reveal">Five phases. One mission. Cognitive liberation through rigorous scientific inquiry — built on a foundation of neurodivergent empowerment.</p>
+  <div class="feature-grid">
+    <div class="feat-card reveal d1">
+      <div class="feat-top-line"></div>
+      <div class="feat-num">PHASE 01</div>
+      <span class="feat-icon">🌀</span>
+      <div class="feat-title">The Void</div>
+      <p class="feat-body">The home. The vortex. The dark foundation from which all light emerges. Where 1142's story begins every night at 11:42 PM.</p>
+      <a href="index.html" class="feat-link">You are here →</a>
+    </div>
+    <div class="feat-card reveal d2">
+      <div class="feat-top-line"></div>
+      <div class="feat-num">PHASE 02</div>
+      <span class="feat-icon">🧠</span>
+      <div class="feat-title">The Brain</div>
+      <p class="feat-body">Scientific underground. Research hub for LSD-25, Methylphenidate, DMT, Psilocybin. 20+ breakthrough discoveries. Professional yet underground.</p>
+      <a href="research_breakthroughs.html" class="feat-link">Enter The Brain →</a>
+    </div>
+    <div class="feat-card reveal d3">
+      <div class="feat-top-line"></div>
+      <div class="feat-num">PHASE 03</div>
+      <span class="feat-icon">⚙️</span>
+      <div class="feat-title">The Engine</div>
+      <p class="feat-body">High-performance interactive tools. Substance Combos Calculator. Withdrawal Timeline. Moonshot Detection System. Built for real use.</p>
+      <a href="tools.html" class="feat-link">Start The Engine →</a>
+    </div>
+    <div class="feat-card reveal d1">
+      <div class="feat-top-line"></div>
+      <div class="feat-num">PHASE 04</div>
+      <span class="feat-icon">👁️</span>
+      <div class="feat-title">The Creator</div>
+      <p class="feat-body">Cole Everdark. Six personas. St. Jimmy Phenidate. Ritalin Man. Mr. BipHentin. Blue Meth War. One founder. Infinite dimensions.</p>
+      <a href="about.html" class="feat-link">Meet The Creator →</a>
+    </div>
+    <div class="feat-card reveal d2">
+      <div class="feat-top-line"></div>
+      <div class="feat-num">PHASE 05</div>
+      <span class="feat-icon">📂</span>
+      <div class="feat-title">The Archive</div>
+      <p class="feat-body">Cole's Tab Corner. The 1142 Manifesto. Chronological research logs. The full story of how a 12-hour experience became an inevitable movement.</p>
+      <a href="archive.html" class="feat-link">Open The Archive →</a>
+    </div>
+    <div class="feat-card reveal d3" style="background:rgba(0,240,255,.02);border-color:var(--border-c);">
+      <div class="feat-top-line"></div>
+      <div class="feat-num">∞ ALWAYS</div>
+      <span class="feat-icon">💊</span>
+      <div class="feat-title">Harm Reduction</div>
+      <p class="feat-body">All tools and research are presented for educational and harm reduction purposes. Knowledge protects. Information empowers.</p>
+      <a href="tools.html" class="feat-link">Harm Reduction Tools →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STATS ══ -->
+<section class="section section-dark" style="padding-top:0;padding-bottom:100px;">
+  <div style="position:relative;height:220px;overflow:hidden;margin:0;">
+  <img src="assets/images/1772589402529.webp" alt="1142 Labs" style="width:100%;height:100%;object-fit:cover;object-position:center 35%;filter:saturate(.6) brightness(.4);">
+  <div style="position:absolute;inset:0;background:linear-gradient(0deg,var(--void) 0%,transparent 35%,transparent 65%,var(--void) 100%);"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,240,255,.08),transparent,rgba(236,72,153,.06));"></div>
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+    <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(18px,3vw,36px);letter-spacing:.2em;color:rgba(0,240,255,.08);text-transform:uppercase;">1142 · EST 2019 · INDEPENDENT RESEARCH</div>
+  </div>
+</div>
+<div class="stats-bar">
+    <div class="stat-box reveal"><span class="stat-n" id="cnt1">0+</span><div class="stat-l">Research Papers</div></div>
+    <div class="stat-box reveal d1"><span class="stat-n">2019</span><div class="stat-l">Established</div></div>
+    <div class="stat-box reveal d2"><span class="stat-n" id="cnt2">0</span><div class="stat-l">Substances Studied</div></div>
+    <div class="stat-box reveal d3"><span class="stat-n">12H</span><div class="stat-l">Ontological Foundation</div></div>
+  </div>
+</section>
+
+<!-- ══ MANIFESTO PULL QUOTE ══ -->
+<div class="manifesto-hero">
+  <div class="mh-quote glitch" data-text="1142 IS INEVITABLE">1142 IS INEVITABLE</div>
+  <div class="mh-sub">∞∞∞ COGNITIVE LIBERATION · NEURODIVERGENT EMPOWERMENT · TOMORROW'S SOLUTIONS ∞∞∞</div>
+  <div class="hero-ctas">
+    <a href="archive.html" class="btn-neon">Read The Manifesto →</a>
+    <a href="about.html" class="btn-neon pink">Meet Cole EverDark →</a>
+  </div>
+</div>
+
+<!-- ══ QUICK LINKS GRID ══ -->
+<section class="section section-darker">
+  <div class="section-label reveal">Navigation Grid</div>
+  <h2 class="section-title reveal">Enter <span style="color:var(--pink);">The</span> Fortress</h2>
+  <div class="quicklinks">
+    <a href="research_breakthroughs.html" class="ql-card reveal d1">
+      <span class="ql-icon">⚗️</span>
+      <div class="ql-title">Chemical Index</div>
+      <div class="ql-desc">LSD-25 · Methylphenidate · DMT · Psilocybin · Full substance database with mechanisms and profiles.</div>
+      <div class="ql-arrow">→ THE BRAIN</div>
+    </a>
+    <a href="tools.html" class="ql-card reveal d2">
+      <span class="ql-icon">🧮</span>
+      <div class="ql-title">Combo Calculator</div>
+      <div class="ql-desc">4-substance interaction calculator with real-time risk scoring, glitch overlay, and harm reduction output.</div>
+      <div class="ql-arrow">→ THE ENGINE</div>
+    </a>
+    <a href="tools.html#withdrawal" class="ql-card reveal d3">
+      <span class="ql-icon">📊</span>
+      <div class="ql-title">Withdrawal Timeline</div>
+      <div class="ql-desc">Evidence-based withdrawal calculator for crack, meth, fentanyl — acute phase, PAWS, severity scoring.</div>
+      <div class="ql-arrow">→ HARM REDUCTION</div>
+    </a>
+    <a href="about.html" class="ql-card reveal d1">
+      <span class="ql-icon">👤</span>
+      <div class="ql-title">Persona Matrix</div>
+      <div class="ql-desc">Cole Everdark · St. Jimmy Phenidate · Ritalin Man · Mr. BipHentin · Blue Meth War · Cole's Tab Corner.</div>
+      <div class="ql-arrow">→ THE CREATOR</div>
+    </a>
+    <a href="archive.html" class="ql-card reveal d2">
+      <span class="ql-icon">📜</span>
+      <div class="ql-title">The Manifesto</div>
+      <div class="ql-desc">The full 1142 philosophy. Cognitive Liberation. Neurodivergent empowerment. Personal trauma as digital architecture.</div>
+      <div class="ql-arrow">→ THE ARCHIVE</div>
+    </a>
+    <a href="research.html#breakthroughs" class="ql-card reveal d3">
+      <span class="ql-icon">💡</span>
+      <div class="ql-title">Breakthroughs</div>
+      <div class="ql-desc">20+ documented discoveries. The Methylphenidate Series. Consciousness Studies. The complete breakthrough archive.</div>
+      <div class="ql-arrow">→ DISCOVERIES</div>
+    </a>
+  </div>
+</section>
+
+<!-- ══ ASSET SHOWCASE ══ -->
+<section class="section section-dark">
+  <div class="section-label reveal">The Lab · Visual Identity</div>
+  <h2 class="section-title reveal">Inside <span style="color:var(--cyan);">MODEL 1142-B</span></h2>
+  <div class="asset-showcase">
+    <div class="asset-img reveal">
+      <img src="assets/images/1772588324927.webp" alt="1142 Labs Typewriter — Model 1142-B">
+    </div>
+    <div class="reveal d1">
+      <div class="section-label">GASOLINE // OBSERVATION // 1142-B</div>
+      <h3 style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:22px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px;color:var(--white);">LOG: [11:42 PM] // UNIT 1142</h3>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:12px;line-height:2;color:rgba(240,244,255,.6);border-left:2px solid var(--cyan);padding-left:20px;margin-bottom:28px;">
+        Novel light source (Ref. THE IDEA) detected.<br>
+        Geometric emission pattern: Cyans &amp; Magentas.<br>
+        Sub-system resonance noted on Pump 132.<br>
+        Initial containment failed.<br>
+        Re-routing fuel. Re-allocating resources to analysis.<br>
+        <span style="color:var(--cyan);">Final Code: 1142</span>
+      </div>
+      <a href="archive.html" class="btn-neon">Read The Archive →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMPUTER IMAGE ══ -->
+<section class="section section-void" style="padding-top:0;text-align:center;">
+  <div style="max-width:480px;margin:0 auto;" class="reveal">
+    <div class="asset-img">
+      <img src="assets/images/1772910843420.webp" alt="1142 Labs Computer — Tomorrow's Solutions Today">
+    </div>
+  </div>
+  <div style="margin-top:48px;" class="reveal d1">
+    <p style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.3em;color:var(--gray);text-transform:uppercase;margin-bottom:20px;">
+      1142LABS.COM · TOMORROW'S SOLUTIONS TODAY
     </p>
-    <div class="hero-event">
-      A 12-HOUR SKILL ENHANCING EXPERIENCE ∞ EVERY 22ND · 11:42 PM → 11:42 AM ∞
-    </div>
+    <a href="research_breakthroughs.html" class="btn-neon">Enter The Lab →</a>
   </div>
 </section>
 
-<section class="section" style="background: var(--void2);">
-  <div class="container">
-    <h2 class="font-header" style="color: var(--pink);">[ SYSTEM STATUS: ONLINE ]</h2>
-    <p class="font-body">Independent neurodivergent research foundation. Cognitive liberation through empirical research.</p>
-    <div style="margin-top: 40px; display: flex; gap: 20px; justify-content: center;">
-      <a href="calculators.html" class="btn-neon">CALCULATORS →</a>
-      <a href="research-breakthroughs.html" class="btn-neon" style="border-color: var(--pink); color: var(--pink);">RESEARCH →</a>
+<!-- ══ FOOTER ══ -->
+<footer class="site-footer">
+  <div class="footer-glow-c"></div>
+  <div class="footer-glow-p"></div>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="footer-brand-logo">
+        <img src="assets/images/1142_logo.png" alt="1142 Labs">
+        <div>
+          <span class="footer-brand-name">1142 LABS</span>
+          <span class="footer-brand-tagline">Tomorrow's Solutions Today</span>
+        </div>
+      </a>
+      <p class="footer-brand-desc">A spiritual jailbreak. A neurodivergent fortress. A scientific underground. Est. Dec 22, 2019.</p>
+      <div class="footer-tags">
+        <span class="footer-tag">⚗ Research</span>
+        <span class="footer-tag">🧠 Neurodivergent</span>
+        <span class="footer-tag">🔓 Liberation</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">Research</h4>
+      <ul>
+        <li><a href="research_breakthroughs.html">Research Hub</a></li>
+        <li><a href="1142_chemicals.html">Chemicals DB</a></li>
+        <li><a href="chemlog.html">Chem Log</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">About</h4>
+      <ul>
+        <li><a href="about.html">The Creator</a></li>
+        <li><a href="about.html#origin-story">Origin Story</a></li>
+        <li><a href="about.html#personas">Persona Matrix</a></li>
+        <li><a href="vision.html">Vision</a></li>
+        <li><a href="creators.html">Creators</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">Explore</h4>
+      <ul>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="withdrawal.html">Withdrawal Calc</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="archive.html">Archive</a></li>
+        <li><a href="posters.html">Posters</a></li>
+        <li><a href="socials.html">Network</a></li>
+      </ul>
     </div>
   </div>
-</section>
+  <div class="footer-bottom">
+    <div class="footer-bottom-left">
+      <p>© 1142 Labs · Est. Dec 22nd 2019</p>
+      <p class="footer-katrina">In loving memory of Katrina Jade Mutch Hasler ♥</p>
+    </div>
+    <div class="footer-everdark"><div class="footer-dot"></div>An EverDark Production</div>
+  </div>
+</footer>
 
+<script>
+(function(){
+  const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+  let mx=0,my=0,rx=window.innerWidth/2,ry=window.innerHeight/2;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,button,.feat-card,.ql-card,.ts-cell,.stat-box').forEach(el=>{
+    el.addEventListener('mouseenter',()=>ring.classList.add('big'));
+    el.addEventListener('mouseleave',()=>ring.classList.remove('big'));
+  });
+
+  // Scroll reveal
+  const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}}),{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // Animated counters
+  function animCount(el,target,suffix=''){
+    const dur=1600,start=performance.now();
+    (function tick(now){
+      const p=Math.min((now-start)/dur,1),ease=1-Math.pow(1-p,3);
+      el.textContent=Math.floor(target*ease)+(p>=1?suffix:(suffix==='+'?'+':''));
+      if(p<1)requestAnimationFrame(tick);
+      else el.textContent=target+suffix;
+    })(performance.now());
+  }
+  const c1=document.getElementById('cnt1'),c2=document.getElementById('cnt2');
+  if(c1&&c2){
+    const co=new IntersectionObserver(es=>es.forEach(e=>{
+      if(e.isIntersecting){
+        if(e.target===c1)animCount(c1,20,'+');
+        if(e.target===c2)animCount(c2,11,'');
+        co.unobserve(e.target);
+      }
+    }),{threshold:.5});
+    co.observe(c1);co.observe(c2);
+  }
+
+  // Glitch data-text init
+  document.querySelectorAll('.glitch').forEach(el=>{if(!el.dataset.text)el.dataset.text=el.textContent;});
+})();
+</script>
+<script src="assets/fx.js" defer></script>
 </body>
 </html>
