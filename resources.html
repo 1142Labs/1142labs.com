@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="assets/fonts/Streamster.ttf" as="font" type="font/truetype" crossorigin>
+<link rel="preload" href="assets/global.css" as="style">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
@@ -24,7 +28,7 @@
 <meta property="og:url" content="https://1142labs.com/resources">
 <meta property="og:title" content="Resources · 1142 Labs: Tomorrow's Solutions Today">
 <meta property="og:description" content="Research resources, references, and educational materials from 1142 Labs — tools for independent scientific exploration.">
-<meta property="og:image" content="https://1142labs.com/assets/images/1142_logo.png">
+<meta property="og:image" content="https://1142labs.com/assets/images/og-1142labs.png">
 <meta property="og:image:width" content="1024">
 <meta property="og:image:height" content="1024">
 <meta property="og:site_name" content="1142 Labs">
@@ -32,7 +36,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Resources · 1142 Labs: Tomorrow's Solutions Today">
 <meta name="twitter:description" content="Research resources, references, and educational materials from 1142 Labs — tools for independent scientific exploration.">
-<meta name="twitter:image" content="https://1142labs.com/assets/images/1142_logo.png">
+<meta name="twitter:image" content="https://1142labs.com/assets/images/og-1142labs.png">
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json">
 {
@@ -82,9 +86,10 @@
     </div>
     <div class="drawer-section">
       <div class="drawer-section-label">Explore</div>
-      <a href="tools.html" class="drawer-link"><span class="dl-icon">&#x2699;</span>Tools</a>
-      <a href="withdrawal.html" class="drawer-link"><span class="dl-icon">&#x25C6;</span>Withdrawal Calc</a>
+      <a href="calculators.html" class="drawer-link"><span class="dl-icon">&#x2699;</span>Calculators</a>
+      <a href="calculators.html" class="drawer-link"><span class="dl-icon">&#x25C6;</span>Calculators</a>
       <a href="resources.html" class="drawer-link"><span class="dl-icon">&#x25C8;</span>Resources</a>
+      <a href="1142-toke-times.html" class="drawer-link"><span class="dl-icon">&#x231A;</span>Toke Times</a>
       <a href="archive.html" class="drawer-link"><span class="dl-icon">&#x2584;</span>Archive</a>
       <a href="posters.html" class="drawer-link"><span class="dl-icon">&#x25FC;</span>Posters</a>
       <a href="socials.html" class="drawer-link"><span class="dl-icon">&#x25CE;</span>Network</a>
@@ -119,11 +124,12 @@
       </div></div>
     </li>
     <li class="has-mega">
-      <a href="tools.html" class="hud-link">Explore <span class="hud-arrow">▾</span></a>
+      <a href="calculators.html" class="hud-link">Explore <span class="hud-arrow">▾</span></a>
       <div class="mega-panel"><div class="mega-grid">
-        <a href="tools.html" class="mega-item"><span class="mega-icon">⚙</span><span class="mega-label">Tools</span><span class="mega-desc">Calculators &amp; utils</span></a>
-        <a href="withdrawal.html" class="mega-item"><span class="mega-icon">&#x25C6;</span><span class="mega-label">Withdrawal Calc</span><span class="mega-desc">Evidence-based timeline</span></a>
+        <a href="calculators.html" class="mega-item"><span class="mega-icon">⚙</span><span class="mega-label">Calculators</span><span class="mega-desc">Calculators &amp; utils</span></a>
+        <a href="calculators.html" class="mega-item"><span class="mega-icon">&#x25C6;</span><span class="mega-label">Calculators</span><span class="mega-desc">Evidence-based timeline</span></a>
         <a href="resources.html" class="mega-item"><span class="mega-icon">◈</span><span class="mega-label">Resources</span><span class="mega-desc">References &amp; links</span></a>
+        <a href="1142-toke-times.html" class="mega-item"><span class="mega-icon">🕐</span><span class="mega-label">Toke Times</span><span class="mega-desc">The ritual timeline</span></a>
         <a href="posters.html" class="mega-item"><span class="mega-icon">◼</span><span class="mega-label">Posters</span><span class="mega-desc">EverDark visuals</span></a>
         <a href="socials.html" class="mega-item"><span class="mega-icon">◎</span><span class="mega-label">Network</span><span class="mega-desc">Connect &amp; follow</span></a>
       </div></div>
@@ -199,7 +205,7 @@
       <p class="feat-body">Reagent test kits and drug checking supplies. Marquis, Mecke, Mandelin, Simon's, fentanyl strips. Testing saves lives — this is where you get the kits.</p>
       <div class="feat-link">bunkpolice.com →</div>
     </a>
-    <a href="tools.html" class="feat-card reveal d3" style="text-decoration:none;color:inherit;cursor:none;background:rgba(0,240,255,.02);border-color:rgba(0,240,255,.3);">
+    <a href="calculators.html" class="feat-card reveal d3" style="text-decoration:none;color:inherit;cursor:none;background:rgba(0,240,255,.02);border-color:rgba(0,240,255,.3);">
       <div class="feat-top-line"></div>
       <span class="feat-icon">⚙️</span>
       <div class="feat-title" style="color:var(--cyan);">1142 Tools</div>
@@ -283,9 +289,10 @@
     <div class="footer-col">
       <h4 class="footer-col-title">Explore</h4>
       <ul>
-        <li><a href="tools.html">Tools</a></li>
-        <li><a href="withdrawal.html">Withdrawal Calc</a></li>
+        <li><a href="calculators.html">Calculators</a></li>
+        <li><a href="calculators.html">Calculators</a></li>
         <li><a href="resources.html">Resources</a></li>
+        <li><a href="1142-toke-times.html">Toke Times</a></li>
         <li><a href="archive.html">Archive</a></li>
         <li><a href="posters.html">Posters</a></li>
         <li><a href="socials.html">Network</a></li>

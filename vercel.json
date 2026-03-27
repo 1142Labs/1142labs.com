@@ -118,12 +118,16 @@
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/research-breakthroughs",
-      "destination": "/research_breakthroughs.html"
+      "source": "/calculators",
+      "destination": "/calculators.html"
     },
     {
-      "source": "/tools",
-      "destination": "/tools.html"
+      "source": "/1142-toke-times",
+      "destination": "/1142-toke-times.html"
+    },
+    {
+      "source": "/research-breakthroughs",
+      "destination": "/research_breakthroughs.html"
     },
     {
       "source": "/about",
@@ -168,6 +172,21 @@
   ],
   "redirects": [
     {
+      "source": "/tools",
+      "destination": "/calculators",
+      "permanent": true
+    },
+    {
+      "source": "/withdrawal",
+      "destination": "/calculators",
+      "permanent": true
+    },
+    {
+      "source": "/withdrawal-calculator",
+      "destination": "/calculators",
+      "permanent": true
+    },
+    {
       "source": "/research",
       "destination": "/research-breakthroughs",
       "permanent": true
@@ -194,7 +213,7 @@
     },
     {
       "source": "/the-engine",
-      "destination": "/tools",
+      "destination": "/calculators",
       "permanent": true
     },
     {

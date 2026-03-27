@@ -2,83 +2,1261 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="assets/fonts/Streamster.ttf" as="font" type="font/truetype" crossorigin>
+<link rel="preload" href="assets/global.css" as="style">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculators · 1142 Labs</title>
+<title>Calculators · 1142 Labs: Tomorrow's Solutions Today</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@300;400;600&family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/global.css">
+<style>@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}</style>
+<meta name="description" content="1142 Labs Calculators: substance combo risk scorer, withdrawal timeline generator, and harm reduction tools for independent researchers.">
+<meta name="keywords" content="research tools, drug combination calculator, withdrawal calculator, dosage reference, 1142 labs tools">
+<meta name="author" content="Cole EverDark · 1142 Labs">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#00F0FF">
+<link rel="canonical" href="https://1142labs.com/calculators">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://1142labs.com/calculators">
+<meta property="og:title" content="Calculators · 1142 Labs: Tomorrow's Solutions Today">
+<meta property="og:description" content="Scientific tools from 1142 Labs: combination calculators, withdrawal timelines, dosage references, and more for independent researchers.">
+<meta property="og:image" content="https://1142labs.com/assets/images/1142_logo.png">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
+<meta property="og:site_name" content="1142 Labs">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Calculators · 1142 Labs: Tomorrow's Solutions Today">
+<meta name="twitter:description" content="Scientific tools from 1142 Labs: combination calculators, withdrawal timelines, dosage references, and more for independent researchers.">
+<meta name="twitter:image" content="https://1142labs.com/assets/images/1142_logo.png">
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "1142 Labs",
+  "url": "https://1142labs.com",
+  "logo": "https://1142labs.com/assets/images/1142_logo.png",
+  "description": "Independent neurodivergent research foundation. Cognitive liberation through empirical research.",
+  "founder": {
+    "@type": "Person",
+    "name": "Cole EverDark"
+  },
+  "foundingDate": "2019-12-22",
+  "sameAs": []
+}
+</script>
 <style>
-  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 48px; }
-  @media (max-width: 768px) { .calc-grid { grid-template-columns: 1fr; } }
-  .calc-card { background: var(--void2); border: 1px solid var(--border-c); padding: 30px; }
-  .calc-output { background: var(--void3); border: 1px solid var(--border-p); padding: 20px; min-height: 200px; display: flex; align-items: center; justify-content: center; margin-top: 20px; }
-  select, input { width: 100%; background: var(--void3); border: 1px solid var(--border-c); color: var(--white); font-family: 'Share Tech Mono', monospace; padding: 12px; margin-bottom: 20px; outline: none; }
+/* ── Page-scoped vars that don't conflict with global.css ── */
+
+/* ── Layout ── */
+.wc-page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 110px 1.5rem 0;
+  overflow-x: hidden;
+}
+
+/* corner spike decorations */
+.wc-spikes { position: fixed; pointer-events: none; z-index: 0; }
+.wc-spikes svg { opacity: 0.09; }
+.wc-spikes-tl { top: -60px; left: -60px; }
+.wc-spikes-br { bottom: -60px; right: -60px; transform: rotate(180deg); }
+
+.wc-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 0 5rem;
+}
+
+/* ── Header ── */
+.wc-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.wc-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0,229,255,0.08);
+  border: 1.5px solid rgba(0,229,255,0.3);
+  border-radius: 100px;
+  padding: 0.35rem 1rem;
+  margin-bottom: 1.5rem;
+  animation: wcFadeDown 0.5s ease both;
+}
+
+.wc-brand-badge-dot {
+  width: 7px; height: 7px;
+  background: var(--wc-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--wc-cyan);
+  animation: wcDotPulse 2s ease-in-out infinite;
+}
+@keyframes wcDotPulse {
+  0%,100% { opacity: 1; box-shadow: 0 0 8px var(--wc-cyan); }
+  50%     { opacity: 0.45; box-shadow: 0 0 2px var(--wc-cyan); }
+}
+
+.wc-brand-badge-text {
+  font-family: 'Neon Tubes','Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--wc-cyan);
+}
+
+.wc-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.6rem, 8vw, 4.4rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  animation: wcFadeDown 0.5s 0.1s ease both;
+}
+
+.wc-title .line-1 {
+  display: block;
+  -webkit-text-stroke: 2px var(--wc-cyan);
+  color: transparent;
+  filter: drop-shadow(0 0 20px rgba(0,229,255,0.55));
+}
+.wc-title .line-2 {
+  display: block;
+  color: #fff;
+  text-shadow: 0 0 28px rgba(0,229,255,0.35), 3px 3px 0 rgba(107,47,212,0.6);
+}
+.wc-title .line-3 {
+  display: block;
+  background: linear-gradient(90deg, var(--wc-cyan), var(--wc-magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 14px rgba(224,32,200,0.45));
+}
+
+.wc-subtitle {
+  font-family: 'Neon Tubes','Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--wc-text-dim);
+  animation: wcFadeDown 0.5s 0.2s ease both;
+}
+
+/* ── Divider ── */
+.wc-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 2rem 0;
+  color: rgba(255,255,255,0.15);
+  font-family: 'Neon Tubes','Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+.wc-divider::before, .wc-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,229,255,0.28), transparent);
+}
+.wc-divider span { color: rgba(0,229,255,0.45); }
+
+/* ── Form card ── */
+.wc-form-card {
+  background: var(--wc-card-bg);
+  border: 1.5px solid var(--wc-card-border);
+  border-radius: 20px;
+  padding: 2rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  animation: wcFadeUp 0.5s 0.25s ease both;
+}
+.wc-form-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 20px; right: 20px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--wc-cyan), var(--wc-magenta), transparent);
+  border-radius: 0 0 4px 4px;
+}
+.wc-form-card:hover {
+  border-color: rgba(0,229,255,0.25);
+  box-shadow: 0 0 30px rgba(0,229,255,0.07);
+}
+
+.wc-section-tag {
+  font-family: 'Neon Tubes','Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--wc-cyan);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.wc-section-tag::before { content: '◆'; font-size: 0.5rem; color: var(--wc-magenta); }
+
+.wc-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.wc-form-group { display: flex; flex-direction: column; gap: 0.45rem; }
+.wc-form-group.full { grid-column: 1 / -1; }
+
+.wc-label {
+  font-family: 'Neon Tubes','Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wc-text-dim);
+}
+
+.wc-select {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  background: rgba(0,0,0,0.4);
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300e5ff'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+}
+.wc-select:hover { border-color: rgba(0,229,255,0.4); background-color: rgba(0,229,255,0.04); }
+.wc-select:focus { border-color: var(--wc-cyan); box-shadow: 0 0 0 3px rgba(0,229,255,0.12), 0 0 18px rgba(0,229,255,0.08); }
+
+/* ── Calculate button ── */
+.wc-calc-btn {
+  width: 100%;
+  padding: 1.1rem;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #0d0720;
+  cursor: none;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--wc-cyan) 0%, var(--wc-blue) 50%, var(--wc-magenta) 100%);
+  background-size: 200% 200%;
+  background-position: 0% 50%;
+  transition: transform 0.15s, box-shadow 0.2s, background-position 0.4s;
+  box-shadow:
+    0 4px 25px rgba(0,229,255,0.3),
+    0 0 50px rgba(0,229,255,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.35);
+  margin-top: 0.25rem;
+}
+.wc-calc-btn:hover {
+  background-position: 100% 50%;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 35px rgba(0,229,255,0.4), 0 0 60px rgba(224,32,200,0.18), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.wc-calc-btn:active { transform: translateY(0); }
+.wc-calc-btn .btn-shine {
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0s;
+}
+.wc-calc-btn:hover .btn-shine { transform: translateX(200%); transition: transform 0.5s ease; }
+
+/* ── Results ── */
+.wc-results { display: none; margin-top: 1.5rem; }
+.wc-results.visible { display: block; animation: wcFadeUp 0.4s ease both; }
+
+.wc-result-card {
+  background: var(--wc-card-bg);
+  border: 1.5px solid var(--wc-card-border);
+  border-radius: 20px;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  margin-bottom: 1rem;
+  position: relative;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.wc-result-card:hover { border-color: rgba(0,229,255,0.2); box-shadow: 0 0 24px rgba(0,229,255,0.06); }
+.wc-result-card.timeline::before {
+  content: ''; position: absolute;
+  top: 0; left: 20px; right: 20px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--wc-cyan), transparent);
+}
+.wc-result-card.substitutes::before {
+  content: ''; position: absolute;
+  top: 0; left: 20px; right: 20px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--wc-magenta), transparent);
+}
+
+.wc-result-head {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.wc-result-head .tag-icon { font-size: 1rem; }
+.wc-result-head h3 {
+  font-family: 'Neon Tubes','Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.wc-result-card.timeline  .wc-result-head h3 { color: var(--wc-cyan); }
+.wc-result-card.substitutes .wc-result-head h3 { color: var(--wc-pink); }
+
+.wc-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.15s;
+  gap: 1rem;
+}
+.wc-result-row:last-child { border-bottom: none; }
+.wc-result-row:hover { background: rgba(255,255,255,0.025); }
+
+.wc-result-label {
+  font-family: 'Neon Tubes','Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wc-text-dim);
+  flex-shrink: 0;
+}
+.wc-result-value {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-align: right;
+  letter-spacing: 0.05em;
+}
+.wc-result-value.cyan    { color: var(--wc-cyan);    text-shadow: 0 0 12px rgba(0,229,255,0.5); }
+.wc-result-value.magenta { color: var(--wc-pink);    text-shadow: 0 0 12px rgba(255,64,224,0.5); }
+.wc-result-value.white   { color: #fff; }
+.wc-result-value.warn    { color: #ffb830;            text-shadow: 0 0 12px rgba(255,184,48,0.4); }
+
+/* ── Animations ── */
+@keyframes wcFadeDown {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes wcFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  .wc-form-grid { grid-template-columns: 1fr; }
+  .wc-title { font-size: 2.4rem; }
+  .wc-title .line-1 { -webkit-text-stroke: 1.5px var(--wc-cyan); }
+}
+</style>
+<style id="ttc-clock-styles">
+/* ── 1142 CLOCKS ── */
+.ttc-wrap {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+  .ttc-wrap {
+    --ttc-cyan: #00ffe7;
+    --ttc-magenta: #ff2d78;
+    --ttc-amber: #ffb300;
+    --ttc-dark: rgba(3,8,16,0.95);
+    --ttc-panel: rgba(5,13,26,0.98);
+    --ttc-border: rgba(0,255,231,0.18);
+    --ttc-glow-c: 0 0 18px rgba(0,255,231,0.55), 0 0 60px rgba(0,255,231,0.18);
+    --ttc-glow-m: 0 0 18px rgba(255,45,120,0.55), 0 0 60px rgba(255,45,120,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  
+
+  /* Scanline overlay */
+  
+
+  /* Noise grain */
+  
+
+  @keyframes grain {
+    0%, 100% { transform: translate(0,0); }
+    25% { transform: translate(-1%, -1%); }
+    50% { transform: translate(1%, 1%); }
+    75% { transform: translate(-1%, 1%); }
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    color: var(--ttc-cyan);
+    text-shadow: var(--ttc-glow-c);
+    letter-spacing: 0.35em;
+    animation: flicker 8s infinite;
+  }
+
+  .logo span {
+    color: var(--ttc-magenta);
+    text-shadow: var(--ttc-glow-m);
+  }
+
+  .sub {
+    font-family: 'VT323', monospace;
+    font-size: 1rem;
+    color: rgba(0,255,231,0.45);
+    letter-spacing: 0.5em;
+    margin-top: 6px;
+  }
+
+  /* Horizontal rule */
+  .divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ttc-cyan), var(--ttc-magenta), transparent);
+    margin: 0 auto 40px;
+    opacity: 0.4;
+  }
+
+  /* Grid layout */
+  .ttc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+    max-width: 960px;
+  }
+
+  @media (max-width: 680px) {
+    .ttc-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Panel */
+  .ttc-panel {
+    background: var(--ttc-panel);
+    border: 1px solid var(--ttc-border);
+    border-radius: 4px;
+    padding: 32px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+
+  .ttc-panel:hover { transform: translateY(-2px); }
+
+  .ttc-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .ttc-panel.cyan-panel::before {
+    background: linear-gradient(90deg, transparent, var(--ttc-cyan), transparent);
+    box-shadow: 0 0 20px var(--ttc-cyan);
+  }
+
+  .ttc-panel.magenta-panel::before {
+    background: linear-gradient(90deg, transparent, var(--ttc-magenta), transparent);
+    box-shadow: 0 0 20px var(--ttc-magenta);
+  }
+
+  /* Corner decorations */
+  .ttc-panel::after {
+    content: '◢';
+    position: absolute;
+    bottom: 8px; right: 10px;
+    font-size: 0.7rem;
+    opacity: 0.2;
+    color: var(--ttc-cyan);
+  }
+
+  .ttc-magenta-panel::after { color: var(--ttc-magenta); }
+
+  /* Panel label */
+  .ttc-panel-label {
+    font-family: 'VT323', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ttc-cyan-panel .ttc-panel-label { color: var(--ttc-cyan); }
+  .ttc-magenta-panel .ttc-panel-label { color: var(--ttc-magenta); }
+
+  .ttc-panel-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    animation: blink 1.1s step-end infinite;
+  }
+
+  .ttc-cyan-panel .ttc-panel-label::before {
+    background: var(--ttc-cyan);
+    box-shadow: 0 0 8px var(--ttc-cyan);
+  }
+
+  .ttc-magenta-panel .ttc-panel-label::before {
+    background: var(--ttc-magenta);
+    box-shadow: 0 0 8px var(--ttc-magenta);
+    animation-delay: 0.5s;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Panel title */
+  .ttc-panel-title {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: clamp(0.85rem, 2.2vw, 1.05rem);
+    margin-bottom: 28px;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.12em;
+    line-height: 1.4;
+  }
+
+  /* Digit clusters */
+  .time-display {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .ttc-digit-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ttc-digit {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    line-height: 1;
+    position: relative;
+    display: inline-block;
+    min-width: 2ch;
+    text-align: center;
+  }
+
+  .ttc-cyan-panel .ttc-digit {
+    color: var(--ttc-cyan);
+    text-shadow: var(--ttc-glow-c);
+  }
+
+  .ttc-magenta-panel .ttc-digit {
+    color: var(--ttc-magenta);
+    text-shadow: var(--ttc-glow-m);
+  }
+
+  /* Ghost / behind digit */
+  .ttc-digit::before {
+    content: '88';
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    color: inherit;
+    user-select: none;
+  }
+
+  .ttc-digit-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.45;
+    color: #fff;
+  }
+
+  /* Colon separators */
+  .ttc-sep {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 900;
+    align-self: center;
+    margin-bottom: 20px;
+    animation: blink 1s step-end infinite;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .ttc-time-display-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  /* Status bar */
+  .ttc-status-bar {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .ttc-status-text {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    opacity: 0.4;
+    color: #fff;
+  }
+
+  .ttc-target-date {
+    font-family: 'VT323', monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.2em;
+    opacity: 0.7;
+  }
+
+  .ttc-cyan-panel .ttc-target-date { color: var(--ttc-cyan); }
+  .ttc-magenta-panel .ttc-target-date { color: var(--ttc-magenta); }
+
+  /* Progress bar */
+  .ttc-progress-wrap {
+    width: 100%;
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    margin-top: 16px;
+    overflow: hidden;
+  }
+
+  .ttc-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s linear;
+  }
+
+  .ttc-cyan-panel .ttc-progress-fill {
+    background: linear-gradient(90deg, var(--ttc-cyan), rgba(0,255,231,0.4));
+    box-shadow: 0 0 8px var(--ttc-cyan);
+  }
+
+  .ttc-magenta-panel .ttc-progress-fill {
+    background: linear-gradient(90deg, var(--ttc-magenta), rgba(255,45,120,0.4));
+    box-shadow: 0 0 8px var(--ttc-magenta);
+  }
+
+  /* Glitch on number change */
+  @keyframes glitch {
+    0% { transform: translate(0); clip-path: none; }
+    10% { transform: translate(-2px, 0); clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%); color: var(--ttc-magenta); }
+    20% { transform: translate(2px, 0); clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); }
+    30% { transform: translate(0); clip-path: none; color: inherit; }
+    100% { transform: translate(0); clip-path: none; }
+  }
+
+  .ttc-digit.glitching { animation: glitch 0.25s ease; }
+
+  @keyframes flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: 0.8; }
+    97% { opacity: 1; }
+    98% { opacity: 0.6; }
+    99% { opacity: 1; }
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 40px;
+    text-align: center;
+    font-family: 'VT323', monospace;
+    font-size: 0.85rem;
+    color: rgba(255,255,231,0.2);
+    letter-spacing: 0.35em;
+  }
+
+  /* Live clock */
+  .ttc-live-clock {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ttc-amber);
+    text-align: center;
+    margin-bottom: 32px;
+    letter-spacing: 0.3em;
+    opacity: 0.7;
+  }
+
+  /* Days large display for count-up */
+  .ttc-days-hero {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .ttc-days-number {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: clamp(3.5rem, 10vw, 5.5rem);
+    color: var(--ttc-magenta);
+    text-shadow: var(--ttc-glow-m);
+    line-height: 1;
+    position: relative;
+    display: inline-block;
+  }
+
+  .ttc-days-number::before {
+    content: attr(data-val);
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    filter: blur(1px);
+    color: inherit;
+    user-select: none;
+  }
+
+  .ttc-days-unit {
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+    letter-spacing: 0.5em;
+    color: var(--ttc-magenta);
+    opacity: 0.6;
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  /* Responsive tweak */
+  @media (max-width: 440px) {
+    .ttc-panel { padding: 24px 16px; }
+    .ttc-digit { font-size: 1.6rem; }
+  }
+
+.ttc-wrap {
+  background: rgba(3, 8, 16, 0.9);
+  border: 1px solid rgba(0,255,231,0.12);
+  padding: 24px;
+  position: relative;
+  backdrop-filter: blur(8px);
+}
+.ttc-wrap-inline {
+  max-width: 100%;
+  overflow: hidden;
+}
+.ttc-wrap-sidebar {
+  max-width: 400px;
+}
+
 </style>
 </head>
 <body>
-<nav class="hud">
+<div id="cursor"></div>
+<div id="cursor-ring"></div><div id="nav-overlay"></div>
+<aside id="nav-drawer">
+  <div class="drawer-header">
+    <a href="index.html" class="drawer-logo">
+      <img src="assets/images/1142_logo.png" alt="1142 Labs">
+      <div>
+        <span class="drawer-logo-name">1142 LABS</span>
+        <span class="drawer-logo-sub">Tomorrow's Solutions Today</span>
+      </div>
+    </a>
+    <button class="drawer-close" id="nav-close" aria-label="Close menu">&#x2715;</button>
+  </div>
+  <nav class="drawer-nav">
+    <div class="drawer-section">
+      <div class="drawer-section-label">Core</div>
+      <a href="index.html" class="drawer-link"><span class="dl-icon">&#x2B21;</span>Home</a>
+      <a href="about.html" class="drawer-link"><span class="dl-icon">&#x25C8;</span>The Creator</a>
+      <a href="vision.html" class="drawer-link"><span class="dl-icon">&#x25C9;</span>Vision</a>
+      <a href="creators.html" class="drawer-link"><span class="dl-icon">&#x25CE;</span>Creators</a>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-label">Research</div>
+      <a href="research_breakthroughs.html" class="drawer-link"><span class="dl-icon">&#x2697;</span>Research &amp; Breakthroughs</a>
+      <a href="1142_chemicals.html" class="drawer-link"><span class="dl-icon">&#x2B21;</span>Chemicals</a>
+      <a href="chemlog.html" class="drawer-link"><span class="dl-icon">&#x25C6;</span>Chem Log</a>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-label">Explore</div>
+      <a href="calculators.html" class="drawer-link active"><span class="dl-icon">&#x2699;</span>Calculators</a>
+      <a href="calculators.html" class="drawer-link"><span class="dl-icon">&#x25C6;</span>Calculators</a>
+      <a href="resources.html" class="drawer-link"><span class="dl-icon">&#x25C8;</span>Resources</a>
+      <a href="1142-toke-times.html" class="drawer-link"><span class="dl-icon">&#x231A;</span>Toke Times</a>
+      <a href="archive.html" class="drawer-link"><span class="dl-icon">&#x2584;</span>Archive</a>
+      <a href="posters.html" class="drawer-link"><span class="dl-icon">&#x25FC;</span>Posters</a>
+      <a href="socials.html" class="drawer-link"><span class="dl-icon">&#x25CE;</span>Network</a>
+    </div>
+  </nav>
+  <div class="drawer-foot">An EverDark Production &middot; Est. Dec 22, 2019</div>
+</aside>
+<nav class="hud" id="hud">
   <a href="index.html" class="hud-logo">
     <img src="assets/images/1142_logo.png" alt="1142 Labs">
-    <span class="hud-logo-name">1142 LABS</span>
+    <div class="hud-logo-text">
+      <span class="hud-logo-name">1142 LABS</span>
+      <span class="hud-logo-sub">Tomorrow's Solutions Today</span>
+    </div>
   </a>
   <ul class="hud-nav">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="research-breakthroughs.html">Research</a></li>
-    <li><a href="calculators.html" class="active">Calculators</a></li>
-    <li><a href="vision.html">Vision</a></li>
-    <li><a href="socials.html">Network</a></li>
+    <li class="has-mega">
+      <a href="research_breakthroughs.html" class="hud-link">Research <span class="hud-arrow">▾</span></a>
+      <div class="mega-panel"><div class="mega-grid">
+        <a href="research_breakthroughs.html" class="mega-item"><span class="mega-icon">⚗</span><span class="mega-label">Research Hub</span><span class="mega-desc">Studies &amp; breakthroughs</span></a>
+        <a href="1142_chemicals.html" class="mega-item"><span class="mega-icon">⬡</span><span class="mega-label">Chemicals DB</span><span class="mega-desc">Full compound database</span></a>
+        <a href="chemlog.html" class="mega-item"><span class="mega-icon">◆</span><span class="mega-label">Chem Log</span><span class="mega-desc">Research session logs</span></a>
+      </div></div>
+    </li>
+    <li class="has-mega">
+      <a href="about.html" class="hud-link">About <span class="hud-arrow">▾</span></a>
+      <div class="mega-panel"><div class="mega-grid">
+        <a href="about.html" class="mega-item"><span class="mega-icon">◈</span><span class="mega-label">The Creator</span><span class="mega-desc">Cole EverDark</span></a>
+        <a href="vision.html" class="mega-item"><span class="mega-icon">◉</span><span class="mega-label">Vision</span><span class="mega-desc">Mission &amp; future</span></a>
+        <a href="creators.html" class="mega-item"><span class="mega-icon">◎</span><span class="mega-label">Creators</span><span class="mega-desc">The persona matrix</span></a>
+        <a href="archive.html" class="mega-item"><span class="mega-icon">▤</span><span class="mega-label">Archive</span><span class="mega-desc">Logs &amp; manifesto</span></a>
+      </div></div>
+    </li>
+    <li class="has-mega">
+      <a href="calculators.html" class="hud-link">Explore <span class="hud-arrow">▾</span></a>
+      <div class="mega-panel"><div class="mega-grid">
+        <a href="calculators.html" class="mega-item"><span class="mega-icon">⚙</span><span class="mega-label">Calculators</span><span class="mega-desc">Risk scorer &amp; timelines</span></a>
+        <a href="calculators.html" class="mega-item"><span class="mega-icon">&#x25C6;</span><span class="mega-label">Calculators</span><span class="mega-desc">Risk scorer &amp; timelines</span></a>
+        <a href="resources.html" class="mega-item"><span class="mega-icon">◈</span><span class="mega-label">Resources</span><span class="mega-desc">References &amp; links</span></a>
+        <a href="1142-toke-times.html" class="mega-item"><span class="mega-icon">🕐</span><span class="mega-label">Toke Times</span><span class="mega-desc">The ritual timeline</span></a>
+        <a href="posters.html" class="mega-item"><span class="mega-icon">◼</span><span class="mega-label">Posters</span><span class="mega-desc">EverDark visuals</span></a>
+        <a href="socials.html" class="mega-item"><span class="mega-icon">◎</span><span class="mega-label">Network</span><span class="mega-desc">Connect &amp; follow</span></a>
+      </div></div>
+    </li>
   </ul>
-</nav>
-
-<section class="section">
-  <div class="container">
-    <h1 class="font-header" style="font-size: 60px; color: var(--cyan);">1142 CALCULATORS</h1>
-    <p class="font-body">Advanced harm reduction and research tools for independent analysis.</p>
-
-    <div class="calc-grid">
-      <!-- Combo Calculator -->
-      <div class="calc-card">
-        <h2 class="font-header">4-SUBSTANCE COMBO</h2>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-          <select id="s1"><option value="">Substance 1</option><option>LSD</option><option>MDMA</option><option>Alcohol</option><option>Caffeine</option></select>
-          <select id="s2"><option value="">Substance 2</option><option>LSD</option><option>MDMA</option><option>Alcohol</option><option>Caffeine</option></select>
-          <select id="s3"><option value="">Substance 3</option><option>LSD</option><option>MDMA</option><option>Alcohol</option><option>Caffeine</option></select>
-          <select id="s4"><option value="">Substance 4</option><option>LSD</option><option>MDMA</option><option>Alcohol</option><option>Caffeine</option></select>
+  <div class="hud-right">
+    <div class="hud-status"><div class="hud-dot"></div><span>SYSTEM ONLINE</span></div>
+    <button class="hud-hamburger" id="nav-open" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav><section style="position:relative;min-height:60vh;display:flex;flex-direction:column;justify-content:center;padding:120px 48px 80px;overflow:hidden;text-align:left;">
+  <div class="vortex-grid" style="opacity:.5;"></div>
+  <div class="orb orb-p" style="opacity:.6;"></div>
+  <div class="orb orb-c" style="opacity:.5;top:auto;bottom:-60px;right:0;"></div>
+  <img src="assets/images/1772910919760.webp" alt="" style="position:absolute;top:50%;right:0;transform:translateY(-50%);width:38vw;max-width:500px;opacity:.22;pointer-events:none;filter:drop-shadow(0 0 40px var(--green)) saturate(1.3);">
+  <div style="position:relative;z-index:1;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.5em;color:var(--green);text-transform:uppercase;margin-bottom:20px;opacity:0;animation:fadeUp .8s .1s forwards;">Phase 03 · Calculators</div>
+    <img src="assets/images/1142_logo.png" alt="" style="height:52px;filter:drop-shadow(0 0 16px var(--green));margin-bottom:24px;opacity:0;animation:fadeUp .8s .15s forwards;display:block;">
+    <h1 style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(44px,7vw,100px);line-height:.92;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:28px;opacity:0;animation:fadeUp .9s .3s forwards;">
+      <span style="display:block;color:var(--white);">Harm Reduction</span>
+      <span style="display:block;color:var(--green);text-shadow:0 0 30px var(--green),0 0 60px var(--green)80;" class="glitch" data-text="Interactive">Interactive</span>
+      <span style="display:block;-webkit-text-stroke:1.5px var(--pink);color:transparent;">Calculators</span>
+    </h1>
+    <p style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:300;color:rgba(240,244,255,.6);max-width:560px;line-height:1.8;opacity:0;animation:fadeUp .9s .5s forwards;">Substance Combo Risk Scorer. Advanced Withdrawal Timeline. Evidence-based harm reduction tools — grouped, anchored, built for real use.</p>
+  </div>
+</section>
+<!-- ══ TEMPORAL GRID CLOCKS ══ -->
+<section style="padding:0 48px 40px;max-width:700px;">
+  <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.5em;color:var(--gray);text-transform:uppercase;margin-bottom:16px;">◆ SYSTEM TIME ◆</div>
+  <div class="ttc-wrap ttc-wrap-sidebar">
+    <div class="ttc-live-clock" id="liveClock2">SYS TIME: —</div>
+    <div class="ttc-divider"></div>
+    <div class="ttc-grid" style="grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="ttc-panel ttc-cyan-panel" style="padding:16px;">
+        <div class="ttc-panel-label">COUNTDOWN</div>
+        <div class="ttc-panel-title" style="font-size:11px;">NEXT 22ND</div>
+        <div class="ttc-time-display-row" id="cd2Display">
+          <div class="ttc-digit-block"><div class="ttc-digit" id="cd2-days">00</div><div class="ttc-digit-label">DAYS</div></div>
+          <div class="ttc-sep">:</div>
+          <div class="ttc-digit-block"><div class="ttc-digit" id="cd2-hours">00</div><div class="ttc-digit-label">HRS</div></div>
+          <div class="ttc-sep">:</div>
+          <div class="ttc-digit-block"><div class="ttc-digit" id="cd2-mins">00</div><div class="ttc-digit-label">MIN</div></div>
         </div>
-        <button onclick="calcCombo()" class="btn-neon" style="width:100%;">CALCULATE RISK</button>
-        <div id="combo-output" class="calc-output">Awaiting input...</div>
+        <div class="ttc-progress-wrap"><div class="ttc-progress-fill" id="cd2-progress" style="width:0%"></div></div>
       </div>
+      <div class="ttc-panel ttc-magenta-panel" style="padding:16px;">
+        <div class="ttc-panel-label">OPERATIONAL</div>
+        <div class="ttc-panel-title" style="font-size:11px;">DAYS ACTIVE</div>
+        <div class="ttc-days-hero" style="padding:8px 0;">
+          <div class="ttc-days-number" id="biz2-days">0</div>
+          <div class="ttc-days-unit">DAYS</div>
+        </div>
+        <div class="ttc-progress-wrap"><div class="ttc-progress-fill" id="biz2-progress" style="width:50%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="marquee-strip"><div class="marquee-track">
+  <div class="marquee-item">COMBO CALCULATOR<span class="sep">◆</span>WITHDRAWAL TIMELINE<span class="sep">◆</span>RISK SCORING<span class="sep">◆</span>HARM REDUCTION<span class="sep">◆</span>MOONSHOT DETECTION<span class="sep">◆</span>REAL-TIME ANALYSIS<span class="sep">◆</span></div>
+  <div class="marquee-item">COMBO CALCULATOR<span class="sep">◆</span>WITHDRAWAL TIMELINE<span class="sep">◆</span>RISK SCORING<span class="sep">◆</span>HARM REDUCTION<span class="sep">◆</span>MOONSHOT DETECTION<span class="sep">◆</span>REAL-TIME ANALYSIS<span class="sep">◆</span></div>
+</div></div>
+<div id="combo-calc" style="scroll-margin-top:80px;"></div>
+<section class="section section-void">
+  <div class="section-label reveal">Harm Reduction Tool</div>
+  <h2 class="section-title reveal">4-Substance <span style="color:var(--cyan);">Combo</span> Calculator</h2>
+  <p class="section-sub reveal">Real-time interaction risk scoring for up to 4 substances. Educational purposes only. Always consult a professional.</p>
 
-      <!-- Withdrawal Calculator -->
-      <div class="calc-card">
-        <h2 class="font-header">WITHDRAWAL TIMELINE</h2>
-        <select id="wsub">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:48px;" class="reveal">
+    <div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+        <div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:8px;">Substance 1</div>
+          <select id="s1" style="width:100%;background:var(--void2);border:1px solid var(--border-c);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 12px;outline:none;cursor:pointer;">
+            <option value="">— Select —</option>
+            <option>LSD</option><option>Methylphenidate</option><option>MDMA</option><option>Psilocybin</option><option>DMT</option><option>Cannabis</option><option>Alcohol</option><option>Caffeine</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--purple);text-transform:uppercase;margin-bottom:8px;">Substance 2</div>
+          <select id="s2" style="width:100%;background:var(--void2);border:1px solid var(--border-p);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 12px;outline:none;cursor:pointer;">
+            <option value="">— Select —</option>
+            <option>LSD</option><option>Methylphenidate</option><option>MDMA</option><option>Psilocybin</option><option>DMT</option><option>Cannabis</option><option>Alcohol</option><option>Caffeine</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--pink);text-transform:uppercase;margin-bottom:8px;">Substance 3 (opt.)</div>
+          <select id="s3" style="width:100%;background:var(--void2);border:1px solid var(--border-m);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 12px;outline:none;cursor:pointer;">
+            <option value="">— None —</option>
+            <option>LSD</option><option>Methylphenidate</option><option>MDMA</option><option>Psilocybin</option><option>DMT</option><option>Cannabis</option><option>Alcohol</option><option>Caffeine</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--green);text-transform:uppercase;margin-bottom:8px;">Substance 4 (opt.)</div>
+          <select id="s4" style="width:100%;background:var(--void2);border:1px solid rgba(74,222,128,.3);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:10px 12px;outline:none;cursor:pointer;">
+            <option value="">— None —</option>
+            <option>LSD</option><option>Methylphenidate</option><option>MDMA</option><option>Psilocybin</option><option>DMT</option><option>Cannabis</option><option>Alcohol</option><option>Caffeine</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="calcCombo()" class="btn-neon" style="width:100%;">⚡ CALCULATE RISK SCORE →</button>
+    </div>
+    <div id="combo-output" style="background:var(--void2);border:1px solid var(--border-p);padding:28px;min-height:200px;display:flex;align-items:center;justify-content:center;">
+      <div style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gray);letter-spacing:.3em;text-transform:uppercase;">Select substances to calculate</div>
+    </div>
+  </div>
+</section>
+
+<div style="height:1px;background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),transparent);opacity:.4;"></div>
+
+<div id="withdrawal-calc" style="scroll-margin-top:80px;"></div>
+<div style="position:relative;height:180px;overflow:hidden;">
+  <img src="assets/images/1772910840617.webp" alt="" style="position:absolute;right:0;top:0;height:100%;width:auto;object-fit:cover;filter:saturate(.6) brightness(.5);opacity:.8;">
+  <img src="assets/images/1772589402529.webp" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.5) brightness(.35);">
+  <div style="position:absolute;inset:0;background:linear-gradient(0deg,var(--void2) 0%,transparent 40%,transparent 60%,var(--void) 100%);"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(74,222,128,.1),transparent,rgba(0,240,255,.06));"></div>
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.6em;color:rgba(74,222,128,.5);text-transform:uppercase;">Withdrawal Timeline Generator · Evidence-Based</div>
+  </div>
+</div>
+
+<section class="section section-dark">
+  <div class="section-label reveal">Harm Reduction Tool</div>
+  <h2 class="section-title reveal">Withdrawal <span style="color:var(--green);">Timeline</span> Calculator</h2>
+  <p class="section-sub reveal">Evidence-based withdrawal estimates for crack cocaine, methamphetamine, and fentanyl. Not medical advice.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:48px;" class="reveal">
+    <div>
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:8px;">Substance</div>
+        <select id="wsub" style="width:100%;background:var(--void3);border:1px solid var(--border-c);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:11px;padding:12px 14px;outline:none;cursor:pointer;">
           <option value="crack">Crack Cocaine</option>
           <option value="meth">Methamphetamine</option>
           <option value="fent">Fentanyl</option>
         </select>
-        <div style="font-size: 10px; color: var(--gray);">DURATION (YEARS): <span id="dur-v">3</span></div>
-        <input type="range" min="1" max="15" value="3" id="wdur" oninput="document.getElementById('dur-v').textContent=this.value">
-        <button onclick="calcWithdrawal()" class="btn-neon" style="width:100%; border-color: var(--pink); color: var(--pink);">GENERATE TIMELINE</button>
-        <div id="w-output" class="calc-output">Awaiting input...</div>
       </div>
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--purple);text-transform:uppercase;margin-bottom:8px;">Duration of use — <span id="dur-v">3</span> years</div>
+        <input type="range" min="1" max="15" value="3" id="wdur" oninput="document.getElementById('dur-v').textContent=this.value" style="width:100%;accent-color:var(--cyan);cursor:pointer;">
+      </div>
+      <div style="margin-bottom:28px;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.3em;color:var(--pink);text-transform:uppercase;margin-bottom:8px;">Daily amount — <span id="amt-v">0.3</span>g</div>
+        <input type="range" min="1" max="10" value="3" id="wamt" oninput="document.getElementById('amt-v').textContent=(this.value/10).toFixed(1)" style="width:100%;accent-color:var(--pink);cursor:pointer;">
+      </div>
+      <button onclick="calcWithdrawal()" class="btn-neon pink" style="width:100%;">📊 GENERATE TIMELINE →</button>
     </div>
+    <div id="w-output" style="background:var(--void3);border:1px solid var(--border-c);padding:28px;min-height:260px;display:flex;align-items:center;justify-content:center;">
+      <div style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gray);letter-spacing:.3em;text-transform:uppercase;">Awaiting input</div>
+    </div>
+  </div>
+  <div style="margin-top:20px;font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:.15em;color:var(--gray);background:var(--void3);border:1px solid var(--border-p);padding:16px 20px;" class="reveal">
+    ⚠ DISCLAIMER: For educational and harm reduction purposes only. This is not medical advice. If you or someone you know needs support, contact a healthcare professional or helpline.
   </div>
 </section>
 
 <script>
 function calcCombo(){
   const subs=[document.getElementById('s1').value,document.getElementById('s2').value,document.getElementById('s3').value,document.getElementById('s4').value].filter(Boolean);
-  if(subs.length<2){document.getElementById('combo-output').innerHTML='Select 2+ substances';return;}
-  document.getElementById('combo-output').innerHTML='Risk Score: ' + (Math.random()*100).toFixed(0);
+  if(subs.length<2){document.getElementById('combo-output').innerHTML='<div style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--pink);letter-spacing:.2em;">⚠ Select at least 2 substances</div>';return;}
+  const risks={LSD:5,Methylphenidate:6,MDMA:8,Psilocybin:4,DMT:6,Cannabis:3,Alcohol:9,Caffeine:2};
+  let base=subs.reduce((a,s)=>a+(risks[s]||5),0)/subs.length;
+  const combo=subs.length>2?base*1.3:base*1.1;
+  const score=Math.min(100,Math.round(combo*8));
+  const level=score<30?['LOW','var(--green)']:score<60?['MODERATE','var(--cyan)']:score<80?['HIGH','var(--pink)']:['EXTREME','#ff0000'];
+  document.getElementById('combo-output').innerHTML=`
+    <div style="width:100%;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.4em;color:var(--gray);text-transform:uppercase;margin-bottom:20px;">RISK ANALYSIS OUTPUT</div>
+      <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:72px;line-height:1;color:${level[1]};text-shadow:0 0 30px ${level[1]};margin-bottom:8px;">${score}</div>
+      <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:18px;color:${level[1]};letter-spacing:.2em;margin-bottom:16px;">${level[0]} RISK</div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gray);letter-spacing:.15em;">${subs.join(' + ')}</div>
+      <div style="margin-top:16px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--gray);line-height:1.8;">Always research interactions independently.<br>Consider set, setting, and personal health factors.</div>
+    </div>`;
 }
 function calcWithdrawal(){
   const sub=document.getElementById('wsub').value;
-  document.getElementById('w-output').innerHTML='Timeline for ' + sub + ' generated.';
+  const dur=parseInt(document.getElementById('wdur').value);
+  const amt=parseFloat(document.getElementById('wamt').value)/10;
+  const d={crack:{n:'Crack Cocaine',peak:'24–72 hrs',acute:'1–2 wks',paws:'1–3 mo',note:'Psychological symptoms dominant. Intense cravings.'},meth:{n:'Methamphetamine',peak:'24–48 hrs',acute:'2–3 wks',paws:'2–6 mo',note:'Prolonged anhedonia. Sleep disruption common.'},fent:{n:'Fentanyl',peak:'12–36 hrs',acute:'5–10 days',paws:'3–12 mo',note:'Medical supervision strongly advised. High relapse risk.'}};
+  const info=d[sub];const sev=Math.min(10,Math.round(dur*.6+amt*4));
+  const sevC=sev<=3?'var(--green)':sev<=6?'var(--cyan)':sev<=8?'var(--pink)':'#ff4444';
+  const rows=[['Substance',info.n],['Duration',dur+' year'+(dur>1?'s':'')],['Daily Amount',amt.toFixed(1)+'g'],['Peak Withdrawal',info.peak],['Acute Phase',info.acute],['PAWS',info.paws],['Severity',`<span style="color:${sevC};font-weight:700">${sev}/10</span>`],['Note',info.note]];
+  let html='<div style="width:100%;"><div style="font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.4em;color:var(--gray);text-transform:uppercase;margin-bottom:16px;">TIMELINE OUTPUT</div><table style="width:100%;border-collapse:collapse;">';
+  rows.forEach(([k,v],i)=>html+=`<tr style="${i%2===0?'background:rgba(255,255,255,.02)':''}"><td style="font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.2em;color:var(--gray);text-transform:uppercase;padding:8px 10px;border-bottom:1px solid rgba(139,92,246,.1);white-space:nowrap;">${k}</td><td style="font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(240,244,255,.7);padding:8px 10px;border-bottom:1px solid rgba(139,92,246,.1);">${v}</td></tr>`);
+  html+='</table></div>';
+  document.getElementById('w-output').innerHTML=html;
 }
 </script>
-</body>
-</html>
+<div style="height:1px;background:linear-gradient(90deg,transparent,var(--purple),var(--cyan),transparent);opacity:.4;margin:0;"></div>
+<div id="advanced-withdrawal" style="scroll-margin-top:80px;"></div>
+<section class="section section-void">
+  <div class="section-label reveal">Advanced Tool</div>
+  <h2 class="section-title reveal">Advanced <span style="color:var(--purple);">Withdrawal</span> Calculator</h2>
+  <p class="section-sub reveal">Full timeline and recovery modelling with recommended substitutes. Not medical advice.</p>
+</section>
+
+<div class="wc-page">
+  <div class="wc-wrapper">
+
+    <header class="wc-header">
+      <div class="wc-brand-badge">
+        <span class="wc-brand-badge-dot"></span>
+        <span class="wc-brand-badge-text">1142 Labs · Research Tool</span>
+      </div>
+      <h1 class="wc-title">
+        <span class="line-1">Drug</span>
+        <span class="line-2">Withdrawal</span>
+        <span class="line-3">Calculator</span>
+      </h1>
+      <p class="wc-subtitle">Timeline &amp; Recovery Modelling</p>
+    </header>
+
+    <div class="wc-divider"><span>◆</span> Input <span>◆</span></div>
+
+    <div class="wc-form-card">
+      <div class="wc-section-tag">Parameters</div>
+
+      <div class="wc-form-grid">
+        <div class="wc-form-group">
+          <label class="wc-label" for="drug">Substance</label>
+          <select class="wc-select" id="drug">
+            <option value="CRACK">Crack Cocaine</option>
+            <option value="METH">Methamphetamine</option>
+            <option value="FENTANYL">Fentanyl</option>
+          </select>
+        </div>
+
+        <div class="wc-form-group">
+          <label class="wc-label" for="amount">Daily Amount (grams)</label>
+          <select class="wc-select" id="amount">
+            <option value="0.1">0.1 g</option>
+            <option value="0.2">0.2 g</option>
+            <option value="0.3">0.3 g</option>
+            <option value="0.4">0.4 g</option>
+            <option value="0.5">0.5 g</option>
+            <option value="0.6">0.6 g</option>
+            <option value="0.7">0.7 g</option>
+            <option value="0.8">0.8 g</option>
+            <option value="0.9">0.9 g</option>
+          </select>
+        </div>
+
+        <div class="wc-form-group full">
+          <label class="wc-label" for="dailyUse">Duration of Daily Use</label>
+          <select class="wc-select" id="dailyUse">
+            <option value="1">1 Year</option>
+            <option value="2">2 Years</option>
+            <option value="3">3 Years</option>
+            <option value="4">4 Years</option>
+            <option value="5">5 Years</option>
+            <option value="6">6 Years</option>
+            <option value="7">7 Years</option>
+            <option value="8">8 Years</option>
+            <option value="9">9 Years</option>
+            <option value="10">10 Years</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="wc-calc-btn" id="calculateBtn">
+        <span class="btn-shine"></span>
+        ▶ &nbsp; Calculate Timeline
+      </button>
+    </div>
+
+    <div class="wc-results" id="results">
+      <div class="wc-divider"><span>◆</span> Results <span>◆</span></div>
+
+      <div class="wc-result-card timeline">
+        <div class="wc-result-head">
+          <span class="tag-icon">⏱</span>
+          <h3>Withdrawal Timeline</h3>
+        </div>
+        <div id="timelineRows"></div>
+      </div>
+
+      <div class="wc-result-card substitutes">
+        <div class="wc-result-head">
+          <span class="tag-icon">⚗</span>
+          <h3>Recommended Substitutes</h3>
+        </div>
+        <div id="substituteRows"></div>
+      </div>
+    </div>
+
+  </div><!-- /.wc-wrapper -->
+</div><!-- /.wc-page -->
+
+<footer class="site-footer">
+  <div class="footer-glow-c"></div>
+  <div class="footer-glow-p"></div>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="footer-brand-logo">
+        <img src="assets/images/1142_logo.png" alt="1142 Labs">
+        <div>
+          <span class="footer-brand-name">1142 LABS</span>
+          <span class="footer-brand-tagline">Tomorrow's Solutions Today</span>
+        </div>
+      </a>
+      <p class="footer-brand-desc">A spiritual jailbreak. A neurodivergent fortress. A scientific underground. Est. Dec 22, 2019.</p>
+      <div class="footer-tags">
+        <span class="footer-tag">⚗ Research</span>
+        <span class="footer-tag">🧠 Neurodivergent</span>
+        <span class="footer-tag">🔓 Liberation</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">Research</h4>
+      <ul>
+        <li><a href="research_breakthroughs.html">Research Hub</a></li>
+        <li><a href="1142_chemicals.html">Chemicals DB</a></li>
+        <li><a href="chemlog.html">Chem Log</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">About</h4>
+      <ul>
+        <li><a href="about.html">The Creator</a></li>
+        <li><a href="about.html#origin-story">Origin Story</a></li>
+        <li><a href="about.html#personas">Persona Matrix</a></li>
+        <li><a href="vision.html">Vision</a></li>
+        <li><a href="creators.html">Creators</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">Explore</h4>
+      <ul>
+        <li><a href="calculators.html">Calculators</a></li>
+        <li><a href="calculators.html">Calculators</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="1142-toke-times.html">Toke Times</a></li>
+        <li><a href="archive.html">Archive</a></li>
+        <li><a href="posters.html">Posters</a></li>
+        <li><a href="socials.html">Network</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-left">
+      <p>© 1142 Labs · Est. Dec 22nd 2019</p>
+      <p class="footer-katrina">In loving memory of Katrina Jade Mutch Hasler ♥</p>
+    </div>
+    <div class="footer-everdark"><div class="footer-dot"></div>An EverDark Production</div>
+  </div>
+</footer><script>
+(function(){
+  const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+  let mx=window.innerWidth/2,my=window.innerHeight/2,rx=mx,ry=my;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,button,.feat-card,.ql-card,.ts-cell,.stat-box,.chem-card,.persona-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>ring.classList.add('big'));
+    el.addEventListener('mouseleave',()=>ring.classList.remove('big'));
+  });
+  const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}}),{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  document.querySelectorAll('.glitch').forEach(el=>{if(!el.dataset.text)el.dataset.text=el.textContent.trim();});
+})();
+</script>
+<script src="assets/fx.js" defer></script>
+<script id="ttc-clock-js2">
+(function() {
+  function pad(n) { return String(Math.floor(n)).padStart(2, '0'); }
+  function setD(el, val) {
+    if (!el) return;
+    const s = pad(val);
+    if (el.textContent !== s) { el.textContent = s; }
+  }
+  function getBizStart() { return new Date(2019, 11, 22, 23, 42, 0, 0); }
+  function getNext22nd() {
+    const now = new Date(); let y = now.getFullYear(), m = now.getMonth();
+    let t = new Date(y, m, 22, 0, 0, 0, 0);
+    if (t <= now) { m++; if (m > 11) { m = 0; y++; } t = new Date(y, m, 22, 0, 0, 0, 0); }
+    return t;
+  }
+  function tick2() {
+    const now = new Date();
+    const lc = document.getElementById('liveClock2');
+    if (lc) lc.textContent = 'SYS TIME: ' + now.toLocaleTimeString('en-US', {hour12:false});
+    const t = getNext22nd(), diff = t - now, s = diff/1000;
+    setD(document.getElementById('cd2-days'), Math.floor(s/86400));
+    setD(document.getElementById('cd2-hours'), Math.floor((s%86400)/3600));
+    setD(document.getElementById('cd2-mins'), Math.floor((s%3600)/60));
+    const pct = Math.max(0,Math.min(100,((31*86400000-diff)/(31*86400000))*100));
+    const cp = document.getElementById('cd2-progress'); if(cp) cp.style.width = pct+'%';
+    const bz = now - getBizStart(), bzS = bz/1000;
+    const bzD = document.getElementById('biz2-days');
+    if(bzD) bzD.textContent = String(Math.floor(bzS/86400));
+    const bp = document.getElementById('biz2-progress');
+    if(bp) bp.style.width = ((bzS%86400)/86400*100)+'%';
+  }
+  tick2(); setInterval(tick2, 1000);
+})();
+</script>
+</body></html>
