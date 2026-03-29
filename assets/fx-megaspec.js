@@ -2053,6 +2053,6 @@
     colors: C,
   };
 
-  global.FXMega = FX1142;
+  global.FX1142 = FX1142;
 
 })(typeof window !== 'undefined' ? window : this);
